@@ -124,14 +124,14 @@ When invoked:
 ```markdown
 # Agent Swarm Launcher
 
-Launch a coordinated multi-agent swarm to complete company-level tasks.
+Run a structured sequential analysis with multiple role perspectives. Each role's output feeds the next. Not parallel — one session, multiple lenses.
 
 Usage: /swarm [type] "[task description]"
 
 Swarm types:
-- product-launch: CMO + SEO + Content + Sales + PR working in parallel
+- product-launch: CMO → SEO → Content → SDR → CEO synthesis (sequential)
 - market-research: Market + Competitor + Validation + CEO synthesis
-- growth-sprint: SEO + Content + Growth + Analytics in parallel
+- growth-sprint: Data → Growth → Content → SDR → CEO synthesis (sequential)
 - go-to-market: Full GTM preparation
 - weekly-ops: Monday morning operations (auto-scheduled)
 - custom [agent1,agent2,...]: Define your own combination
@@ -139,7 +139,7 @@ Swarm types:
 When invoked:
 1. Decompose task into role-specific subtasks
 2. For each role: load system prompt + relevant tools
-3. Run parallel phases where possible
+3. Run each role in sequence, each building on prior output
 4. Synthesize outputs into actionable brief
 5. Present: team outputs + synthesis + priority actions
 6. Human review time: 15-30 minutes

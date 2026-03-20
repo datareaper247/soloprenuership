@@ -6,6 +6,26 @@
 
 ---
 
+## ⚠️ Solo Founder Stage Gate
+
+**International expansion is almost never the right move at <$50K MRR.**
+
+| Stage | Verdict | Reason |
+|-------|---------|--------|
+| <$20K MRR | ❌ Stop | You don't have PMF in your home market. Expanding spreads the problem. |
+| $20–$50K MRR | ⚠️ Test only | Runs a single localized landing page test. No full geo build. |
+| $50K+ MRR with inbound signals | ✅ Go | Organic signups from a market = pull signal. Now it's worth analyzing. |
+| $50K+ MRR without signals | ⚠️ Validate first | Use `/research market` before committing budget. |
+
+**Common trap**: A founder at $8K MRR asks "should I expand to Europe?" The correct answer is almost always: fix your churn in your current market first. International complexity (legal, currency, support timezone, localization) multiplies operational load at exactly the stage where focus is your only advantage.
+
+**Exception**: If you already have 10+ paying customers from a country without doing any targeting, that's a pull signal worth analyzing with `/geo analyze`.
+
+If you invoked this skill and you're <$20K MRR without inbound international signals, Claude will surface this flag automatically.
+
+---
+
+
 ## Overview
 
 The geo skill turns Claude into an international expansion strategist. Every command applies the CAGE Distance Framework, Hofstede cultural dimensions, and localization best practices to give you a rigorous, actionable plan — not generic "go global" advice.

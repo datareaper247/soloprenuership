@@ -4,7 +4,7 @@
 > validated founder playbooks — all through markdown files that work today.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Skills: 15](https://img.shields.io/badge/Skills-15-purple.svg)](#claude-code-skills)
+[![Skills: 16](https://img.shields.io/badge/Skills-16-purple.svg)](#claude-code-skills)
 [![Roles: 10](https://img.shields.io/badge/Core%20Roles-10-blue.svg)](#role-library)
 [![Works with: Claude Code](https://img.shields.io/badge/Works%20with-Claude%20Code-orange.svg)](#quick-start)
 
@@ -82,7 +82,7 @@ That's it. Open Claude Code and start using the skills.
 
 ---
 
-## The 15 Skills
+## The 16 Skills
 
 Drop-in commands for Claude Code. Encoding validated founder frameworks, not generic prompts.
 

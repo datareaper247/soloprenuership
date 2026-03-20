@@ -6,6 +6,25 @@ Produces professional-grade content assets with the correct format, length, tone
 
 ---
 
+## Solo Founder Content Hierarchy
+
+Before using this skill, check which content type is right for your stage.
+**Wrong content at the wrong stage wastes the one thing you don't have: time.**
+
+| Stage | What matters | What to skip |
+|-------|-------------|-------------|
+| $0–$5K MRR | `blog` (SEO for pain-point keywords), `landing-page` | press releases, video scripts, ad copy |
+| $5–$20K MRR | Add `email-sequence` (onboarding + retention), `social` | press releases, ad copy |
+| $20–$50K MRR | Add `case-study`, `ad-copy` (test paid) | press releases |
+| $50K+ MRR | All types relevant | — |
+
+⚠️ If you're at <$10K MRR and asking for a `press-release`: flag — **PR doesn't move the needle at this stage.** Most press release effort at early stage returns near-zero. Build customers, not coverage.
+
+**For $0–$5K MRR founders**: Your two highest-ROI content types are (1) a `blog` post targeting a specific pain-point keyword your ICP searches, and (2) a `landing-page` that converts that traffic. Start there.
+
+---
+
+
 ## Content Types
 
 ### `blog` — SEO-Optimized Long-Form Blog Post

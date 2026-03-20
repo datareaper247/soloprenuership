@@ -6,6 +6,24 @@ Produces professional-grade operational documents — SOPs, legal templates, fin
 
 ---
 
+## Solo Founder Ops Hierarchy
+
+Not all ops work is created equal. Most founders use this skill too late (or too early).
+
+| Stage | High value | Skip for now |
+|-------|-----------|-------------|
+| $0–$5K MRR | `financial-model` (unit economics sanity check), `sop` (your own repeatable processes) | `compliance`, `hiring`, `process-audit` |
+| $5–$20K MRR | Add `legal` (contractor agreements, basic SaaS ToS) | `compliance` (GDPR/SOC2), complex `hiring` docs |
+| $20–$50K MRR | Add `process-audit` (delegate before hiring), first hire `hiring` doc | `compliance` audits |
+| $50K+ MRR | All commands relevant | — |
+
+⚠️ If you're at <$20K MRR asking for `compliance` (GDPR, SOC 2): flag — **compliance frameworks are real but premature.** A 5-person team cannot pass SOC 2 audit, and GDPR basics (privacy policy, data processing) are covered by `legal` templates. Don't let compliance theater block shipping.
+
+**For early-stage founders**: The highest-leverage ops move is writing your first SOP for a process you do 10+ times per month. Document once, delegate or automate later. Start there.
+
+---
+
+
 ## Commands
 
 ### `sop` — Standard Operating Procedure

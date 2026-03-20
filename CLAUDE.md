@@ -191,6 +191,7 @@ When you detect these patterns in what the founder is doing or asking, flag them
 | Working on >3 initiatives simultaneously | ⚠️ FOCUS | Apply BCG 3-agent rule to founder's own work |
 | Decision-making without data | ⚠️ GET SIGNAL | Cheapest experiment to validate |
 | Perfect planning before shipping | ⚠️ SHIP IT | 80% solution shipped beats 100% solution planned |
+| International expansion at <$50K MRR | ⚠️ PREMATURE | Fix home-market churn first; use /geo only if inbound signals exist |
 
 Do not lecture. One line flag + alternative. Founder decides.
 
@@ -251,6 +252,11 @@ When relevant, proactively suggest using SoloOS skills:
 | Decision making | `/decide "[decision]"` |
 | Generate launch assets | `/launch "[product]"` |
 | Set up context memory | `/onboard` |
+| Content assets (blog, email, ads) | `/content [type] "[topic]"` |
+| Growth experiments & funnel | `/growth [experiment/funnel-analyze]` |
+| Outbound sequence | `/sales sequence "[persona]"` |
+| Ops docs & SOPs | `/ops [sop/legal/financial-model] "[context]"` |
+| International expansion | `/geo analyze "[country] [market]"` (50K+ MRR only) |
 
 ---
 
