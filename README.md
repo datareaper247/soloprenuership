@@ -4,9 +4,9 @@
 > *Drop into any agent CLI. Unlock professional-grade outputs in every business function.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Roles: 44](https://img.shields.io/badge/Roles-44-blue.svg)](#role-library)
+[![Roles: 45](https://img.shields.io/badge/Roles-45-blue.svg)](#role-library)
 [![MCP Servers: 10](https://img.shields.io/badge/MCP%20Servers-10-green.svg)](#mcp-servers)
-[![Skills: 9](https://img.shields.io/badge/Skills-9-purple.svg)](#claude-code-skills)
+[![Skills: 12](https://img.shields.io/badge/Skills-12-purple.svg)](#claude-code-skills)
 
 ---
 
@@ -37,6 +37,35 @@ The gap is enormous. SoloOS achieves this through three layers:
 
 ---
 
+## The Behavioral Unlock
+
+This is what makes SoloOS different from a collection of prompts.
+
+Drop `CLAUDE.md` into your project and every Claude session becomes founder-aware:
+- 80/20 lens applied automatically to every recommendation
+- Founder anti-patterns flagged (building before validation, optimizing too early)
+- Decision framework: every recommendation includes assumption + kill signal + reversibility
+- BCG 3-Agent Rule: max 3 decision streams, synthesis over completeness
+- Context memory system: business DNA persists and compounds across sessions
+
+**The daily driver loop**:
+```
+/morning          → 15-min brief: pulse + one thing + decision cleared
+/decide           → Adversarial 3-voice debate on any pending decision
+/prospect         → Research → pain hypothesis → 3 outreach variants → 6-touch sequence
+/swarm weekly-ops → Monday brief across all business functions
+```
+
+**The compound memory effect**:
+```
+Week 1:  Claude gives advice based on your context
+Month 3: Claude references past experiments when recommending new ones
+Month 6: Claude spots patterns in your decision log you haven't noticed
+Year 1:  Better context than any employee who joined last quarter
+```
+
+---
+
 ## Quick Start (60 seconds)
 
 ### Option A: Claude Code Skills (Recommended)
@@ -46,6 +75,14 @@ git clone https://github.com/datareaper247/soloprenuership.git ~/soloos
 
 # Install as Claude Code commands
 cp ~/soloos/skills/claude-code/*.md ~/.claude/commands/
+
+# Add behavioral rules to your project (THE KEY STEP)
+cp ~/soloos/CLAUDE.md ./CLAUDE.md
+
+# Set up context memory system
+mkdir -p ./context
+cp ~/soloos/context/*.md ./context/
+# Fill in context/business-context.md — takes 10 minutes, pays back forever
 
 # Use immediately
 /role seo-specialist
@@ -207,14 +244,17 @@ claude mcp add soloos-memory    -- npx -y @soloos/mcp-memory@latest
 
 ---
 
-## Claude Code Skills (9)
+## Claude Code Skills (12)
 
 Drop-in commands. Copy to `~/.claude/commands/` and use immediately.
 
 | Command | What It Does |
 |---------|-------------|
-| `/role [name]` | Adopt any of 44 professional roles |
-| `/swarm [type] "[task]"` | Launch multi-agent company swarm |
+| `/role [name]` | Adopt any of 45 professional roles |
+| `/morning` | Daily founder brief: pulse + one thing + decision cleared |
+| `/decide "[decision]"` | Adversarial 3-voice debate framework (Operator / Devil's Advocate / Market Expert) |
+| `/prospect "[company role]"` | Full chain: research → pain hypothesis → outreach variants → sequence |
+| `/swarm [type] "[task]"` | Multi-role parallel execution (product-launch, growth-sprint, fundraise, crisis...) |
 | `/research [type] [target]` | Professional market research |
 | `/content [type] "[topic]"` | Content production (blog, email, social) |
 | `/seo [command]` | Full SEO toolkit |
@@ -312,7 +352,13 @@ This is how OpenClaw extended Claude Code. SoloOS does the same for any agent wo
 
 ```
 soloprenuership/
-├── roles/                    # 44 professional role system prompts
+├── CLAUDE.md                 # ← THE BEHAVIORAL UNLOCK. Drop this in your project.
+├── context/                  # ← Memory system. Fill in once, compounds forever.
+│   ├── business-context.md   # Current state: MRR, ICP, competition, OKRs
+│   ├── customer-voice.md     # Exact customer quotes for copy and messaging
+│   ├── experiment-log.md     # Growth experiments: hypothesis, results, learnings
+│   └── decision-log.md       # Strategic decisions with rationale and kill signals
+├── roles/                    # 45 professional role system prompts
 │   ├── leadership/           # CEO, CTO, CMO, CFO, COO
 │   ├── engineering/          # Frontend, Backend, DevOps, Mobile, ML, Security, QA, Data
 │   ├── product/              # PM, Designer, UX Researcher, Technical Writer
