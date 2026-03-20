@@ -1,186 +1,165 @@
 # Getting Started with SoloOS
 
-## What Is This?
+SoloOS is markdown files. No install. No servers. Copy files, start using.
 
-SoloOS is not software you install. It's a framework you deploy — a system of playbooks, agent configurations, decision frameworks, and knowledge bases that, together, multiply what a single founder can do.
-
-Think of it as hiring a team that never sleeps:
-- **Researcher** — runs market analysis while you sleep
-- **Strategist** — stress-tests your decisions before you make them
-- **Builder** — generates code, content, and copy in parallel
-- **Analyst** — tracks metrics and flags anomalies
-- **Operator** — runs daily processes on autopilot
-
-You are the CEO. Everything else can be augmented with AI.
+This guide gets you from zero to your first useful output in 10 minutes.
 
 ---
 
-## The 3 Ways to Use SoloOS
+## Step 1: Clone and set up (2 minutes)
 
-### Option A: Framework Only (Start Here)
+```bash
+git clone https://github.com/datareaper247/soloprenuership.git ~/soloos
 
-Use the playbooks, agent system prompts, and templates directly in Claude, ChatGPT, or any AI interface. No setup required.
+# Add behavioral rules to your project — this is the core unlock
+cp ~/soloos/CLAUDE.md ./CLAUDE.md
 
-**Start with**:
-1. Identify your current phase → `playbooks/[0-4]-[phase]/README.md`
-2. Deploy the relevant agent system prompts → `agents/[role]/system-prompt.md`
-3. Use the templates → `knowledge-base/templates/README.md`
+# Install all skills as Claude Code commands
+cp ~/soloos/skills/claude-code/*.md ~/.claude/commands/
 
-### Option B: Claude Code Integration
+# Create context directory
+mkdir -p ./context
+cp ~/soloos/context/*.md ./context/
+```
 
-With Claude Code, you can run agent swarms from your terminal. The `framework/swarms/` directory contains swarm configurations you can reference.
+## Step 2: Populate your business context (10 minutes)
 
-### Option C: Build Your Own SoloOS Dashboard
+Open Claude Code in your project directory and run:
 
-Use the architecture blueprint in `docs/ARCHITECTURE.md` as the spec for a custom TypeScript application. The full directory structure and TypeScript interfaces are documented.
+```
+/onboard
+```
 
----
+Claude will ask you 10 questions and write your context files automatically.
+This is the step most people skip. Don't skip it — it's what makes everything else calibrated.
 
-## Day 1 Checklist
+## Step 3: Run your first skill
 
-### Step 1: Know Your Phase (5 minutes)
+```bash
+# Daily brief
+/morning
 
-Answer honestly:
-- [ ] Do I have a validated idea? → No → Start at Phase 0 (Discover)
-- [ ] Am I validating with real customers? → Phase 1 (Validate)
-- [ ] Am I actively building? → Phase 2 (Build)
-- [ ] Am I growing revenue? → Phase 3 (Scale)
-- [ ] Am I preparing an exit? → Phase 4 (Exit)
+# Validate a product idea before building
+/validate "your idea here"
 
-### Step 2: Deploy Your First Agent (10 minutes)
+# Research a competitor
+/research competitor "CompetitorName"
 
-Open the system prompt for your most-needed function:
-- Need to research a market? → `agents/research/` (coming soon) or use `framework/research/README.md`
-- Need a strategic decision? → `agents/ceo/system-prompt.md`
-- Need a technical decision? → `agents/cto/system-prompt.md`
-- Need a financial model? → `agents/cfo/system-prompt.md`
-- Need content? → `agents/cmo/system-prompt.md`
-- Need a process documented? → `agents/coo/system-prompt.md`
-
-Copy the system prompt → paste into Claude → start with your question.
-
-### Step 3: Set Up Your Daily OS (15 minutes)
-
-Open `tools/daily-os/README.md` and implement the morning brief ritual. 15 minutes each morning, AI-powered.
-
-### Step 4: Start Building Your Knowledge Base (Ongoing)
-
-Every time an agent produces a useful output:
-- Save it to the appropriate directory
-- Tag it with: date, phase, type, confidence level
-
-This is your compound advantage. Start on Day 1.
+# Decide something you've been putting off
+/decide "the decision you keep avoiding"
+```
 
 ---
 
-## Which Agent to Use for What
+## What You Have Now
 
-| Question | Agent | File |
-|----------|-------|------|
-| "What should I focus on this week?" | CEO Agent | `agents/ceo/system-prompt.md` |
-| "Is this the right tech stack?" | CTO Agent | `agents/cto/system-prompt.md` |
-| "How should I price this?" | CFO Agent | `agents/cfo/system-prompt.md` |
-| "Write my launch email" | CMO Agent | `agents/cmo/system-prompt.md` |
-| "Document this process" | COO Agent | `agents/coo/system-prompt.md` |
-| "Research this market" | Research Engine | `framework/research/README.md` |
-| "Score this opportunity" | Strategy Engine | `framework/strategy/README.md` |
-| "Build this feature" | Build Swarm | `framework/execution/README.md` |
-| "Grow my revenue" | Growth Swarm | `playbooks/3-scale/README.md` |
+After setup:
 
----
+```
+Your project/
+├── CLAUDE.md              ← Every Claude session is now founder-aware
+└── context/
+    ├── business-context.md  ← Populated by /onboard
+    ├── customer-voice.md    ← Populated by /onboard
+    ├── experiment-log.md    ← Populated by /onboard
+    └── decision-log.md      ← Populated by /onboard
 
-## The Daily Rhythm
-
-**Morning (15 min)**:
-1. Run CEO Agent morning brief (5 min)
-2. Review and approve today's agent task queue (5 min)
-3. Set priority decision for the day (5 min)
-
-**During day (async)**:
-- Agent swarms run on approved tasks
-- Review outputs as they arrive (batched, not real-time)
-- Max 3 decisions surfaced to you at any time (3-Agent Rule)
-
-**Evening (30 min)**:
-1. Review day's agent outputs — approve, modify, or reject (15 min)
-2. Update knowledge base with key learnings (10 min)
-3. Queue tomorrow's tasks for agents (5 min)
-
-**Weekly (Friday, 1 hour)**:
-1. Metrics review (15 min)
-2. Strategy alignment (15 min)
-3. Knowledge base update (15 min)
-4. Next week planning (15 min)
+~/.claude/commands/
+├── morning.md     ← /morning
+├── decide.md      ← /decide
+├── validate.md    ← /validate
+├── listen.md      ← /listen
+├── launch.md      ← /launch
+├── prospect.md    ← /prospect
+├── onboard.md     ← /onboard
+├── swarm.md       ← /swarm
+├── research.md    ← /research
+├── seo.md         ← /seo
+├── sales.md       ← /sales
+├── role.md        ← /role
+└── ...
+```
 
 ---
 
-## The 3-Agent Rule (Mandatory)
+## The Daily Workflow
 
-Based on BCG research (March 2026): managing more than 3 active AI agent streams simultaneously causes cognitive collapse.
+**Every morning (10 minutes)**:
+```
+/morning    → What matters today. One thing. One decision.
+```
 
-**Always limit yourself to**: 3 active decisions pending your review at any time.
+**Before building anything**:
+```
+/listen "[market]"     → 4 weeks of community intelligence (skip if you've done this)
+/validate "[idea]"     → 4-gate validation before writing code
+```
 
-If you have more than 3 things needing your judgment:
-1. Prioritize the 3 most impactful
-2. Let agents hold the rest until you clear the queue
-3. Trust quality gates to prevent bad outputs from queuing
+**When launching**:
+```
+/launch "[product]"    → All 7 launch assets in one command
+```
 
-This feels slow at first. It is faster in practice.
+**When stuck on a decision**:
+```
+/decide "[decision]"   → Adversarial debate, recommendation, kill signal
+```
 
----
-
-## Common Mistakes (Avoid These)
-
-### ❌ Mistake 1: Human-in-the-Loop Thinking
-**Don't**: Set up agents to ask permission at every step
-**Do**: Define objectives + quality criteria once → review final output
-
-### ❌ Mistake 2: Ignoring Quality Gates
-**Don't**: Accept the first agent output without review
-**Do**: Run the 3-gate protocol on every output (mechanical → quality → alignment)
-
-### ❌ Mistake 3: Forgetting Compound Learning
-**Don't**: Let agent insights evaporate after each session
-**Do**: Save every insight, decision, and outcome to the knowledge base
-
-### ❌ Mistake 4: Running Agents Sequentially on One Approach
-**Don't**: Ask one agent for one answer
-**Do**: Run 3-5 parallel agents, measure quality, select winner
-
-### ❌ Mistake 5: Skipping the Morning Brief
-**Don't**: Start work without knowing your 1 priority
-**Do**: 15-minute morning brief → focused execution → compounding results
+**When prospecting**:
+```
+/prospect "[company + role]"   → Research → pain → outreach → sequence
+```
 
 ---
 
-## What Success Looks Like
+## The 10 Core Roles
 
-After 30 days:
-- Daily OS running with 15-minute morning brief
-- 1-3 agent swarms running regularly
-- Knowledge base accumulating with real patterns
-- Time to first draft of any content: < 30 min
-- Time to market research brief: < 2 hours
+For any business function, activate the specialist:
 
-After 90 days:
-- Agents know your customers, your voice, your patterns
-- Research cycles: 90 minutes (was: 1 week)
-- Content production: 2 posts/week (was: 0.5)
-- Strategic decisions: 30 min with full analysis (was: 3 hours with uncertainty)
-
-After 12 months:
-- Compound advantage visible: agents optimized for your specific business
-- Knowledge base is a moat competitors can't easily replicate
-- Operating at the functional equivalent of a 5-10 person team
-- Founder time spent entirely on judgment calls, not execution
+```
+/role ceo      → Strategy, OKRs, investor narrative
+/role cmo      → GTM, positioning, demand gen
+/role cfo      → Unit economics, pricing math
+/role sdr      → Cold outreach, ICP research
+/role seo      → Keyword research, content briefs
+/role pm       → PRDs, roadmap, prioritization
+/role cs       → Customer retention, churn prevention
+/role growth   → AARRR experiments, viral loops
+```
 
 ---
 
-## Next Steps
+## Real Examples
 
-1. **Identify your phase** → Read the relevant playbook
-2. **Deploy one agent** → CEO or CFO if unsure where to start
-3. **Set up Daily OS** → `tools/daily-os/README.md`
-4. **Start your knowledge base** → Even one insight saved is the start of compounding
+See `examples/` for complete input → output walkthroughs:
 
-Welcome to the AI era of solo entrepreneurship.
+- `examples/validate-saas-idea.md` — catching a fatal flaw before building
+- `examples/decide-pricing.md` — adversarial debate on free tier
+- `examples/morning-brief.md` — a real morning brief at $4K MRR
+- `examples/launch-hacker-news.md` — full launch asset generation
+- `examples/claude-md-before-after.md` — the CLAUDE.md difference
+
+---
+
+## Keeping Context Up to Date
+
+**Weekly (5 minutes)**:
+```
+/onboard --metrics    → Update MRR and key numbers
+/onboard --voice      → Add any customer quotes from the week
+```
+
+**After every decision**:
+Update `context/decision-log.md` manually, or tell Claude:
+"Add this decision to my decision log: [decision]"
+
+---
+
+## What Doesn't Work Yet
+
+Honest limitations:
+- **No MCP servers** — the integrations listed in some older docs don't exist yet
+- **No parallel agents** — `/swarm` runs sequential role-switching, not true parallel
+- **No Python package** — no `from soloos.roles import CMORole`
+
+Everything that works, works today with stock Claude Code and these markdown files.

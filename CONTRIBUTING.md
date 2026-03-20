@@ -1,168 +1,119 @@
 # Contributing to SoloOS
 
-SoloOS is an open-source framework. Every contribution makes the virtual company more powerful.
+SoloOS is open source. Contributions that make it genuinely more useful for solo founders
+are welcome. Here's what moves the needle vs. what doesn't.
 
-## What to Contribute
+---
 
-### High-Value Contributions (Most Wanted)
+## What Actually Helps (High Impact)
 
-#### 1. New Role System Prompts
-Add a role file at `roles/[function]/[role]/system-prompt.md`.
+### 1. Better examples
+The single highest-impact contribution. Real input → output examples that show
+a skill working in a real founder scenario.
 
+**Format**: See `examples/validate-saas-idea.md` as the template.
 Requirements:
-- Role must represent a real professional job function
-- System prompt must be 150-250 lines
-- Must include: expertise areas, tools, methodology, output formats, quality standards
-- Must include 2-3 concrete output templates
-- Cannot be generic — must be role-specific methodology
+- Real product idea, real competitor landscape, real output
+- "What happened after" section — shows the outcome, not just the process
+- "What this demonstrates" section — explains what's non-obvious about the output
 
-Example of a high-quality contribution: A role for a specialized function we don't cover yet (e.g., Quant Analyst, IP Attorney, Performance Marketing Manager).
+### 2. Sharper role system prompts
+Not more roles — sharper ones. The 10 core roles need to be senior-quality.
+That means: specific frameworks (named, sourced), specific output formats,
+and honest "escalate when" criteria that reflect what the role actually can't do.
 
-#### 2. New MCP Server Implementations
-Build an actual TypeScript MCP server from one of the specs in `mcp/servers/`.
+**How to evaluate quality**:
+Ask: "Would a real senior [role] give this advice, or would they ask for more context first?"
+If the role gives confident advice without sufficient context → it's not senior quality.
 
+**What not to contribute**:
+- New extended roles (we have 44, we don't need more)
+- Generic additions to existing prompts (longer ≠ better)
+
+### 3. Real /onboard improvements
+Finding questions that produce better context calibration, or output templates
+that make the context files more useful across sessions.
+
+### 4. Fixing the skills that are still shallow
+`/content`, `/ops`, `/growth`, `/geo` still describe what should happen rather than
+encode specific frameworks. Converting any of them to the standard set by `/research`
+or `/validate` is high value.
+
+### 5. MCP server implementations (technical)
+If you build one of the planned MCP servers, it belongs here.
 Requirements:
 - Must use `@modelcontextprotocol/sdk`
-- Must be typed with Zod schemas
-- Must include README with environment variable documentation
-- Must include example usage
-- Must publish as `@soloos/mcp-[name]` npm package (or submit as PR for us to publish)
-
-#### 3. Swarm Templates
-Add a pre-built swarm template to `mcp/servers/soloos-swarm.md` or `skills/claude-code/swarm.md`.
-
-A swarm template needs:
-- Clear use case (what business problem it solves)
-- Defined agents (which roles participate)
-- Phase definitions (parallel vs sequential)
-- Output format specification
-- Real-world example output
-
-#### 4. Industry-Specific Role Variants
-Some roles need industry customization:
-- Healthcare: Medical writer, HIPAA compliance officer, healthcare IT
-- Legal: Patent attorney, contract specialist
-- Finance: Quant analyst, M&A advisor
-- E-commerce: Marketplace specialist, logistics coordinator
-- Real estate: Property marketing, leasing specialist
-
-#### 5. Open Source Integrations
-Add entries to `integrations/open-source/README.md` for tools we're missing.
-
-Requirements:
-- Must be genuinely open source (MIT, Apache, AGPL, etc.)
-- Must have >1K GitHub stars (signal of quality/adoption)
-- Must have clear SoloOS use case
-- Must include GitHub URL, star count, license, and integration note
+- Typed with Zod schemas
+- README with environment variables
+- Must actually work (test it before submitting)
+- Publish as `@soloos/mcp-[name]` or submit as PR
 
 ---
 
-## How to Contribute
+## What Doesn't Help
 
-### For Role Files and Documentation
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b role/[role-name]` or `feature/[description]`
-3. Add your contribution
-4. Test: ensure the role prompt produces professional-grade output when used with Claude or another LLM
-5. Submit a PR with:
-   - Description of what you're adding
-   - Example of the role in action (before/after output)
-   - Why this role belongs in SoloOS
-
-### For MCP Implementations
-
-1. Fork the repository
-2. Create branch: `feature/mcp-[server-name]`
-3. Implement the TypeScript server following the spec in `mcp/servers/`
-4. Add tests
-5. Include a `README.md` in the implementation directory
-6. Submit PR with example tool calls and outputs
+- Adding more roles to `agents/roles/extended/` — we have enough
+- Documentation about planned features that don't exist
+- Generic SEO/marketing/sales tips that aren't encoded as behavioral rules
+- Typo fixes without any other change
+- Advice about "what SoloOS should be" without building the thing
 
 ---
 
-## Role System Prompt Template
+## Standards for Skill Contributions
 
+A skill contribution must pass this test:
+**"Does this skill change Claude's behavior in a way it wouldn't behave by default?"**
+
+If the skill just describes a framework Claude already knows about → it's not a behavioral unlock.
+If the skill encodes a specific sequence, specific output format, or specific anti-pattern flag
+that Claude wouldn't apply without the prompt → it's a real contribution.
+
+Template for new skills:
 ```markdown
-# [Role Name] — SoloOS Role System Prompt
+# Skill Name — One-line description
 
-You are a [Role Title] with [X]+ years of experience in [specific domain].
+**Usage**: `/skillname "[input]"`
 
-## Expertise Areas
+**Examples**: [2-3 real examples]
 
-1. **[Area 1]**: [2-3 sentences describing deep expertise with specific tools/methods]
-2. **[Area 2]**: [...]
-3. **[Area 3]**: [...]
-[... 8-12 areas total]
+[1-2 sentences on what behavioral problem this solves]
 
-## Tools & Stack
+---
 
-Primary tools you use daily:
-- [Tool 1] — [what you use it for]
-- [Tool 2] — [what you use it for]
-[... 6-10 tools]
+## [Framework or sequence]
+[Specific steps, not generic advice]
 
-## Methodology
-
-When given a task, you follow this process:
-1. [Step 1 — with specific methodology name if applicable]
-2. [Step 2]
-[... 5-8 steps]
-
-## Output Formats
-
-You produce these deliverables:
-- **[Deliverable 1]**: [Description + format]
-- **[Deliverable 2]**: [Description + format]
-
-### Template: [Primary Deliverable]
-```
-[Actual template with placeholder fields]
-```
-
-## Quality Standards
-
-I never deliver [deliverable] without:
-- [Specific criterion 1]
-- [Specific criterion 2]
-- [Specific criterion 3]
-
-Quality means: [Specific, measurable definition of done]
-
-## Escalation & Collaboration
-
-- Collaborate with [Role A] when [condition]
-- Escalate to [Role B] when [condition]
-- Hand off to [Role C] after [milestone]
-
-## Example Output
-
-**Input**: [Example request]
-
-**Output**:
-[Abbreviated example showing format and quality level]
+## Output Format
+[Exact format with labeled sections]
 ```
 
 ---
 
-## Quality Bar
+## How to Submit
 
-Before submitting, ask:
-
-1. **Would a real professional recognize this?** — The output should look like something a 5-year professional would produce, not a generic AI response.
-
-2. **Is it specific enough?** — Replace all instances of "analyze", "optimize", "improve" with specific methodologies (e.g., "MEDDIC qualification", "ICE scoring", "inverted pyramid structure").
-
-3. **Does it have templates?** — Role prompts without concrete output templates are less useful. Add at least one.
-
-4. **Is the quality standard measurable?** — "High quality" is not a quality standard. "Open rate >30%" is.
+1. Fork the repo
+2. Create a branch: `feature/skill-[name]` or `fix/[what-you-fixed]`
+3. Make your change
+4. If it's a skill: test it by running the command in Claude Code and pasting the output in a `examples/` file
+5. Open a PR with: what you built, why it helps, and an example output
 
 ---
 
-## License
+## What We're Not Looking For
 
-By contributing, you agree that your contribution will be licensed under MIT.
+To be blunt: SoloOS doesn't need to be bigger. It needs to be better.
 
----
+The next 10 contributions that matter most are:
+1. Better examples (2-3 more real ones)
+2. Sharper /content skill (currently a menu)
+3. Sharper /growth skill (currently a menu)
+4. Sharper /ops skill (currently a menu)
+5. One working MCP server (any of the planned ones)
+6. Real /onboard output quality improvement
+7. Better morning brief output with real metrics
+8. A second CLAUDE.md behavioral rule that changes behavior visibly
+9. A stage-based routing system (different advice at different MRR stages)
+10. An example of a full /swarm product-launch run with real output
 
-Thank you for making SoloOS more powerful. Every role you add is a team member that thousands of solo founders get to hire.
+If your contribution fits one of these 10: open the PR.
