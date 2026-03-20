@@ -450,6 +450,127 @@ State the inferred swarm design before executing so the user can approve or adju
 
 ---
 
+### `fundraise`
+Investor narrative, financial model, and pitch preparation.
+
+**Phase 1 — Parallel Preparation**
+- `cfo` → Financial model: MRR/ARR, unit economics (CAC, LTV, payback), burn + runway, projections
+- `ceo` → Investment thesis: why now, market timing, what the capital unlocks
+- `competitive-analyst` → Market size validation, competitive landscape for investor narrative
+- `product-manager` → Product roadmap narrative: what gets built with the capital
+
+**Phase 2 — Synthesis**
+- `ceo` → Unified pitch narrative, objection handling for investors, due diligence readiness checklist
+
+**Output**:
+```
+FUNDRAISE PACKAGE
+════════════════════
+
+INVESTMENT THESIS
+[Why this, why now, why us — 1 paragraph]
+
+FINANCIAL SUMMARY
+Current MRR: $X | Growth: X% MoM | Burn: $X/mo | Runway: X months
+CAC: $X | LTV: $X | LTV:CAC: X:1 | Gross Margin: X%
+Target raise: $X | Use of funds: [specific allocation]
+Post-raise runway: X months | Projected ARR at end of runway: $X
+
+MARKET STORY
+TAM: $Xb | Timing signal: [why now] | Our wedge: [specific entry point]
+
+TRACTION NARRATIVE
+[Month 1 to now — the growth story in 5 sentences]
+
+COMMON INVESTOR OBJECTIONS + RESPONSES
+- "[Objection]" → "[Response]"
+
+30-DAY FUNDRAISE ACTION PLAN
+Week 1-2: [investor outreach list criteria + warm intro strategy]
+Week 3-4: [first meetings + pitch deck review]
+
+DUE DILIGENCE READINESS
+[ ] Data room checklist
+[ ] Legal docs organized
+[ ] Customer references identified
+```
+
+---
+
+### `customer-crisis`
+Rapid response plan for a customer issue, outage, or PR problem.
+
+**Phase 1 — Parallel Assessment** (runs in 10 minutes)
+- `technical-support` → Root cause diagnosis, severity assessment, fix timeline
+- `customer-success` → Affected customers identified, relationship risk assessment
+- `pr-manager` → External communication draft, narrative control
+
+**Phase 2 — Response Coordination**
+- `ceo` → Communication sequence, prioritization, what founder should do first
+
+**Output**:
+```
+CRISIS RESPONSE PLAN: [situation]
+════════════════════════════════
+
+SEVERITY: [Critical / High / Medium]
+Estimated resolution: [timeframe]
+
+IMMEDIATE ACTIONS (next 60 minutes)
+1. [Action] — Owner: [role] — Done by: [time]
+2. [Action] — Owner: [role] — Done by: [time]
+3. [Action] — Owner: [role] — Done by: [time]
+
+CUSTOMER COMMUNICATION
+Who to contact: [N affected customers — prioritized by ARR/relationship]
+Message to send: [draft]
+Send via: [email / phone / in-app]
+Timing: [now / after fix / staged]
+
+EXTERNAL COMMUNICATION (if public-facing)
+Status page update: [draft]
+Social response: [if needed]
+Press response: [if needed]
+
+FIX TIMELINE
+[Technical resolution path]
+
+POST-CRISIS ACTIONS
+[ ] Follow-up communication with affected customers
+[ ] Post-mortem scheduled
+[ ] Preventive measures documented
+```
+
+---
+
+## The BCG 3-Agent Rule (Critical for Solo Founders)
+
+From research on multi-agent cognitive performance: **clarity collapses beyond 3 simultaneous decision streams.**
+
+Applied to SoloOS swarms:
+- Never surface more than 3 role outputs without synthesis first
+- Phase all swarms in 2-3 stages with review gates between phases
+- Always end with ONE prioritized "First Action" — not 10 equal priorities
+- Synthesis is more valuable than completeness — a clean plan beats a comprehensive mess
+
+**Practical implication**: When running a product-launch swarm, don't try to execute all 7 role outputs at once. The synthesis (Phase 3) tells you which 1-2 things to act on TODAY. Start there.
+
+---
+
+## Context File Integration
+
+Swarms dramatically improve when these files exist in your project:
+
+```
+context/business-context.md  → All roles calibrate to your actual stage + metrics
+context/customer-voice.md    → Copy + messaging uses real customer language
+context/decision-log.md      → Strategy respects past decisions
+```
+
+If these files don't exist, `/swarm` will ask for the 3 most important context inputs before running.
+
+---
+
 ## Execution Standards
 
 ### Parallel Execution
@@ -464,4 +585,5 @@ State the inferred swarm design before executing so the user can approve or adju
 ### Synthesis Principles
 - Prioritize actions by impact, not completeness
 - Surface conflicts between agent recommendations explicitly
-- End every swarm with "Top 10 Priority Actions" ranked by expected impact
+- End every swarm with a single "FIRST ACTION" — the one thing to do today
+- Respect the BCG 3-Agent Rule: max 3 decision streams without synthesis
