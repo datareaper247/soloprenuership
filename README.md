@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Roles: 45](https://img.shields.io/badge/Roles-45-blue.svg)](#role-library)
 [![MCP Servers: 10](https://img.shields.io/badge/MCP%20Servers-10-green.svg)](#mcp-servers)
-[![Skills: 12](https://img.shields.io/badge/Skills-12-purple.svg)](#claude-code-skills)
+[![Skills: 15](https://img.shields.io/badge/Skills-15-purple.svg)](#claude-code-skills)
 
 ---
 
@@ -54,6 +54,13 @@ Drop `CLAUDE.md` into your project and every Claude session becomes founder-awar
 /decide           → Adversarial 3-voice debate on any pending decision
 /prospect         → Research → pain hypothesis → 3 outreach variants → 6-touch sequence
 /swarm weekly-ops → Monday brief across all business functions
+```
+
+**The pre-build validation loop**:
+```
+/listen "[market]"  → 4 weeks of community intelligence (Arvid Kahl pattern)
+/validate "[idea]"  → 4 gates: problem → market signal → 5 commitments → unit economics
+/launch "[product]" → All launch assets generated: HN + Twitter + PH + LinkedIn + DMs
 ```
 
 **The compound memory effect**:
@@ -244,7 +251,7 @@ claude mcp add soloos-memory    -- npx -y @soloos/mcp-memory@latest
 
 ---
 
-## Claude Code Skills (12)
+## Claude Code Skills (15)
 
 Drop-in commands. Copy to `~/.claude/commands/` and use immediately.
 
@@ -253,7 +260,10 @@ Drop-in commands. Copy to `~/.claude/commands/` and use immediately.
 | `/role [name]` | Adopt any of 45 professional roles |
 | `/morning` | Daily founder brief: pulse + one thing + decision cleared |
 | `/decide "[decision]"` | Adversarial 3-voice debate framework (Operator / Devil's Advocate / Market Expert) |
+| `/validate "[idea]"` | Paid validation gate — forces 4 sequential gates before building |
 | `/prospect "[company role]"` | Full chain: research → pain hypothesis → outreach variants → sequence |
+| `/launch "[product]"` | Build-in-public launch sequence: HN + Twitter + PH + LinkedIn + 50 DMs |
+| `/listen "[market]"` | Community intelligence pipeline — pain signals → product opportunities |
 | `/swarm [type] "[task]"` | Multi-role parallel execution (product-launch, growth-sprint, fundraise, crisis...) |
 | `/research [type] [target]` | Professional market research |
 | `/content [type] "[topic]"` | Content production (blog, email, social) |
