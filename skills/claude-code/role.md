@@ -8,13 +8,70 @@ Loads the system prompt for the specified professional role and fully adopts tha
 
 ## How It Works
 
-1. **Map** the role name to its file path: `~/soloos/roles/[role-name].md`
-2. **Read** the role's system prompt from that file
+1. **Map** the role name to its file path using the table below
+2. **Read** the role's system prompt from that file (if the repo is cloned locally)
 3. **Adopt** the role completely — methodology, vocabulary, quality gates, deliverable formats
 4. **Maintain** role context for every subsequent message
 5. **Produce** professional-grade deliverables exactly as that professional would
 
-If the role file does not exist at `~/soloos/roles/[role-name].md`, fall back to the built-in role definition below and operate from that specification.
+If the role file cannot be found, fall back to the built-in role definition below and operate from that specification.
+
+### Role File Paths
+
+The SoloOS repo structure stores roles at `roles/[category]/[slug]/system-prompt.md`. If cloned to `~/soloos`:
+
+| Role Command | File Path |
+|-------------|-----------|
+| `/role ceo` | `~/soloos/roles/leadership/ceo/system-prompt.md` |
+| `/role cto` | `~/soloos/roles/leadership/cto/system-prompt.md` |
+| `/role cmo` | `~/soloos/roles/leadership/cmo/system-prompt.md` |
+| `/role cfo` | `~/soloos/roles/leadership/cfo/system-prompt.md` |
+| `/role coo` | `~/soloos/roles/leadership/coo/system-prompt.md` |
+| `/role seo-specialist` | `~/soloos/roles/marketing/seo/system-prompt.md` |
+| `/role content-marketer` | `~/soloos/roles/marketing/content/system-prompt.md` |
+| `/role sem-manager` | `~/soloos/roles/marketing/sem/system-prompt.md` |
+| `/role email-marketer` | `~/soloos/roles/marketing/email/system-prompt.md` |
+| `/role social-media-manager` | `~/soloos/roles/marketing/social/system-prompt.md` |
+| `/role pr-manager` | `~/soloos/roles/marketing/pr/system-prompt.md` |
+| `/role growth-marketer` | `~/soloos/roles/marketing/growth/system-prompt.md` |
+| `/role brand-designer` | `~/soloos/roles/marketing/brand/system-prompt.md` |
+| `/role video-producer` | `~/soloos/roles/marketing/video/system-prompt.md` |
+| `/role community-manager` | `~/soloos/roles/marketing/community/system-prompt.md` |
+| `/role sdr` | `~/soloos/roles/sales/sdr/system-prompt.md` |
+| `/role account-executive` | `~/soloos/roles/sales/ae/system-prompt.md` |
+| `/role sales-engineer` | `~/soloos/roles/sales/se/system-prompt.md` |
+| `/role customer-success` | `~/soloos/roles/sales/cs/system-prompt.md` |
+| `/role revenue-ops` | `~/soloos/roles/sales/rev-ops/system-prompt.md` |
+| `/role sales-enablement` | `~/soloos/roles/sales/enablement/system-prompt.md` |
+| `/role frontend-engineer` | `~/soloos/roles/engineering/frontend/system-prompt.md` |
+| `/role backend-engineer` | `~/soloos/roles/engineering/backend/system-prompt.md` |
+| `/role devops-engineer` | `~/soloos/roles/engineering/devops/system-prompt.md` |
+| `/role mobile-engineer` | `~/soloos/roles/engineering/mobile/system-prompt.md` |
+| `/role ml-engineer` | `~/soloos/roles/engineering/ml-ai/system-prompt.md` |
+| `/role security-engineer` | `~/soloos/roles/engineering/security/system-prompt.md` |
+| `/role qa-engineer` | `~/soloos/roles/engineering/qa/system-prompt.md` |
+| `/role data-engineer` | `~/soloos/roles/engineering/data/system-prompt.md` |
+| `/role product-manager` | `~/soloos/roles/product/pm/system-prompt.md` |
+| `/role product-designer` | `~/soloos/roles/product/designer/system-prompt.md` |
+| `/role ux-researcher` | `~/soloos/roles/product/ux-researcher/system-prompt.md` |
+| `/role technical-writer` | `~/soloos/roles/product/technical-writer/system-prompt.md` |
+| `/role hr-manager` | `~/soloos/roles/operations/hr/system-prompt.md` |
+| `/role finance-manager` | `~/soloos/roles/operations/finance/system-prompt.md` |
+| `/role legal-counsel` | `~/soloos/roles/operations/legal/system-prompt.md` |
+| `/role compliance-officer` | `~/soloos/roles/operations/compliance/system-prompt.md` |
+| `/role business-analyst` | `~/soloos/roles/operations/biz-analyst/system-prompt.md` |
+| `/role customer-support` | `~/soloos/roles/customer/support/system-prompt.md` |
+| `/role technical-support` | `~/soloos/roles/customer/technical/system-prompt.md` |
+| `/role onboarding-specialist` | `~/soloos/roles/customer/onboarding/system-prompt.md` |
+| `/role data-analyst` | `~/soloos/roles/growth/data-analyst/system-prompt.md` |
+| `/role growth-hacker` | `~/soloos/roles/growth/growth-hacker/system-prompt.md` |
+| `/role cro-specialist` | `~/soloos/roles/growth/cro/system-prompt.md` |
+| `/role analytics-engineer` | `~/soloos/roles/growth/analytics-engineer/system-prompt.md` |
+| `/role localization-manager` | `~/soloos/roles/geo/localization/system-prompt.md` |
+| `/role international-market-manager` | `~/soloos/roles/geo/international/system-prompt.md` |
+| `/role business-development` | `~/soloos/roles/partnerships/biz-dev/system-prompt.md` |
+| `/role partnership-manager` | `~/soloos/roles/partnerships/partnerships/system-prompt.md` |
+| `/role api-integration-manager` | `~/soloos/roles/partnerships/api-integrations/system-prompt.md` |
 
 ---
 
