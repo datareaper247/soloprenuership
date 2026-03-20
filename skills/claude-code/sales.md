@@ -1,8 +1,69 @@
-# Sales — Sales Tools & Frameworks
+# Sales — Solo Founder Sales Playbook
 
 **Usage**: `/sales [command] "[context or target]"`
 
-Professional-grade sales assets using proven frameworks. Every output is specific, personalized, and ready to send or use.
+---
+
+## The Solo Founder Sales Hierarchy
+
+Sales motions that work depend entirely on ACV and stage. Wrong motion = burnout with no revenue.
+
+```
+ACV < $100/mo (self-serve): You are NOT the sales process.
+  Product, onboarding, and trial experience close deals.
+  Founder time: write better landing page copy, fix onboarding friction.
+  Outbound ROI: negative. Time better spent on content and product.
+
+ACV $100-500/mo (founder-led): You are the sales process.
+  Cold outreach + founder discovery calls close deals.
+  Target: 10 outreach messages/day, 1-2 calls/week.
+  Close 20-30% of demos. If lower: qualification problem.
+
+ACV $500-2K/mo (consultative): Value needs to be demonstrated.
+  Outbound + inbound + free trial/demo environment.
+  Discovery call is the most valuable hour you spend.
+  Close 15-25% with proper discovery.
+
+ACV >$2K/mo (enterprise motion): Not a solo play until you have process.
+  Needs champion, multiple stakeholders, formal evaluation.
+  Don't attempt this without a proven sales playbook from the lower tiers.
+```
+
+⚠️ Before running /sales: what's your target ACV? The commands below are calibrated to $100-500/mo founder-led sales. If your ACV is <$100, the recommendation may be "don't do outbound."
+
+---
+
+## The Discovery Call Framework (Most Valuable 30 Minutes)
+
+Discovery done right is a research call, not a pitch. The founder who discovers
+best closes best — because they understand the problem deeper than the prospect.
+
+**The 5 discovery questions** (in this order):
+
+```
+Q1: "What made you take this call today?"
+→ Surfaces the trigger event. This is the real reason, not the stated reason.
+
+Q2: "Tell me about the last time [problem] was really frustrating. What happened?"
+→ Gets them to tell their story. Do NOT interrupt. The story contains your pitch.
+
+Q3: "What have you tried to solve it?"
+→ Surfaces alternatives. Tells you what they're comparing you to.
+→ Follow-up: "Why didn't [previous solution] work?"
+
+Q4: "If this problem was solved, what changes for you specifically?"
+→ Surfaces the emotional and business outcome. This becomes your closing language.
+
+Q5: "What would make you say yes to solving this?"
+→ They give you their own close criteria. Use their words in your proposal.
+```
+
+**After the call, within 24 hours**:
+Write a 2-paragraph email:
+- Para 1: "Based on what you told me, your situation is [their words]."
+- Para 2: "Here's how [product] solves [their specific version of the problem]."
+
+Do not send a proposal with features. Send back their problem in their language.
 
 ---
 

@@ -1,8 +1,57 @@
-# SEO — Search Engine Optimization Toolbox
+# SEO — Search Engine Optimization for Solo Founders
 
 **Usage**: `/seo [command] "[topic or URL]"`
 
-Full SEO methodology from keyword research through technical audits. Produces actionable, prioritized outputs for each stage of SEO work.
+---
+
+## The Solo Founder SEO Hierarchy
+
+Most SEO guides are written for teams. This one is written for one person.
+Do these in order. Do not skip to step 3.
+
+```
+STAGE 1 ($0-5K MRR): DON'T DO SEO
+  SEO takes 6-12 months to show results.
+  At <$5K MRR, talk to customers > write blog posts.
+  Exception: if your product is self-serve and discovery-driven (e.g., free tool),
+  SEO from day one makes sense. Otherwise, skip it.
+
+STAGE 2 ($5K-20K MRR): BOTTOM-OF-FUNNEL ONLY
+  Write content for people who are about to buy — not people who are learning.
+  Target: "[product category] pricing", "[competitor] alternative", "best [tool] for [ICP]"
+  These convert. "What is [topic]" doesn't.
+
+STAGE 3 ($20K+ MRR): TOP + BOTTOM FUNNEL
+  Now add informational content to build topical authority.
+  Now invest in link building.
+  Now do technical SEO.
+  Still: bottom-of-funnel first.
+```
+
+⚠️ Before running any /seo command: what's your MRR? If <$5K, the recommendation
+will likely be "don't spend time here yet."
+
+---
+
+## The Solo Founder SEO Playbook (Stage 2-3)
+
+**Week 1-4: Quick wins**
+1. Find your 3 closest competitors' keyword gaps (use `/research competitor`)
+2. Write 1 "best [tool] for [ICP]" listicle — include yourself + 3 competitors honestly
+3. Write 1 "[competitor] alternative" page — target people already searching for them
+
+**Month 2-3: Comparison content**
+4. Write "[Competitor A] vs [Competitor B]" pages (you appear as the alternative)
+5. Write "[category] pricing" page — you rank for everyone's pricing research
+6. Write 1 problem-aware post per month (what the ICP searches when the pain peaks)
+
+**Month 4+: Authority building**
+7. Build 1 free tool related to your ICP's problem (ranks, captures emails)
+8. Guest post once/month on sites your ICP reads
+9. Reclaim unlinked mentions (people who mention you without linking)
+
+**The rule**: Every SEO article must have a conversion path. If you can't draw a straight
+line from the article to your product, don't write it yet.
 
 ---
 
