@@ -1,589 +1,281 @@
-# Swarm — Coordinated Multi-Agent Task Execution
+# Swarm — Sequential Multi-Role Analysis
 
 **Usage**: `/swarm [type] "[task description]"`
 
-Launches a coordinated swarm of role-specialized agents that decompose, execute in parallel phases, and synthesize outputs into an actionable brief.
+**Examples**:
+- `/swarm product-launch "Rankly — daily keyword rank tracker, $9/mo, targeting solo founders"`
+- `/swarm weekly-ops` (reads from context files)
+- `/swarm growth-sprint "Grow MRR from $4K to $8K in 90 days"`
+- `/swarm market-research "B2B expense tracking tools for freelancers"`
+
+Runs a structured sequential analysis where each role's perspective feeds the next.
+**Not parallel agents** — one Claude session, multiple role perspectives with explicit handoffs.
+Each role builds on the prior output. The synthesis is the deliverable.
 
 ---
 
-## How It Works
+## How It Actually Works
 
-1. **Parse** the swarm type and task description
-2. **Decompose** the task into role-specific subtasks across execution phases
-3. **Load** each agent's system prompt from `~/soloos/roles/[role].md`
-4. **Execute** Phase 1 agents in parallel (independent tasks)
-5. **Feed** Phase 1 outputs into Phase 2 agents as context
-6. **Synthesize** all outputs into a prioritized action brief
-7. **Deliver** the brief with top 10 priority actions, owners, and timelines
+```
+Step 1: Claude reads the task and identifies which roles should contribute
+Step 2: Claude adopts Role 1 system prompt → produces Role 1 output
+Step 3: Claude explicitly hands off: "Role 1 found X. Role 2, given that, analyze Y."
+Step 4: Repeat for each role in sequence
+Step 5: CEO/Operator synthesis: given all perspectives, what are the top 5 actions?
+```
+
+This is not parallel execution. It's one intelligent system with multiple specialized
+lenses applied sequentially. The output quality comes from role-specific depth + handoffs.
+
+**Typical session time**: 45-90 minutes
+**Your review time**: 15-20 minutes
 
 ---
 
 ## Swarm Types
 
 ### `product-launch`
-Full product launch orchestration.
 
-**Phase 1 — Parallel Intelligence Gathering**
-- `product-manager` → Feature/benefit matrix, launch criteria checklist, success metrics
-- `seo-specialist` → Target keyword clusters, search volume, competitive gap analysis
-- `pr-manager` → Media list, pitch angle, embargo strategy, press kit outline
-- `competitive-analyst` → Competitor positioning map, differentiation matrix
+For launching a product. Requires: product name, description, price, target customer.
 
-**Phase 2 — Parallel Asset Creation** (uses Phase 1 outputs)
-- `content-marketer` → Launch blog post, announcement copy, email announcement
-- `brand-designer` → Visual brief for launch assets, naming/tagline review
-- `social-media-manager` → Platform-specific launch posts (LinkedIn, Twitter/X, Reddit)
-- `email-marketer` → Launch day sequence (announcement, follow-up, re-engagement)
-- `cro-specialist` → Landing page conversion audit, CTA recommendations
+**Role sequence with handoffs**:
 
-**Phase 3 — Sequential Coordination**
-- `cmo` → Synthesizes all Phase 2 assets into unified GTM narrative
-- `growth-marketer` → Post-launch growth loops and distribution amplification plan
+**CMO lens** (positioning + GTM):
+- What's the positioning? Who is this for exactly? What's the competitive alternative?
+- What GTM motion fits this ACV/complexity? (PLG / sales-assisted / enterprise)
+- Output: 1-paragraph positioning statement + recommended GTM motion + rationale
 
-**Output Format**:
+**SEO Specialist lens** (using CMO output):
+- Given the ICP identified, what keywords are they searching?
+- What's the search demand for this problem? What does the competitive landscape look like?
+- Output: Top 10 keywords with estimated monthly volume + content gap opportunity
+
+**SDR lens** (using CMO + SEO output):
+- Who is the specific person to cold-outreach? Where do they congregate?
+- What's the pain hook? What trigger events create urgency?
+- Output: ICP description + top 5 communities/channels + outreach angle + first email draft
+
+**Content Marketer lens** (using all above):
+- Given the positioning, keywords, and ICP — what's the launch content?
+- Output: Launch blog post outline (H1, H2s, key arguments) + 3 email subject line tests
+
+**CEO synthesis**:
+- Given all four perspectives, what are the top 5 actions for launch week?
+- What's the realistic 30-day goal?
+- Output: Launch brief with ranked actions, owners (you), timelines
+
+**Full output format**:
 ```
-PRODUCT LAUNCH BRIEF
-====================
-Launch Readiness Score: X/10
+PRODUCT LAUNCH BRIEF: [Product]
+Date: [date]
+════════════════════════════════════════════════════
 
-PHASE 1 INSIGHTS
-- Keyword opportunities: [top 5]
-- Media targets: [top 10 journalists/outlets]
-- Key differentiators vs competitors: [3 bullets]
+CMO PERSPECTIVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Positioning: [1 paragraph — competitive alternative + unique attribute + value + ICP]
+GTM motion: [PLG / Sales-assisted / Enterprise] — Rationale: [2 sentences]
 
-PHASE 2 ASSETS
-- Launch post: [draft or outline]
-- Email sequence: [3-email outline]
-- Social calendar: [7-day calendar]
-- Landing page recommendations: [top 3 changes]
+SEO PERSPECTIVE (informed by CMO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Target keywords:
+  1. [keyword] — [monthly volume] — [KD] — [page type]
+  2. [keyword] — ...
+  (top 10)
+Content gap: [the specific thing competitors rank for but do poorly]
 
-PHASE 3 GTM NARRATIVE
-[Unified narrative paragraph]
+SDR PERSPECTIVE (informed by CMO + SEO)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ICP: [specific person description]
+Where to find them: [top 3 specific channels]
+Trigger events: [what creates urgency now]
+First email draft:
+  Subject: [subject]
+  Body: [4-sentence draft]
 
-PRIORITY ACTIONS (ranked by impact/effort)
-1. [Action] — Owner: [Role] — Timeline: [X days]
-...
-```
+CONTENT PERSPECTIVE (informed by all above)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Launch blog post: "[H1 title]"
+  H2 sections: [list]
+  Key argument: [what makes this worth reading]
+Email subject tests:
+  A: [subject]
+  B: [subject]
+  C: [subject]
 
----
+════════════════════════════════════════════════════
+CEO SYNTHESIS — TOP 5 LAUNCH ACTIONS
+════════════════════════════════════════════════════
+1. [Action] — Owner: You — Timeline: Launch day
+2. [Action] — Owner: You — Timeline: Week 1
+3. [Action] — Owner: You — Timeline: Week 1
+4. [Action] — Owner: You — Timeline: Week 2
+5. [Action] — Owner: You — Timeline: Week 2
 
-### `market-research`
-Deep market intelligence gathering.
+30-day realistic goal: [specific metric]
+90-day goal if executed: [specific metric]
 
-**Phase 1 — Parallel Research**
-- `market-researcher` → TAM/SAM/SOM sizing, market structure, growth vectors
-- `ux-researcher` → Customer pain point mapping, JTBD framework, persona hypotheses
-- `data-analyst` → Available market data synthesis, trend identification
-- `competitive-analyst` → Competitor landscape, funding, positioning, weaknesses
-
-**Phase 2 — Parallel Synthesis**
-- `business-analyst` → Opportunity scoring matrix, risk assessment
-- `growth-hacker` → Underserved channel/segment identification
-- `ceo` → Strategic implications, go/no-go framework
-
-**Output Format**:
-```
-MARKET INTELLIGENCE BRIEF
-=========================
-Market Attractiveness Score: X/10
-Confidence Level: [High/Medium/Low]
-
-MARKET OVERVIEW
-- TAM: $Xb | SAM: $Xm | SOM: $Xm (Year 3 target)
-- Growth rate: X% YoY
-- Key dynamics: [3 bullets]
-
-CUSTOMER INSIGHTS
-- Primary pain: [1 sentence]
-- JTBD: [functional, emotional, social jobs]
-- Willingness to pay signal: [evidence]
-
-COMPETITIVE LANDSCAPE
-- Leaders: [names + one-line positioning]
-- Gaps: [3 specific unaddressed needs]
-
-OPPORTUNITY SCORECARD
-| Dimension | Score | Evidence |
-|-----------|-------|----------|
-| Market size | X/5 | ... |
-| Pain intensity | X/5 | ... |
-| Competition | X/5 | ... |
-| Timing | X/5 | ... |
-
-PRIORITY ACTIONS
-1. ...
-```
-
----
-
-### `growth-sprint`
-2-week growth experiment design and execution planning.
-
-**Phase 1 — Parallel Diagnostic**
-- `data-analyst` → Current funnel metrics, cohort analysis, leaky bucket identification
-- `growth-hacker` → Experiment backlog generation (min 20 ideas, ICE-scored)
-- `cro-specialist` → Conversion audit of top 3 funnel steps
-- `customer-success` → Churn reasons analysis, expansion opportunity mapping
-
-**Phase 2 — Parallel Experiment Design**
-- `growth-marketer` → Top 5 acquisition experiments with test designs
-- `email-marketer` → Activation/retention email experiments
-- `product-manager` → In-product growth loop experiments
-- `seo-specialist` → SEO quick-win experiments (low competition, high volume)
-
-**Phase 3 — Synthesis**
-- `growth-hacker` → Unified sprint backlog, sprint calendar, metrics dashboard spec
-
-**Output Format**:
-```
-GROWTH SPRINT BRIEF
-===================
-Current North Star Metric: [metric] = [value]
-Sprint Goal: Increase [metric] by X% in 14 days
-
-TOP LEVERAGE POINTS (from diagnostic)
-1. [Funnel step] converting at X% vs benchmark Y%
-2. [Cohort] churning at X% within [timeframe]
-3. [Channel] showing X% better CAC
-
-SPRINT BACKLOG (ICE scored)
-| Experiment | Impact | Confidence | Ease | ICE | Phase |
-|------------|--------|------------|------|-----|-------|
-| ... | | | | | |
-
-SPRINT CALENDAR
-Week 1: [experiments running]
-Week 2: [experiments running + read results]
-
-SUCCESS METRICS
-- Primary: [metric, target, measurement method]
-- Secondary: [metric, target]
-
-PRIORITY ACTIONS
-1. ...
-```
-
----
-
-### `go-to-market`
-Full GTM strategy for a new product or market segment.
-
-**Phase 1 — Parallel Strategy**
-- `cmo` → Positioning, ICP definition, messaging hierarchy
-- `seo-specialist` → Organic acquisition strategy, content pillars
-- `sem-manager` → Paid acquisition strategy, channel mix, budget allocation
-- `sales-enablement` → Sales process design, qualification criteria
-
-**Phase 2 — Parallel Execution Planning**
-- `content-marketer` → 90-day content calendar, SEO content plan
-- `email-marketer` → Lead nurture sequences, trial-to-paid flows
-- `account-executive` → Sales playbook, discovery framework, demo structure
-- `customer-success` → Onboarding flow, activation milestones, health scoring
-
-**Phase 3 — Unified Plan**
-- `ceo` → Resource requirements, hiring plan, 90-day milestones, board narrative
-
-**Output Format**:
-```
-GO-TO-MARKET STRATEGY
-=====================
-
-ICP DEFINITION
-- Company: [firmographics]
-- Buyer: [title, responsibilities, pain]
-- Champion: [title, motivations]
-- Disqualifiers: [3 things that make bad fit]
-
-POSITIONING
-- Category: [what we are]
-- Differentiation: [why us vs status quo]
-- Value prop: [one sentence]
-- Proof points: [3 evidence-based claims]
-
-MESSAGING HIERARCHY
-1. Primary: [hero message]
-2. Supporting: [3 key messages]
-3. Proof: [evidence for each]
-
-CHANNEL STRATEGY (90 days)
-| Channel | Goal | Budget | Tactic | Owner |
-|---------|------|--------|--------|-------|
-| Organic SEO | ... | | | |
-| Paid Search | ... | | | |
-| Outbound | ... | | | |
-| Content | ... | | | |
-
-SALES PROCESS
-Stage 1 → Stage 2 → ... → Closed
-
-90-DAY MILESTONES
-Month 1: [milestone]
-Month 2: [milestone]
-Month 3: [milestone]
-
-PRIORITY ACTIONS
-1. ...
-```
-
----
-
-### `due-diligence`
-Business due diligence for investment, acquisition, or partnership.
-
-**Phase 1 — Parallel Assessment**
-- `cfo` → Financial analysis, unit economics, burn rate, projections integrity
-- `cto` → Technical architecture review, technical debt, scalability, security posture
-- `legal-counsel` → Contract review, IP ownership, regulatory exposure, litigation risk
-- `hr-manager` → Team assessment, key person risk, culture, comp structure
-- `competitive-analyst` → Market position, competitive moat, defensibility
-
-**Phase 2 — Synthesis**
-- `ceo` → Investment thesis, key risks, negotiation leverage points
-
-**Output Format**:
-```
-DUE DILIGENCE REPORT
-====================
-Overall Assessment: [Green/Yellow/Red]
-Recommendation: [Proceed/Negotiate/Pass]
-
-FINANCIAL SUMMARY
-- Revenue: $X (LTM) | Growth: X% YoY
-- Gross Margin: X% | Net Margin: X%
-- Burn Rate: $Xk/mo | Runway: X months
-- Unit Economics: LTV $X | CAC $X | LTV:CAC X:1
-- RED FLAGS: [if any]
-
-TECHNICAL ASSESSMENT
-- Architecture: [summary]
-- Technical Debt: [Low/Medium/High] — [details]
-- Scalability: [assessment]
-- Security: [gaps identified]
-- RED FLAGS: [if any]
-
-LEGAL/COMPLIANCE
-- IP Status: [owned/licensed/unclear]
-- Key Contracts: [summary]
-- Regulatory Exposure: [summary]
-- RED FLAGS: [if any]
-
-TEAM ASSESSMENT
-- Key person risk: [names, roles, retention]
-- Org gaps: [missing capabilities]
-- Culture: [assessment]
-
-COMPETITIVE POSITION
-- Moat: [assessment]
-- Key risks: [3 bullets]
-
-NEGOTIATION CONSIDERATIONS
-1. [Leverage point]
-...
-
-PRIORITY ACTIONS
-1. ...
+The single highest-leverage thing: [1 action]
+════════════════════════════════════════════════════
 ```
 
 ---
 
 ### `weekly-ops`
-Weekly business operations review and planning.
 
-**Phase 1 — Parallel Review**
-- `data-analyst` → Metrics review vs targets, anomaly flagging
-- `product-manager` → Sprint review, roadmap health, blockers
-- `customer-success` → Customer health dashboard, at-risk accounts, wins
-- `revenue-ops` → Pipeline review, forecast accuracy, CRM hygiene
+Monday morning brief. No input required — reads from context files.
 
-**Phase 2 — Planning**
-- `coo` → Priorities for the week, resource conflicts, escalations needed
-- `ceo` → Weekly narrative for team, focus areas
+**Role sequence**:
 
-**Output Format**:
+**Data Analyst lens** (reads experiment-log.md + business-context.md):
+- What are the numbers? What moved? What's the trend?
+- Output: 5-metric pulse, 2 anomalies, 1 pattern
+
+**Growth Hacker lens** (using data output):
+- Given these metrics, what's the constraint? What's the highest-leverage experiment?
+- Output: 1 experiment to run this week with hypothesis + success metric
+
+**SDR lens** (reads business-context.md for pipeline):
+- What's the pipeline status? What follow-ups are due?
+- Output: 3 follow-up actions + 1 new prospecting action
+
+**CEO synthesis**:
+- Given data + growth + pipeline: what's the one thing this week?
+- What decision has been open too long and needs resolution today?
+- Output: Weekly brief with 1 priority + 1 decision + 1 experiment
+
 ```
-WEEKLY OPS BRIEF — Week of [DATE]
-==================================
+WEEKLY OPS BRIEF — [date]
+════════════════════════════════════════════════════
+PULSE (5 metrics, 30 seconds)
+  MRR: $[X] ([+/-X%] WoW) | Target: $[X] | Gap: $[X]
+  New MRR this week: $[X] | Churned: $[X]
+  Active users: [N] | Signups: [N] | Conversion: [X%]
 
-METRICS SUMMARY
-| KPI | Target | Actual | Trend | Status |
-|-----|--------|--------|-------|--------|
-| ... | | | | 🟢/🟡/🔴 |
+ANOMALY FLAGS
+  ⚠️ [Metric] is [X% above/below] normal range — possible cause: [hypothesis]
 
-WINS THIS WEEK
-1. ...
-
-BLOCKERS / ESCALATIONS NEEDED
-1. [Blocker] — Owner: [name] — Action needed: [action]
-
-PRODUCT
-- Shipped: [features/fixes]
-- In progress: [items]
-- Blocked: [items + blockers]
-
-CUSTOMER
-- At-risk accounts: [names + actions]
-- Expansion opportunities: [names + stage]
-- NPS/CSAT: [score + trend]
+EXPERIMENT THIS WEEK
+  Hypothesis: If [action], then [outcome], because [reasoning]
+  Measure: [metric] after [N] days
+  Effort: [hours]
 
 PIPELINE
-- New pipeline: $X
-- Forecast (30 day): $X
-- Deals at risk: [list]
+  Hot (follow up today): [N leads + names]
+  Warm (follow up this week): [N leads]
+  One outbound action: [specific target + approach]
 
-THIS WEEK'S PRIORITIES
-1. [Priority] — Owner: [name] — Due: [day]
-...
+════════════════════════════════════════════════════
+THIS WEEK'S ONE THING
+  [Single most important action]
+  Why: [reason it outranks everything else]
+
+DECISION TO CLEAR
+  [Decision that's been open > 7 days]
+  Recommended: [clear recommendation]
+  Kill signal: [how to know if wrong]
+════════════════════════════════════════════════════
 ```
 
 ---
 
-### `competitive-intelligence`
-Deep competitive intelligence on a specific competitor.
+### `growth-sprint`
 
-**Phase 1 — Parallel Research**
-- `competitive-analyst` → Positioning, pricing, features, recent changes
-- `seo-specialist` → Competitor keyword strategy, content gaps, domain authority
-- `growth-marketer` → Competitor acquisition channels, estimated spend, tactics
-- `customer-success` → Win/loss analysis, why customers choose them or leave them
-- `pr-manager` → Recent press, executive messaging, brand narrative
+For a defined growth push over 30-90 days with a specific target.
 
-**Phase 2 — Synthesis**
-- `sales-enablement` → Battle card creation
-- `cmo` → Strategic response recommendations
+**Role sequence**:
 
-**Output Format**:
-```
-COMPETITIVE INTELLIGENCE: [COMPETITOR NAME]
-===========================================
-Threat Level: [Critical/High/Medium/Low]
+**Data Analyst lens**: Audit the full funnel. Where is the biggest conversion drop?
 
-COMPANY OVERVIEW
-- Funding: $X (last round: Series X, $Xm, [date])
-- Team size: ~X employees
-- Revenue estimate: $X ARR (if known)
-- Customers: [notable logos]
+**Growth Hacker lens** (using data): What's the constraint? Top/middle/bottom funnel?
+Design 3 experiments targeting the weakest stage.
 
-POSITIONING
-- How they describe themselves: "[quote]"
-- Target customer: [ICP]
-- Core differentiators: [3 bullets]
+**Content Marketer lens** (using growth output): What content supports the growth motion?
+Prioritize by: drives immediate traffic to conversion page.
 
-PRODUCT COMPARISON
-| Feature | Them | Us | Advantage |
-|---------|------|----|-----------|
-| ... | | | |
+**SDR lens** (using all above): What's the outbound motion that complements the experiments?
 
-PRICING
-[Their pricing structure]
-[Our advantage/gap]
-
-SEO PROFILE
-- Domain Authority: X
-- Ranking keywords: X (organic traffic est: Xk/mo)
-- Top content: [titles]
-- Keywords we could take: [list]
-
-ACQUISITION CHANNELS
-- Primary: [channels with evidence]
-- Estimated spend: $Xk/mo on paid
-
-BATTLE CARD
-WHEN THEY SAY: "[objection]"
-YOU SAY: "[response]"
-
-OUR WIN CONDITIONS
-[When we beat them and why]
-
-STRATEGIC RECOMMENDATIONS
-1. ...
-```
+**CEO synthesis**: 90-day plan with weekly milestones, experiment cadence, kill signals.
 
 ---
 
-### `content-machine`
-Full content production system setup.
+### `market-research`
 
-**Phase 1 — Strategy**
-- `seo-specialist` → Keyword universe, content pillars, competitive content gaps
-- `content-marketer` → Editorial strategy, content calendar, distribution plan
-- `cmo` → Audience definition, tone of voice, success metrics
+For sizing a market or validating a space before building.
 
-**Phase 2 — Production Templates**
-- `technical-writer` → Documentation content templates
-- `email-marketer` → Email newsletter template and cadence
-- `social-media-manager` → Platform-specific content templates
-- `video-producer` → Video content strategy and script templates
+**Role sequence**:
 
-**Phase 3 — Distribution**
-- `growth-marketer` → Content distribution playbook, amplification tactics
+**CMO lens**: Who buys in this space? What triggers the purchase? How do they evaluate?
 
-**Output**: Full content system — pillars, calendar, templates, distribution playbook, metrics.
+**SDR lens** (using CMO): Who specifically? What's their title, company size, buying process?
 
----
+**Content Marketer lens**: What are they searching for? What content exists? What's missing?
 
-### `sales-outreach`
-Targeted sales outreach campaign design.
-
-**Phase 1 — Research**
-- `sdr` → ICP definition, prospect research methodology, list building criteria
-- `competitive-analyst` → Competitive context for messaging
-- `customer-success` → Customer success stories for social proof
-
-**Phase 2 — Creation**
-- `sales-enablement` → Email sequences, call scripts, LinkedIn templates
-- `account-executive` → Discovery framework, demo narrative
-- `content-marketer` → Supporting content assets (one-pagers, case studies)
-
-**Output**: Complete outreach campaign — sequences, scripts, assets, tracking setup.
-
----
-
-### `custom`
-**Usage**: `/swarm custom "[task]"`
-
-For custom tasks, automatically:
-1. Analyze the task to identify the 3-6 most relevant roles
-2. Design a 2-3 phase execution plan with clear inputs/outputs per phase
-3. Execute and synthesize
-
-State the inferred swarm design before executing so the user can approve or adjust.
+**CEO synthesis**: Market size estimate + opportunity assessment + entry angle recommendation.
 
 ---
 
 ### `fundraise`
-Investor narrative, financial model, and pitch preparation.
 
-**Phase 1 — Parallel Preparation**
-- `cfo` → Financial model: MRR/ARR, unit economics (CAC, LTV, payback), burn + runway, projections
-- `ceo` → Investment thesis: why now, market timing, what the capital unlocks
-- `competitive-analyst` → Market size validation, competitive landscape for investor narrative
-- `product-manager` → Product roadmap narrative: what gets built with the capital
+For founder preparing to raise. Requires: stage, amount, what the money is for.
 
-**Phase 2 — Synthesis**
-- `ceo` → Unified pitch narrative, objection handling for investors, due diligence readiness checklist
+**Role sequence**:
 
-**Output**:
-```
-FUNDRAISE PACKAGE
-════════════════════
+**CFO lens**: Financial model — current metrics, projection assumptions, use of funds math.
 
-INVESTMENT THESIS
-[Why this, why now, why us — 1 paragraph]
+**CEO lens** (using CFO): Investor narrative — why now, why us, what we need to be true.
 
-FINANCIAL SUMMARY
-Current MRR: $X | Growth: X% MoM | Burn: $X/mo | Runway: X months
-CAC: $X | LTV: $X | LTV:CAC: X:1 | Gross Margin: X%
-Target raise: $X | Use of funds: [specific allocation]
-Post-raise runway: X months | Projected ARR at end of runway: $X
+**CMO lens** (using CEO): Pitch positioning — how to frame the company vs. the competitive landscape.
 
-MARKET STORY
-TAM: $Xb | Timing signal: [why now] | Our wedge: [specific entry point]
-
-TRACTION NARRATIVE
-[Month 1 to now — the growth story in 5 sentences]
-
-COMMON INVESTOR OBJECTIONS + RESPONSES
-- "[Objection]" → "[Response]"
-
-30-DAY FUNDRAISE ACTION PLAN
-Week 1-2: [investor outreach list criteria + warm intro strategy]
-Week 3-4: [first meetings + pitch deck review]
-
-DUE DILIGENCE READINESS
-[ ] Data room checklist
-[ ] Legal docs organized
-[ ] Customer references identified
-```
+**CEO synthesis**: Pitch deck outline (11 slides), top 5 investor objections + responses, data room checklist.
 
 ---
 
 ### `customer-crisis`
-Rapid response plan for a customer issue, outage, or PR problem.
 
-**Phase 1 — Parallel Assessment** (runs in 10 minutes)
-- `technical-support` → Root cause diagnosis, severity assessment, fix timeline
-- `customer-success` → Affected customers identified, relationship risk assessment
-- `pr-manager` → External communication draft, narrative control
+For when a key customer threatens to churn or a critical bug/incident occurs.
 
-**Phase 2 — Response Coordination**
-- `ceo` → Communication sequence, prioritization, what founder should do first
+**Role sequence**:
 
-**Output**:
-```
-CRISIS RESPONSE PLAN: [situation]
-════════════════════════════════
+**Customer Success lens**: Immediate response — what does this customer need to hear right now?
 
-SEVERITY: [Critical / High / Medium]
-Estimated resolution: [timeframe]
+**CEO lens**: What's the root cause? What's the strategic response vs. tactical fix?
 
-IMMEDIATE ACTIONS (next 60 minutes)
-1. [Action] — Owner: [role] — Done by: [time]
-2. [Action] — Owner: [role] — Done by: [time]
-3. [Action] — Owner: [role] — Done by: [time]
+**SDR lens** (recovery angle): If they churn, what's the re-engagement path? What would win them back?
 
-CUSTOMER COMMUNICATION
-Who to contact: [N affected customers — prioritized by ARR/relationship]
-Message to send: [draft]
-Send via: [email / phone / in-app]
-Timing: [now / after fix / staged]
-
-EXTERNAL COMMUNICATION (if public-facing)
-Status page update: [draft]
-Social response: [if needed]
-Press response: [if needed]
-
-FIX TIMELINE
-[Technical resolution path]
-
-POST-CRISIS ACTIONS
-[ ] Follow-up communication with affected customers
-[ ] Post-mortem scheduled
-[ ] Preventive measures documented
-```
+**CEO synthesis**: Response plan — what to say now, what to fix in 48h, what to change in 30 days.
 
 ---
 
-## The BCG 3-Agent Rule (Critical for Solo Founders)
+## BCG 3-Agent Rule (Applied to Swarms)
 
-From research on multi-agent cognitive performance: **clarity collapses beyond 3 simultaneous decision streams.**
+Max 3 active decision streams presented to you at synthesis time.
 
-Applied to SoloOS swarms:
-- Never surface more than 3 role outputs without synthesis first
-- Phase all swarms in 2-3 stages with review gates between phases
-- Always end with ONE prioritized "First Action" — not 10 equal priorities
-- Synthesis is more valuable than completeness — a clean plan beats a comprehensive mess
+A swarm with 5 roles still produces a synthesis with ≤3 priority actions.
+The synthesis is not a list of everything that came up. It's the top 3 that matter.
 
-**Practical implication**: When running a product-launch swarm, don't try to execute all 7 role outputs at once. The synthesis (Phase 3) tells you which 1-2 things to act on TODAY. Start there.
+If a swarm outputs 10 equal priority actions, the synthesis failed.
 
 ---
 
 ## Context File Integration
 
-Swarms dramatically improve when these files exist in your project:
+Swarms use context files automatically if present:
 
-```
-context/business-context.md  → All roles calibrate to your actual stage + metrics
-context/customer-voice.md    → Copy + messaging uses real customer language
-context/decision-log.md      → Strategy respects past decisions
-```
+| File | Swarm Uses It For |
+|------|------------------|
+| `context/business-context.md` | All swarms — calibrates recommendations to your stage |
+| `context/customer-voice.md` | `product-launch`, `market-research` — uses exact ICP language |
+| `context/experiment-log.md` | `weekly-ops`, `growth-sprint` — avoids re-running failed experiments |
+| `context/decision-log.md` | All swarms — prevents contradicting past strategic decisions |
 
-If these files don't exist, `/swarm` will ask for the 3 most important context inputs before running.
+Without context files: the swarm gives generally good output for the task.
+With context files: the swarm gives output calibrated to your specific business.
 
 ---
 
-## Execution Standards
+## After the Swarm
 
-### Parallel Execution
-- All agents within a phase run simultaneously
-- Each agent receives: (1) the original task, (2) relevant outputs from prior phases, (3) its specific subtask brief
-
-### Output Quality Gates
-- Each agent output must be specific, actionable, and professional-grade
-- No generic advice — every recommendation tied to the specific task
-- Every claim backed by reasoning or data
-
-### Synthesis Principles
-- Prioritize actions by impact, not completeness
-- Surface conflicts between agent recommendations explicitly
-- End every swarm with a single "FIRST ACTION" — the one thing to do today
-- Respect the BCG 3-Agent Rule: max 3 decision streams without synthesis
+1. Log the top decisions in `context/decision-log.md`
+2. Log the top experiment in `context/experiment-log.md`
+3. Add any customer language discovered to `context/customer-voice.md`
+4. Run `/morning` next day to track which swarm actions you executed
