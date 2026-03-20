@@ -1,0 +1,1 @@
+create new project in the folder name and push to github. the goal or aim of it is to initially search, create, organzie relevant content and to build any and all AI e2e job skills/framework is built to multiplex a solo entreprenuer into the AI era of solo billon dollar company. this needs depth on the research, planning and flawless execution all  using agentic swarms

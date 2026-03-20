@@ -1,0 +1,57 @@
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Secrets and credentials
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+secrets/
+credentials/
+
+# Logs
+logs/*.log
+!logs/.gitkeep
+
+# Generated / temp files
+tmp/
+temp/
+.tmp/
+generated/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (for any tools built)
+node_modules/
+.npm
+
+# Python (for any scripts)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Data files (could be large)
+*.csv
+*.xlsx
+*.sqlite
+
+# But keep example/template data files
+!knowledge-base/**/*.csv
+!knowledge-base/**/*.xlsx
+
+# Build artifacts
+dist/
+build/
+.next/
