@@ -1,5 +1,11 @@
 # /growth — Growth Hacking Skill
 
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: "how do I grow", "stuck at X MRR", "growth rate flat", "not growing", "acquisition problem". **RETENTION CHECK FIRST** — diagnose before prescribing.
+
+---
+
+
 > Usage: `/growth [command] [arguments]`
 >
 > Activate: "use growth skill" or `/growth help`

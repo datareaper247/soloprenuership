@@ -1,5 +1,11 @@
 # Launch — Build-in-Public Launch Sequence
 
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: "about to launch", "launching X next week", "ready to ship", "going live". **Marc Lou Rule fires first** before any other advice.
+
+---
+
+
 **Usage**: `/launch "[product name and one-line description]"`
 
 **Examples**:

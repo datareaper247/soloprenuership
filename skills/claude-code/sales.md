@@ -1,5 +1,11 @@
 # Sales — Solo Founder Sales Playbook
 
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: "close more deals", "sales call", "discovery call", "follow up with prospect", "cold email", "pipeline". **ACV DETECTION FIRST** — routes to correct motion.
+
+---
+
+
 **Usage**: `/sales [command] "[context or target]"`
 
 ---

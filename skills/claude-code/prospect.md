@@ -1,5 +1,11 @@
 # Prospect — Research + Outreach + Sequence in One Shot
 
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: "cold outreach to [company/role]", "prospect [X]", "find leads at [company]", "write outreach for [target]"
+
+---
+
+
 **Usage**: `/prospect "[company name] [role/title] [optional context]"`
 
 **Examples**:

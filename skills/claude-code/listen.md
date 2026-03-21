@@ -1,5 +1,11 @@
 # Listen — Community Intelligence Pipeline
 
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: "find out what customers want", "where do customers hang out", "community research", "what subreddits", "monitoring [market]"
+
+---
+
+
 **Usage**: `/listen "[market or problem space]"`
 
 **Examples**:

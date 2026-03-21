@@ -1,5 +1,11 @@
 # Research — Market Intelligence for Solo Founders
 
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: "what's the market for X", "competitors doing X", "what do [customers] complain about", "is X market saturated"
+
+---
+
+
 **Usage**: `/research [type] "[topic]"`
 
 **Examples**:

@@ -1,6 +1,12 @@
 # Validate — Paid Validation Gate
 
-**Usage**: `/validate "[idea or feature description]"`
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: "thinking about building X", "I want to add X", "should I build X", "my idea is X", "I'm planning to X"
+**Arvid Kahl Rule fires first**: "Did 3+ customers describe this pain in their own words? If not, listen before building."
+
+---
+
+**Usage**: `/validate "[idea or feature description]"` *(or just describe what you're thinking about building)*
 
 **Examples**:
 - `/validate "AI-powered invoice reconciliation for small accounting firms"`

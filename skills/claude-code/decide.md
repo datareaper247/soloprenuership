@@ -1,5 +1,11 @@
 # Decide — Adversarial Decision Framework
 
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: "should I X or Y", "I'm torn between", "I can't decide", "what would you do", "help me decide"
+
+---
+
+
 **Usage**: `/decide "[decision description]"`
 
 Cut through decision fatigue with a structured adversarial debate. Three perspectives, one clear recommendation.

@@ -1,6 +1,11 @@
 # Morning — Daily Founder Brief
 
-**Usage**: `/morning`
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when: "good morning", "morning", "what should I focus on today", "help me prioritize", "where do I start"
+
+---
+
+**Usage**: `/morning` *(or just say good morning)*
 
 Your 15-minute start to every founder day. Three things, no fluff:
 1. **Yesterday's pulse** — What moved, what didn't, what matters

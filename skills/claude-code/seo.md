@@ -1,5 +1,11 @@
 # SEO — Search Engine Optimization for Solo Founders
 
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: "SEO strategy", "content strategy", "rank for X", "blog posts", "backlinks", "keyword research". **STAGE CHECK FIRST** — auto-calibrates to MRR.
+
+---
+
+
 **Usage**: `/seo [command] "[topic or URL]"`
 
 ---

@@ -1,5 +1,11 @@
 # Content — Professional Content Production
 
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: "I need to write X", "content for [platform]", "what should I post", "newsletter idea", "tweet about X"
+
+---
+
+
 **Usage**: `/content [type] "[topic or brief]"`
 
 Produces professional-grade content assets with the correct format, length, tone, and optimization for each content type. Every piece is structured, purposeful, and ready for minimal editing.

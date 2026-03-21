@@ -1,5 +1,11 @@
 # Swarm — Sequential Multi-Role Analysis
 
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: "multiple perspectives on X", "challenge my thinking", "play devil's advocate", "what would X think"
+
+---
+
+
 **Usage**: `/swarm [type] "[task description]"`
 
 **Examples**:

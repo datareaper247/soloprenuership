@@ -1,59 +1,57 @@
-# SoloOS: The Operating System for Solo Founders
+# SoloOS v2: The Cognitive OS for Solo Founders
 
-> *Give Claude persistent business intelligence, professional-grade role cognition, and
-> validated founder playbooks — all through markdown files that work today.*
+> *Intelligence that fires automatically. No slash commands required.*
+> *Every session is founder-aware. Every recommendation has a kill signal.*
+> *Grounded in real founder data from 300+ documented cases.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Skills: 16](https://img.shields.io/badge/Skills-16-purple.svg)](#claude-code-skills)
-[![Roles: 10](https://img.shields.io/badge/Core%20Roles-10-blue.svg)](#role-library)
+[![Skills: 17](https://img.shields.io/badge/Auto--Trigger%20Skills-17-purple.svg)](#skills)
+[![Roles: 10](https://img.shields.io/badge/Core%20Roles-10-blue.svg)](#roles)
 [![Works with: Claude Code](https://img.shields.io/badge/Works%20with-Claude%20Code-orange.svg)](#quick-start)
 
 ---
 
-## What SoloOS Actually Is
+## What SoloOS v2 Actually Does
 
-SoloOS is a **prompt framework** — markdown files you drop into your project that transform
-Claude from a generic AI assistant into a founder-aware business copilot.
+SoloOS is a **prompt framework** — markdown files that transform Claude into a founder-aware co-pilot.
 
-No install. No servers. No API keys. Copy files, start using.
+**v1** required you to remember slash commands. `/validate`, `/decide`, `/morning` — you had to know the command existed and type it.
 
-**What it gives you**:
-1. **CLAUDE.md** — behavioral rules that make every Claude session founder-aware
-2. **15 skills** — slash commands encoding validated founder frameworks (validation gate, launch sequence, community listening, etc.)
-3. **10 core roles** — deep system prompts for the roles solo founders actually use
-4. **Context templates** — persistent business memory that compounds across sessions
-5. **Validated playbooks** — 5 proven founder patterns encoded as AI behaviors
+**v2** removes that entirely. Claude detects what you need and applies the right framework automatically.
 
-**What it does NOT include (yet)**:
-- MCP servers (planned, not built)
-- Python packages
-- Parallel multi-agent orchestration
+```
+You: "I'm thinking about building an AI resume tool for nurses"
 
-Everything that works, works today with stock Claude Code and the files in this repo.
+Claude: ⚠️ VALIDATE FIRST: Did 3+ nurses describe this pain in their own words?
+Reading this as $0 MRR — pre-revenue stage. Continuing...
+
+4-gate validation:
+Gate 1 — Problem clarity: "Nurses struggling with resume formatting" vs "nurses can't get callbacks" — which?
+Gate 2 — Market signal check: [checks MARKET_INTELLIGENCE.md] AI resume tools are Heavily Saturated.
+  Viable with niche focus: nursing-specific certifications, ATS formatting for hospital HR systems.
+Gate 3 — 5 Tier-4+ commitments needed before building. Here's the exact DM to send...
+Gate 4 — Unit economics: at $29 one-time, 92% gross margin. Compliance angle available?
+
+KILL SIGNAL: If you can't get 5 nurses to say "charge my card" in 4 weeks from 100 direct DMs → wrong ICP or wrong problem.
+```
+
+No command typed. That's v2.
 
 ---
 
-## The Core Unlock: CLAUDE.md
+## What's Genuinely New in v2
 
-Drop `CLAUDE.md` into any project directory. Every Claude session in that directory becomes founder-aware.
-
-```bash
-cp ~/soloos/CLAUDE.md ./CLAUDE.md
-```
-
-From that point forward, without any prompting from you, Claude will:
-
-- Apply 80/20 thinking to every recommendation — surfaces the top 20% that drives 80% of value
-- Flag founder anti-patterns as they appear — building before validation, scaling before PMF, optimizing at <$10K MRR
-- Frame every decision with: recommendation + key assumption + kill signal + reversibility
-- Apply the BCG 3-Agent cognitive rule — max 3 active decision streams, prevents collapse
-- Auto-trigger the right founder playbook based on stage (Kahl pre-idea, Levels MVP, Tringas post-PMF)
-
-**Before CLAUDE.md**: "Here's a marketing strategy..."
-**After CLAUDE.md**: "⚠️ VALIDATE FIRST — you haven't confirmed 5 people will pay for this.
-Before any marketing, here are the 3 cheapest experiments to confirm demand."
-
-See [examples/claude-md-before-after.md](examples/claude-md-before-after.md) for a full side-by-side.
+| Feature | v1 | v2 |
+|---|---|---|
+| Framework activation | Slash command required | **Auto-detects from conversation** |
+| Stage awareness | Founder must declare MRR | **Inferred from conversation clues** |
+| Role switching | `/role cmo` command | **Automatic from topic** |
+| Anti-pattern flags | Fires on explicit triggers | **Fires on implicit signals** |
+| Kill signals | Optional | **Mandatory on every recommendation** |
+| Reversibility scoring | Not included | **Every significant decision scored** |
+| Assumption tracking | Not included | **Contradictions flagged across session** |
+| Market claims | Generic | **Referenced from real founder data** |
+| Knowledge base | Patterns + playbooks only | **+ FOUNDER_INTELLIGENCE + MARKET_INTELLIGENCE** |
 
 ---
 
@@ -63,162 +61,177 @@ See [examples/claude-md-before-after.md](examples/claude-md-before-after.md) for
 # 1. Clone SoloOS
 git clone https://github.com/datareaper247/soloprenuership.git ~/soloos
 
-# 2. Add behavioral rules to your project
+# 2. Add the cognitive OS to your project
 cp ~/soloos/CLAUDE.md ./CLAUDE.md
 
-# 3. Install skills as Claude Code commands
+# 3. Install skills as Claude Code commands (optional — auto-triggers work without this)
 cp ~/soloos/skills/claude-code/*.md ~/.claude/commands/
 
 # 4. Set up context memory
 mkdir -p ./context
 cp ~/soloos/context/*.md ./context/
-# Fill in context/business-context.md — 10 minutes, compounds forever
+# /onboard will fill these in through a 10-question conversation
 
-# 5. Run the onboarding skill to auto-populate context
-/onboard
+# 5. Open Claude Code. Start talking. No commands needed.
 ```
 
-That's it. Open Claude Code and start using the skills.
+From session 1, Claude auto-detects your stage and applies the right framework.
 
 ---
 
-## The 16 Skills
+## The Auto-Trigger System
 
-Drop-in commands for Claude Code. Encoding validated founder frameworks, not generic prompts.
+17 skills. All fire without slash commands. Mapped in `skills/AUTO_TRIGGERS.md`.
 
-### The Pre-Build Loop (do these in order before writing code)
+| When you say... | What fires automatically |
+|---|---|
+| "thinking about building X" | 4-gate validation + Kahl Rule |
+| "good morning" / "what to focus on" | Morning brief: pulse → action → decision |
+| "should I X or Y" / "I can't decide" | Adversarial decision: Rec → Why → Risks → Reversibility → Kill Signal |
+| "about to launch" / "going live" | Marc Lou Rule + 7-asset launch generation |
+| "how do I grow" / "stuck at $X MRR" | Retention check first, then acquisition |
+| "SEO strategy" / "blog posts" | Stage gate: $0-5K → "Not yet, here's why" |
+| "[competitor] launched" | 5-layer competitor autopsy |
+| "new customer session" + no context | 10-question onboarding flow |
+| "should I hire" | Reversibility score (3/10) + process-first flag |
+| Pricing question | Marc Lou price ladder + conversion benchmarks |
 
-| Skill | What It Does | Framework Source |
-|-------|-------------|-----------------|
-| `/listen "[market]"` | Community intelligence — maps pain signals, classifies build vs. content vs. validate | Arvid Kahl's Embedded Entrepreneur |
-| `/validate "[idea]"` | 4-gate validation: problem → market signal → 5 paid commitments → unit economics | Kahl + Tringas paid validation gate |
-| `/onboard` | 10-question flow that auto-populates all context templates | Original |
-
-### The Daily Driver Loop
-
-| Skill | What It Does | Framework Source |
-|-------|-------------|-----------------|
-| `/morning` | 15-min brief: revenue pulse + today's one thing + one decision cleared | Original |
-| `/decide "[decision]"` | Adversarial 3-voice debate: Operator vs. Devil's Advocate vs. Market Expert | BCG decision quality research |
-| `/prospect "[company + role]"` | Research → trigger events → pain hypothesis → 3 outreach variants → 6-touch sequence | SDR playbook synthesis |
-
-### The Launch Loop
-
-| Skill | What It Does | Framework Source |
-|-------|-------------|-----------------|
-| `/launch "[product]"` | Generates 7 launch assets: HN post + tweet thread + PH + LinkedIn + email + 50 DMs + Reddit | Marc Lou build-in-public pattern |
-| `/swarm [type] "[task]"` | Sequential multi-role analysis: each role's output feeds the next | Original |
-
-### The Specialist Toolkit
-
-| Skill | What It Does |
-|-------|-------------|
-| `/role [name]` | Activate any of the 10 core role system prompts |
-| `/research [type] "[topic]"` | Market sizing, competitor analysis, customer pain mining |
-| `/content [type] "[topic]"` | Blog posts, email sequences, social content with SEO intent |
-| `/seo [command]` | Keyword research, content briefs, technical audit checklist |
-| `/sales [command]` | Cold outreach, deal qualification, proposal frameworks |
-| `/ops [command]` | SOP creation, financial modeling, legal review templates |
-| `/growth [command]` | Experiment design, funnel analysis, retention frameworks |
+**Slash commands still work** as power-user shortcuts for explicit invocation.
 
 ---
 
-## Real Examples
+## The Knowledge Base (New in v2)
 
-See `examples/` for complete input → output walkthroughs:
+Real founder data encoded as reference intelligence. Claude consults these before making market claims.
 
-- [`examples/validate-saas-idea.md`](examples/validate-saas-idea.md) — `/validate` catching a fatal flaw in a SaaS idea before a line of code was written
-- [`examples/launch-hacker-news.md`](examples/launch-hacker-news.md) — `/launch` generating a Show HN post + full thread + 50 DMs
-- [`examples/decide-pricing.md`](examples/decide-pricing.md) — `/decide` running the adversarial debate on "should I add a free tier?"
-- [`examples/morning-brief.md`](examples/morning-brief.md) — `/morning` output for a $4K MRR B2B SaaS founder
-- [`examples/claude-md-before-after.md`](examples/claude-md-before-after.md) — same question, with and without CLAUDE.md
+### `knowledge-base/FOUNDER_INTELLIGENCE.md`
+300+ founder journeys distilled to:
+- **7 Master Patterns** with evidence citations (Pieter Levels, Marc Lou, Arvid Kahl, Tony Dinh, Danny Postma...)
+- **Stage-specific decision trees** ($0 / $1-5K / $5-20K / $20-50K / $50K+ MRR)
+- **6 Founder Archetypes** with exact strategies, real numbers, and "best for / not for"
+- **Kill Signal Database** — specific data that proves each decision type wrong within 30 days
+- **Assumption Debt Patterns** — the 4 most common conflicting assumptions founders hold
+- **Honest failure data**: 45-50% of AI products launched 2023-2024 generated $0 MRR
+
+### `knowledge-base/MARKET_INTELLIGENCE.md`
+- **Category Saturation Map**: Dead / Saturated / Viable-with-niche / Open / Emerging
+- **Unit economics database**: Gross margins, LTV:CAC, churn rates by category
+- **Pricing conversion benchmarks**: Real conversion rates at each price point
+- **AI API cost structure**: $/request for every major model
+- **Moat strength matrix**: How long each moat type takes to build, clone resistance rating
+
+### `knowledge-base/PATTERN_LIBRARY.md`
+38 decision patterns from real founders:
+- P01 The Levels Test → P07 The Narrow ICP Rule → P14 The Paid Acquisition Gate → P35 The 40% Test...
+- Each has: situation → pattern → real example → kill signal → reversibility score
+
+---
+
+## The 17 Skills
+
+All auto-trigger. All still available as slash commands for explicit use.
+
+### Pre-Build Intelligence
+| Skill | Auto-fires when | Framework |
+|---|---|---|
+| `validate` | "thinking about building X" | 4-gate paid validation — Kahl + Tringas |
+| `listen` | "what do customers want" / "community research" | Arvid Kahl community intelligence pipeline |
+| `research` | Market/competitor/ICP questions | 5-layer autopsy, bottom-up sizing, Signal Classifier |
+| `onboard` | New session with no context | 10-question flow → writes all 4 context files |
+
+### Daily Operations
+| Skill | Auto-fires when | Framework |
+|---|---|---|
+| `morning` | "good morning" / "prioritize today" | Chief of Staff daily brief |
+| `decide` | "should I X or Y" / "I can't decide" | Adversarial 3-voice: Operator / Devil's Advocate / Expert |
+| `prospect` | "cold outreach to [X]" / "find leads at [Y]" | Research → trigger events → 3 outreach variants → 6-touch sequence |
+
+### Launch + Growth
+| Skill | Auto-fires when | Framework |
+|---|---|---|
+| `launch` | "about to launch" / "going live" | Marc Lou build-in-public: 7 assets before shipping |
+| `growth` | "stuck at $X MRR" / "how do I grow" | Retention check → acquisition calibrated to stage |
+| `seo` | SEO/content/keywords question | Stage-gated: $0-5K (no), $5-20K (bottom-funnel), $20K+ (full funnel) |
+| `sales` | Pipeline/outreach/demos | ACV-gated: <$100 (self-serve), $100-500 (email), $500+ (calls) |
+| `content` | "I need to write X" / "what to post" | Stage-matched content + distribution ladder |
+
+### Specialist Tools
+| Skill | Auto-fires when | Framework |
+|---|---|---|
+| `swarm` | "multiple perspectives" / "challenge my thinking" | Sequential role analysis with explicit handoffs |
+| `ops` | "document this process" / "SOP for X" | Document → automate → delegate |
+| `geo` | International expansion questions | Stage gate ($50K+ only) + market entry framework |
+
+---
+
+## Auto-Triggers: The New Behaviors
+
+Beyond skills, CLAUDE.md v2 adds 4 behaviors that fire on every strategic conversation:
+
+### 1. Stage Inference
+Claude reads conversation for stage signals. "You're asking about hiring → Reading this as $20K+ MRR."
+Stated in one line. Never blocks the answer.
+
+### 2. Reversibility Scoring
+Every significant decision gets: `Reversibility: 3/10 — Hard to reverse. Need 3 data points before committing.`
+Hiring = 3/10. Cold email test = 9/10. Different analysis warranted for each.
+
+### 3. Kill Signal (Mandatory)
+Every strategic recommendation ends with: `KILL SIGNAL: [specific data that proves this wrong in 30 days]`
+No exceptions. Unmeasurable recommendations get refined until they have one.
+
+### 4. Assumption Debt Tracking
+When "ICP = SMBs" in session 1 conflicts with "our best customer is an enterprise" in session 4:
+`⚠️ ASSUMPTION CONFLICT: Earlier you said X, now implying Y. Which is true?`
 
 ---
 
 ## The 10 Core Roles
 
-Roles a solo founder actually uses. Deep system prompts with identity, frameworks, tools, and escalation logic.
+Auto-activate by topic. No `/role` command needed.
 
-| Role | When to Use | Activates With |
-|------|------------|---------------|
-| **CEO** | Strategy, OKRs, investor narrative, pivot decisions | `/role ceo` |
-| **CMO** | GTM strategy, positioning canvas, demand gen | `/role cmo` |
-| **SDR** | Cold outreach, ICP research, pipeline building | `/role sdr` |
-| **Account Executive** | Discovery, demos, close strategies | `/role ae` |
-| **SEO Specialist** | Keyword research, content briefs, technical audit | `/role seo` |
-| **Content Marketer** | Long-form SEO, case studies, newsletters | `/role content` |
-| **Product Manager** | PRDs, prioritization, user stories, metrics | `/role pm` |
+| Role | Auto-activates on | Full command |
+|---|---|---|
+| **CEO** | Strategy, OKRs, investors, pivots | `/role ceo` |
+| **CMO** | Marketing, GTM, channels, brand | `/role cmo` |
+| **SDR** | Cold outreach, ICP research, pipeline | `/role sdr` |
+| **Account Executive** | Discovery, demos, close | `/role ae` |
+| **SEO Specialist** | Keyword research, content briefs, audit | `/role seo` |
+| **Content Marketer** | Long-form SEO, newsletters, case studies | `/role content` |
+| **Product Manager** | PRDs, prioritization, user stories | `/role pm` |
 | **Customer Success** | Onboarding, retention, churn prevention | `/role cs` |
 | **Growth Hacker** | AARRR experiments, viral loops, PLG | `/role growth` |
 | **CFO** | Unit economics, pricing math, financial modeling | `/role cfo` |
-
-> All 44 roles from the original role library are available in `agents/roles/` — the 10 above
-> are the ones with the deepest prompts and highest solo-founder utility.
 
 ---
 
 ## Context Memory System
 
-Four files. Fill them once. Every SoloOS skill gets dramatically better.
+Four files. Fill once. Every skill gets dramatically more accurate.
 
 ```
 context/
-├── business-context.md   # MRR, ICP, competition, current OKRs, open decisions
+├── business-context.md   # MRR, ICP, competition, OKRs, open decisions
 ├── customer-voice.md     # Exact customer quotes — the words that convert
 ├── experiment-log.md     # What you tried, what worked, what didn't
 └── decision-log.md       # Strategic decisions, rationale, kill signals
 ```
 
-**The compound effect**:
-```
-Week 1:  Claude advises based on your context
-Month 3: Claude cross-references experiments when you propose new ones
-Month 6: Claude spots patterns in your decision log you've missed
-Year 1:  More institutional memory than any hire you made in the last quarter
-```
+Run `/onboard` to populate all four through a 10-question conversation.
 
-Run `/onboard` to populate all four files through a 10-minute conversation instead of staring at blank templates.
+**Compounding effect**: Claude detects conflicts between what context says and what you're describing today. Keeps your model of your own business honest.
 
 ---
 
-## Validated Founder Playbooks
+## Real Examples
 
-Five documented founder patterns encoded as automatic Claude behaviors.
-See [`knowledge-base/patterns/SOLO_FOUNDER_PLAYBOOKS.md`](knowledge-base/patterns/SOLO_FOUNDER_PLAYBOOKS.md).
+Complete input → output walkthroughs:
 
-| Playbook | Pattern | Auto-Triggers When |
-|----------|---------|-------------------|
-| **Kahl** | Audience before product | Founder proposes an idea without community validation |
-| **Marc Lou** | Every launch is content | Founder is about to build without launch assets |
-| **Levels** | Constraints as advantage | Scope creep detected, MVP growing beyond 2-week ship |
-| **Jackson** | Stair-step to SaaS | Founder jumps straight to SaaS for first product |
-| **Tringas** | Narrow focus wins | Founder tries to serve multiple ICPs before PMF |
-
-These patterns are wired into `CLAUDE.md` — they activate automatically, not only when you invoke them.
-
----
-
-## The /swarm Command (What It Actually Does)
-
-`/swarm` runs sequential role-switching analysis — each role's perspective feeds the next.
-It does **not** run parallel agents (that requires infrastructure not yet built).
-
-What it actually produces in a single Claude session:
-
-```bash
-/swarm product-launch "Rankly — daily SEO rank tracker with Slack alerts"
-
-Phase 1: CMO analyzes positioning and GTM motion
-Phase 2: SEO Specialist identifies keyword opportunities from Phase 1
-Phase 3: SDR builds ICP profile and outreach angle from Phase 1+2
-Phase 4: Content Marketer writes launch blog intro from all above
-Synthesis: CEO-level brief with top 5 actions, owners, timelines
-```
-
-Each role has access to the prior role's output. The synthesis is the deliverable.
-Total session: 45-90 minutes. Review time: 15 minutes.
-
-Available swarm types: `product-launch`, `weekly-ops`, `growth-sprint`, `fundraise`, `customer-crisis`, `market-research`
+- [`examples/validate-saas-idea.md`](examples/validate-saas-idea.md) — validate catching a fatal flaw before writing code
+- [`examples/launch-hacker-news.md`](examples/launch-hacker-news.md) — launch generating Show HN + full tweet thread + 50 DMs
+- [`examples/decide-pricing.md`](examples/decide-pricing.md) — decide running adversarial debate on "free tier?"
+- [`examples/morning-brief.md`](examples/morning-brief.md) — morning output for a $4K MRR B2B SaaS founder
+- [`examples/claude-md-before-after.md`](examples/claude-md-before-after.md) — same question, with and without CLAUDE.md
 
 ---
 
@@ -226,78 +239,75 @@ Available swarm types: `product-launch`, `weekly-ops`, `growth-sprint`, `fundrai
 
 ```
 soloprenuership/
-├── CLAUDE.md                 ← THE BEHAVIORAL UNLOCK. Drop this in any project.
-├── context/                  ← Fill once. Compounds forever.
+├── CLAUDE.md                      ← THE COGNITIVE OS. Drop in any project.
+├── context/                       ← Fill once. Compounds forever.
 │   ├── business-context.md
 │   ├── customer-voice.md
 │   ├── experiment-log.md
 │   └── decision-log.md
-├── skills/claude-code/       ← 15 slash commands for Claude Code
-│   ├── morning.md            ← Daily brief
-│   ├── decide.md             ← Adversarial decision framework
-│   ├── validate.md           ← Paid validation gate
-│   ├── listen.md             ← Community intelligence pipeline
-│   ├── launch.md             ← Build-in-public launch sequence
-│   ├── prospect.md           ← Full outreach chain
-│   ├── onboard.md            ← Context setup flow
-│   ├── swarm.md              ← Sequential multi-role analysis
-│   └── ...
-├── agents/roles/             ← 44 role system prompts (10 core, 34 extended)
+├── skills/
+│   ├── AUTO_TRIGGERS.md           ← Master routing table (how skills auto-fire)
+│   └── claude-code/               ← 17 skill files (auto-trigger + slash command)
+│       ├── validate.md
+│       ├── morning.md
+│       ├── decide.md
+│       └── ... (14 more)
+├── agents/roles/                  ← 10 core + 34 extended role system prompts
 ├── knowledge-base/
+│   ├── FOUNDER_INTELLIGENCE.md    ← 300+ founder journeys → decision patterns
+│   ├── MARKET_INTELLIGENCE.md     ← Category maps, unit economics, pricing benchmarks
+│   ├── PATTERN_LIBRARY.md         ← 38 decision patterns with kill signals
 │   └── patterns/
-│       ├── AI_ERA_PATTERNS.md        ← Research-validated AI behavior patterns
-│       └── SOLO_FOUNDER_PLAYBOOKS.md ← 5 founder playbooks as AI behaviors
-└── examples/                 ← Real input → output walkthroughs
+│       └── SOLO_FOUNDER_PLAYBOOKS.md
+├── docs/
+│   ├── GETTING_STARTED.md
+│   └── CONTRIBUTING.md
+└── examples/                      ← Real input → output walkthroughs
 ```
+
+---
+
+## Why This vs. Generic Prompts
+
+A generic "act as a startup advisor" prompt gives you advice for one message.
+
+SoloOS CLAUDE.md gives you a co-pilot that:
+- **Knows your stage** without being told (infers from what you're asking)
+- **Remembers your experiments** (context files prevent recommending what already failed)
+- **Grounds advice in real data** (FOUNDER_INTELLIGENCE.md: "Danny Postma did X at $300K MRR peak")
+- **Forces kill signals** before you waste weeks on wrong assumptions
+- **Flags stage mismatches** ("you're asking about paid ads but you're $0 MRR — here's why that's wrong")
+- **Scores reversibility** so you know when to go fast vs. when to go careful
+
+Generic prompts give you a thinking partner. SoloOS gives you a co-founder who's seen 300 similar situations.
 
 ---
 
 ## What's Planned (Not Built Yet)
 
-Honest roadmap. None of this exists today:
+Honest roadmap:
 
-- **MCP Servers** — `soloos-research`, `soloos-marketing` etc. connecting to real APIs
-- **Python package** — `from soloos.roles import CMORole` for CrewAI / LangGraph
-- **Parallel swarm execution** — true multi-agent orchestration via Claude's sub-agent API
-- **Auto-context population** — automatic business-context.md updates from integrated tools
+- **MCP servers** connecting to real APIs (Reddit research, HN monitoring, competitor intelligence)
+- **Python package** for CrewAI / LangGraph integration
+- **True parallel swarm execution** via Claude sub-agent API
+- **Auto-context updates** from integrated business tools (Stripe, PostHog, etc.)
 
-If you want to contribute any of these, see [CONTRIBUTING.md](CONTRIBUTING.md).
-
----
-
-## Why Not Just Use ChatGPT or Generic Prompts?
-
-The difference is **behavioral programming vs. one-off prompting**.
-
-A generic "act as a CMO" prompt gets you a CMO for one message.
-
-SoloOS CLAUDE.md + `/role cmo` gets you a CMO that:
-- Knows your current MRR and growth rate (from context files)
-- Has already read your last 3 experiments and won't recommend what already failed
-- Applies April Dunford's positioning canvas without you asking
-- Flags when your GTM motion is wrong for your ACV before building a plan around it
-- Refuses to recommend brand investment before PMF (built into the behavioral rules)
-
-The depth compounds. Generic prompts don't.
+Everything that works, works today with stock Claude Code.
 
 ---
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+See [`docs/CONTRIBUTING.md`](docs/CONTRIBUTING.md).
 
 Highest-value contributions:
-- Sharper role system prompts (the closer to how a senior hire actually thinks, the better)
-- New examples with real input/output
-- `/onboard` improvements — reducing friction to context setup
-- MCP server implementations (if you build one, it goes here)
+- New examples with real input/output from your actual founder use
+- Sharper role system prompts (closer to how a senior hire actually thinks)
+- Additional patterns for PATTERN_LIBRARY.md with real kill signals
+- Auto-trigger rules for edge cases not covered in AUTO_TRIGGERS.md
 
 ---
 
 ## License
 
 MIT — use commercially, modify freely.
-
----
-
-*For the founder who refuses to hire when AI can staff the company — but only if it actually works.*

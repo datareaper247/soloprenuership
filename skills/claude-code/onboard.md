@@ -1,5 +1,11 @@
 # Onboard — Context Setup in 10 Questions
 
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: New session with no context loaded, "starting fresh", "you don't know my business", no MRR mentioned after 3 messages.
+
+---
+
+
 **Usage**: `/onboard`
 
 **When to run**: First time using SoloOS with a new project. Takes 10-15 minutes.

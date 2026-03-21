@@ -1,5 +1,11 @@
 # /geo — Geographic Expansion Skill
 
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: "expand to [country]", "international expansion", "launch in [market]". **STAGE GATE**: Only fires at K+ MRR. Flags premature expansion below this.
+
+---
+
+
 > Usage: `/geo [command] [arguments]`
 >
 > Activate: "use geo skill" or `/geo help`

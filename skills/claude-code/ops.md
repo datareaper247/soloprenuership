@@ -1,5 +1,11 @@
 # Ops — Business Operations Documents & Processes
 
+## Auto-Trigger (No Slash Command Needed)
+Fires automatically when founder says: "document this process", "SOP for X", "systematize X", "I keep doing X manually", "how to delegate X"
+
+---
+
+
 **Usage**: `/ops [command] "[context]"`
 
 Produces professional-grade operational documents — SOPs, legal templates, financial models, process audits, and hiring documents — ready for immediate use.
