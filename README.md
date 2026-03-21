@@ -1,13 +1,20 @@
-# SoloOS v2: The Cognitive OS for Solo Founders
+# SoloOS v3: The Cognitive OS for Solo Founders
 
-> *Intelligence that fires automatically. No slash commands required.*
-> *Every session is founder-aware. Every recommendation has a kill signal.*
-> *Grounded in real founder data from 300+ documented cases.*
+> *A goal-oriented reasoning engine that connects your decisions, actions, and outcomes into an emergent knowledge graph — turning your daily work into a personal playbook.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Skills: 17](https://img.shields.io/badge/Auto--Trigger%20Skills-17-purple.svg)](#skills)
 [![Roles: 10](https://img.shields.io/badge/Core%20Roles-10-blue.svg)](#roles)
 [![Works with: Claude Code](https://img.shields.io/badge/Works%20with-Claude%20Code-orange.svg)](#quick-start)
+[![Cross-platform](https://img.shields.io/badge/Also%20works-Claude.ai%20%7C%20API%20%7C%20Any%20LLM-green.svg)](integrations/claude-ai-system-prompt.md)
+
+---
+
+## What SoloOS v3 Actually Does
+
+**v1**: Required slash commands. You had to know `/validate` existed.
+**v2**: Auto-triggers. Claude detects intent and fires the right framework.
+**v3**: Learns from you. Every decision logged. Goals drive every answer. Knowledge compounds.
 
 ---
 
@@ -283,7 +290,29 @@ Generic prompts give you a thinking partner. SoloOS gives you a co-founder who's
 
 ---
 
-## What's Planned (Not Built Yet)
+## What's New in v3
+
+Three architectural breakthroughs. All zero-infrastructure. All built on top of v2.
+
+### 1. Personal Pattern Accrual
+Every decision you make gets logged to `knowledge-base/personal/founder-log.md` via **Session Synthesis** — an auto-trigger that fires at the end of sessions containing key decisions, experiments, or pivots. After 6 months, Claude reasons from 200+ of your own decisions with outcomes, not just generic founder data.
+
+### 2. Emergent Knowledge Graph (EKG)
+`[[type:id]]` wiki-link syntax across all context files creates a traversable knowledge graph with zero infrastructure. `[[D-017]]` links to `[[E-004]]` links to `[[P-06]]`. Your company's entire decision history becomes traversable. Claude follows the links to reason about causality, not just current state.
+
+### 3. Goal-Oriented Backwards Induction
+`context/mission.md` is the new strategic root. Declare your exit goal once. Claude derives the backwards induction model — what must be true at 60%, 30%, and 10% of your timeline — and evaluates every strategic question against that model. You stop optimizing for the wrong things at the wrong stage.
+
+**New auto-triggers**:
+- **KILL SIGNAL CHECK**: At session start, Claude checks `founder-log.md` for overdue outcome reviews and surfaces them before anything else.
+- **MISSION CHECK**: Every strategic answer evaluated against your declared critical path milestone.
+- **SESSION SYNTHESIS**: At session end, key decisions auto-logged with hypothesis + kill signal.
+
+Everything that works, works today with stock Claude Code.
+
+---
+
+## What's Still Planned (Not Built Yet)
 
 Honest roadmap:
 
@@ -291,8 +320,6 @@ Honest roadmap:
 - **Python package** for CrewAI / LangGraph integration
 - **True parallel swarm execution** via Claude sub-agent API
 - **Auto-context updates** from integrated business tools (Stripe, PostHog, etc.)
-
-Everything that works, works today with stock Claude Code.
 
 ---
 
