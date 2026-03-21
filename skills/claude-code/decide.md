@@ -50,14 +50,110 @@ Every `/decide` runs three voices in structured debate:
 
 ---
 
+## Pre-Debate Data Check (NEW — Fires Before Every Debate)
+
+Many decisions are data-collection problems disguised as decision problems. Running an adversarial debate on zero data produces confident-sounding wrong answers.
+
+Before entering the debate, check:
+
+```
+DATA READINESS CHECK:
+Decision type: [pricing / product / channel / hiring / pivot / other]
+Data available: [what we actually know vs. what we're assuming]
+Missing data: [what would make the right answer obvious]
+Collection time: [how long to gather the missing data]
+
+If missing data collectible in <14 days AND reversibility is ≤5/10:
+→ "Recommend gathering data first. Here's the 14-day experiment..."
+→ Debate runs anyway with explicit uncertainty flagging
+
+If missing data not collectible (real deadline, irreversible) OR reversibility ≥7/10:
+→ Proceed to debate with explicit assumptions labeled
+```
+
 ## How the Debate Works
 
-The three voices debate in this order:
+**Dual-Process Routing** (new in v3):
+- **System 1 (Fast)**: Reversibility ≥7/10 and strong pattern match → Skip full debate, return pattern + recommendation in under 60 seconds
+- **System 2 (Deliberate)**: Reversibility ≤5/10 OR no pattern match → Full adversarial debate below
+
+For System 1 fast-path, show the matched pattern explicitly:
+```
+PATTERN MATCH: P-[XX] — [Pattern name]
+Evidence: [Real founder who faced this exact situation + outcome]
+Recommendation: [1 sentence]
+Kill signal: [what proves this wrong in 30 days]
+(Use /decide --deep to force full System 2 debate)
+```
+
+For System 2 full debate, run voices in this order:
 1. Each states their position (1 sentence)
 2. The two strongest objections get surfaced
 3. The debate resolves to a recommendation
 4. A reversibility score is assigned
 5. A kill signal is defined (how to know within 30 days if you're wrong)
+
+**BSHR Evidence Display** (mandatory in System 2): The BSHR loop must SHOW its evidence, not apply it silently:
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PATTERN INTELLIGENCE (from BSHR search)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Closest match: P-[XX] — [Pattern name]
+Founder evidence: "[Founder X] faced [this situation] at [$Y MRR] and chose [Z]. Outcome: [result]."
+Your situation differs in: [what's different — don't pretend it's identical]
+Confidence in pattern match: [High / Medium / Low — and why]
+```
+
+---
+
+## Anti-Advisor Protocol (Mandatory for Reversibility ≤5/10)
+
+The Devil's Advocate voice is not enough. For hard-to-reverse decisions, a dedicated **Anti-Advisor** runs before the recommendation is finalized.
+
+The Anti-Advisor's mandate: *Find the scenario where this decision is catastrophically wrong.* Not "here are some risks" — the strongest possible case for why this fails.
+
+```
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ANTI-ADVISOR REPORT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Deliberately pessimistic. This is the Red Team report.]
+
+Failure scenario: [The most likely way this goes badly wrong — be specific]
+Underlying assumption that breaks it: [The ONE assumption, if wrong, kills this]
+Evidence this assumption is fragile: [Why we can't be confident it's true]
+Pre-mortem (6 months from now, this failed): [What specifically happened]
+
+Anti-advisor verdict: [STRONG RISK / MODERATE RISK / ACCEPTABLE RISK]
+What would change this verdict: [Specific data that would lower the risk]
+```
+
+The recommendation is only considered final after the Anti-Advisor report is shown to the founder. They can override — but they saw the strongest case against.
+
+## Expected Value Framing (for time-allocation decisions)
+
+When the decision involves allocating founder time between two activities, add EV framing:
+
+```
+EV ANALYSIS: [Activity A] vs [Activity B]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Activity A]:
+  Time required: [X hours]
+  Estimated probability of positive outcome: [Y%]
+  If outcome positive: $[Z] revenue impact
+  EV: Y% × $Z ÷ X hours = $[EV/hr]
+
+[Activity B]:
+  Time required: [X hours]
+  Estimated probability: [Y%]
+  Revenue impact if success: $[Z]
+  EV: Y% × $Z ÷ X hours = $[EV/hr]
+
+Highest EV activity: [A or B] at $[EV/hr]
+Caveat: [What this analysis misses — asymmetric bets, compounding, etc.]
+```
+
+*Note: These are rough estimates, not precision math. The point is to surface order-of-magnitude differences, not false precision.*
 
 ---
 

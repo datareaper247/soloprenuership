@@ -32,7 +32,37 @@ This skill won't let you pass without real demand signals.
 
 ## The Validation Framework
 
-Every idea must pass through 4 gates in sequence. Fail any gate = don't build yet.
+Every idea must pass through a Pre-Gate and then 4 gates in sequence. Fail any gate = don't build yet.
+
+### GATE 0: ChatGPT Substitution Test (NEW — Pre-Gate)
+
+**The #1 undetected failure mode (25-30% of AI product failures): the free LLM absorbed your use case.**
+
+Before ANY validation work, run this test in 5 minutes:
+
+```
+CHATGPT SUBSTITUTION TEST:
+1. Open ChatGPT or Claude (free tier)
+2. Describe your product's core value in one sentence
+3. Ask it to perform that exact function for you — right now
+
+Result A: It does it adequately → You're building against a free competitor with infinite marketing budget.
+          Options: (a) Find narrower niche with compliance/integration moat, (b) Find workflow step
+          where LLM alone fails (data connectivity, multi-step automation, domain-specific training)
+
+Result B: It can't do it → You have a real gap. Continue to Gate 1.
+Result C: It does it badly → Document the gap specifically. That gap is your product.
+```
+
+**Services-to-Software shortcut** (highest validation confidence): Before running the 4 gates, ask: "Am I this customer?" If yes — you have lived experience as your own validation. Skip Gates 1-2. Document your exact painful workflow, then jump to Gate 3 (will others pay?) and Gate 4 (unit economics).
+
+```
+SELF-AS-CUSTOMER CHECK:
+- Do I personally experience this problem? [yes/no]
+- Have I built/documented a manual solution for myself? [yes/no]
+- If yes to both → document your workflow first, validate others will pay second
+  (This is the Arjun Jain / Services-to-Software flywheel — highest conviction path)
+```
 
 ```
 GATE 1: Problem Existence
@@ -48,8 +78,9 @@ GATE 4: Unit Economics
 Does the pricing make sense given the problem's perceived value?
 ```
 
-If all 4 gates pass → BUILD
-If any gate fails → The skill tells you exactly what to test first
+If Gate 0 passes AND all 4 gates pass → BUILD
+If Gate 0 fails → Narrow or reframe before continuing
+If any of Gates 1-4 fail → The skill tells you exactly what to test first
 
 ---
 
