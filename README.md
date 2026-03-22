@@ -3,7 +3,7 @@
 > *A goal-oriented reasoning engine that connects your decisions, actions, and outcomes into an emergent knowledge graph — turning your daily work into a personal playbook.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Skills: 29](https://img.shields.io/badge/Auto--Trigger%20Skills-29-purple.svg)](#skills)
+[![Skills: 30](https://img.shields.io/badge/Auto--Trigger%20Skills-30-purple.svg)](#skills)
 [![Roles: 10](https://img.shields.io/badge/Core%20Roles-10-blue.svg)](#roles)
 [![Works with: Claude Code](https://img.shields.io/badge/Works%20with-Claude%20Code-orange.svg)](#quick-start)
 [![Cross-platform](https://img.shields.io/badge/Also%20works-Claude.ai%20%7C%20API%20%7C%20Any%20LLM-green.svg)](integrations/claude-ai-system-prompt.md)
