@@ -3,7 +3,7 @@
 > *A goal-oriented reasoning engine that connects your decisions, actions, and outcomes into an emergent knowledge graph — turning your daily work into a personal playbook.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Skills: 28](https://img.shields.io/badge/Auto--Trigger%20Skills-28-purple.svg)](#skills)
+[![Skills: 29](https://img.shields.io/badge/Auto--Trigger%20Skills-29-purple.svg)](#skills)
 [![Roles: 10](https://img.shields.io/badge/Core%20Roles-10-blue.svg)](#roles)
 [![Works with: Claude Code](https://img.shields.io/badge/Works%20with-Claude%20Code-orange.svg)](#quick-start)
 [![Cross-platform](https://img.shields.io/badge/Also%20works-Claude.ai%20%7C%20API%20%7C%20Any%20LLM-green.svg)](integrations/claude-ai-system-prompt.md)
@@ -191,6 +191,7 @@ All auto-trigger. All still available as slash commands for explicit use.
 | `hire` | "should I hire" / "first employee" / "I'm the bottleneck" | Hire Gate + archetype matrix + trial protocol + Arthashastra Amatya principle |
 | `brand` | "build in public" / "personal brand" / "grow my audience" | Kahl Method + platform matrix + content flywheel + 1000 True Fans math |
 | `fundraising` | "should I raise" / "seed round" / "term sheet" / "cap table" | Raise Gate + bootstrapped path model + investor type matrix + term sheet decoder |
+| `product-moat` | "how do I reduce churn" / "switching costs" / "make my product sticky" | 5 moat architectures + 10 asymmetric retention features + moat layer sequencing |
 
 ### Specialist Tools
 | Skill | Auto-fires when | Framework |

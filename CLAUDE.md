@@ -131,6 +131,9 @@ Reference `skills/AUTO_TRIGGERS.md` for the full routing table.
 **TAX-STRUCTURE fires when**: "what entity should I form", "LLC vs S-Corp", "self-employment tax", "quarterly taxes", "should I set up an S-Corp", founder at $50K+ ARR/MRR mentioned without entity structure
 → Apply tax optimization ladder: sole prop → S-Corp election → international structure (Dutch BV / Estonian OÜ). See finance.md tax section. Flag: "At your revenue level, entity structure may be costing more than all your tools combined."
 
+**PRODUCT-MOAT fires when**: "how do I reduce churn", "users churn after X days", "switching costs", "retention features", "make my product sticky", "competitor copied my feature", "build a moat", "customers don't come back", "what features increase retention"
+→ Run MOAT GATE: D30 retention check first. If <40%: retention problem before moat. Stage-calibrated: <$5K → gather intel / $5K-$20K → Workflow Lock-In / $20K+ → layer moats. Apply 5 moat architectures + 10 asymmetric retention features. See `skills/claude-code/product-moat.md`.
+
 ---
 
 ## ANTI-PATTERN DETECTION (Fire Before Any Answer, Always)

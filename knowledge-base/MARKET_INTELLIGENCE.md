@@ -227,3 +227,56 @@ $50K+ MRR:                     <1%
 3. No sustainable acquisition channel: 20-25%
 4. Unit economics collapsed (API cost increases): 8-12%
 5. Founder burnout / lost interest: 5-10%
+
+---
+
+## SaaS BENCHMARK REFERENCE TABLE
+
+Reference when evaluating founder health metrics. Use these before any "is this good or bad" assessment.
+
+| Metric | Healthy | Warning | Kill Signal | Notes |
+|--------|---------|---------|-------------|-------|
+| Monthly churn (B2B SaaS) | <3% | 5-7% | >8% | General SaaS benchmark |
+| Monthly churn (compliance tools) | <1.5% | 2-4% | >4% | Compliance = higher retention |
+| Monthly churn (consumer SaaS) | <5% | 7-10% | >12% | Consumer churns faster |
+| D30 retention | >45% | 30-40% | <30% | Core PMF signal |
+| D90 retention | >35% | 20-30% | <20% | Long-term value signal |
+| LTV:CAC ratio | >3x | 2-3x | <2x | Below 2x = broken unit economics |
+| Gross margin (SaaS) | >75% | 60-75% | <60% | AI products: watch API costs |
+| Annual plan take rate | >25% | 10-20% | <10% | Higher = healthier cash flow |
+| NRR (Net Revenue Retention) | >100% | 90-100% | <90% | >110% = expansion-led growth |
+| Support time at $20K MRR | <30 min/day | 1-2 hrs/day | >2 hrs/day | >2 hrs = systematize now |
+| Cold email to demo rate | >1.5% | 0.5-1% | <0.5% | Below 0.5% = wrong message or ICP |
+| Demo to paid conversion | >20% | 10-15% | <10% | Below 10% = price, objections, or wrong buyer |
+| PMF signal (Sean Ellis) | >40% "very disappointed" | 25-40% | <25% | Below 25% = do not scale |
+| MoM growth ($0-$10K ARR) | >20% | 10-20% | <10% for 2+ months | Below 10% for 2 months = change hypothesis |
+| MoM growth ($10K-$100K ARR) | >15% | 8-15% | <8% for 3 months | Channel saturation or PMF incomplete |
+| MoM growth ($100K+ ARR) | >10% | 5-10% | <5% for 3 months | Requires new channel or pricing expansion |
+| Working hours at $30K MRR | 30-35 hrs/wk | 35-45 hrs/wk | >45 hrs/wk | Leverage problem, not capacity problem |
+| CAC payback period | <6 months | 6-12 months | >12 months | Long payback = cash flow risk |
+| API cost as % of revenue | <15% | 15-25% | >30% | AI-specific: watch LLM cost creep |
+| Activation rate (to milestone) | >60% | 40-60% | <40% | Onboarding problem if low |
+| Time to activation milestone | <10 minutes | 10-30 minutes | >30 minutes | >30 min = redesign onboarding |
+
+### Stage-Specific Benchmark Application
+
+| Stage | Primary Benchmark | Secondary Benchmark | What to Ignore |
+|-------|------------------|--------------------|----|
+| $0-$10K ARR | Demo to paid >15% | D30 retention >40% | Monthly churn (too few customers for signal) |
+| $10K-$100K ARR | MoM growth >15% | NRR >95% | Gross margin (fine-tune later) |
+| $100K-$500K ARR | NRR >100% | LTV:CAC >3x | MoM absolute growth (focus on rates) |
+| $500K+ ARR | NRR >110% | Annual take rate >30% | CAC alone (look at blended + payback) |
+
+### Moat-Type Retention Benchmarks
+
+| Product Type | 6-Month Retention | 12-Month Retention | Monthly Churn |
+|---|---|---|---|
+| Compliance tools | 80-90% | 70-80% | 1-2% |
+| Workflow lock-in (B2B) | 70-80% | 60-70% | 2-3% |
+| Data/analytics tools | 60-70% | 50-60% | 3-5% |
+| General B2B SaaS | 50-65% | 40-55% | 4-6% |
+| Consumer/prosumer | 35-50% | 25-40% | 6-10% |
+| AI commoditized tools | 25-40% | 15-30% | 8-14% |
+
+*Sources: Baremetrics Open benchmarks, SaaStr annual survey, Stripe Atlas published data, ChartMogul SaaS benchmarks, 300+ documented founder cases (Indie Hackers, Twitter/X, podcasts 2018-2026)*
+

@@ -151,22 +151,154 @@ Timeline: [how many days to gather 5 commitments]
 
 ### Phase 4: The Pricing Sanity Check
 
-Founders systematically underprice because they're afraid. This gate prevents that.
+Founders systematically underprice because they're afraid. This gate runs 4 pricing frameworks to find the right number before you commit.
+
+> **The Marc Lou Insight**: "If your first 20 customers paid without negotiating, your price is almost certainly too low."
+
+---
+
+#### Framework 1: Anchored Value Calculation
+
+Show the cost of the alternative before showing your price. The anchor sets the frame.
 
 ```
-PRICING ANALYSIS:
-Problem severity: [1-10 — how urgent/painful is this?]
-Cost of status quo: [what does NOT solving this cost them per month?]
-Comparable solutions: [what do similar solutions charge?]
-Your target price: $[X]
+ANCHOR CALCULATION:
+Problem: [what does this replace?]
+Alternative cost: [hours × hourly rate] OR [service cost] OR [tool cost × time saved]
 
-PRICE SANITY:
-If your price < 10% of the cost of the problem → you're undercharging. Raise it.
-If your price > 50% of the cost of what they pay for alternatives → justify the premium.
+Format: "Replaces [X hours] of [activity] at $[rate]/hr = $[total] of value."
+Your price: $[actual price]
+Value ratio: [anchor ÷ your price] — must be >5x to feel compelling
 
-Price recommendation: $[X]
+ShipFast example: $4,000 anchor ($40/hr × 100 hours saved) → $299 felt cheap.
+The anchor belongs above the fold on your landing page, not below it.
+
+ANCHOR RECOMMENDATION:
+Anchor: $[X] in value
+Your price: $[X]
+Value multiple: [X]x
+```
+
+---
+
+#### Framework 2: Van Westendorp Price Sensitivity
+
+Run this BEFORE committing to a price point. Requires 30+ respondents (use your waitlist, cold outreach targets, or ICP communities).
+
+**The 4 questions**:
+1. "At what price would [Product] be so cheap you'd question its quality?"
+2. "At what price is [Product] starting to feel like a good deal?"
+3. "At what price is [Product] starting to feel expensive but you'd still consider it?"
+4. "At what price would [Product] be too expensive to consider?"
+
+**Plot 4 curves**:
+- "Too cheap" (Q1) — ascending
+- "Good value" (Q2) — descending
+- "Getting expensive" (Q3) — ascending
+- "Too expensive" (Q4) — descending
+
+**Acceptable price range**: Where "too cheap" crosses "getting expensive" → where "too expensive" crosses "good value"
+
+**Optimal price point** (PMC): Where "too expensive" and "too cheap" intersect
+
+```
+VAN WESTENDORP SHORTCUT (for pre-survey situations):
+Too cheap threshold: $[X] (below this, customers distrust quality)
+Sweet spot: $[X]-$[Y] (acceptable range)
+Ceiling: $[Z] (above this, majority won't consider)
+Recommended launch price: Middle of acceptable range
+```
+
+**Practical shortcut without survey**: Map against 3 comparable tools in the category. Price at 70-100% of the mid-tier competitor (not the cheapest, not the most expensive). Adjust after 20 customers.
+
+---
+
+#### Framework 3: Three-Tier Decoy Pricing Structure
+
+The decoy effect: a middle-tier option looks compelling when flanked by a cheap option (obviously limited) and an expensive option (obviously more than needed).
+
+```
+DECOY PRICING TEMPLATE:
+
+Starter: $[X]/mo
+  → Include: [2-3 features — deliberately limited to make next tier look right]
+  → Cap: [sessions / documents / seats / API calls — specific limit]
+  → Designed to: make Pro look like the obvious choice
+
+Pro: $[2-3X]/mo  ← designed as the natural landing point
+  → Include: [full core features — everything most customers need]
+  → Cap: [generous or unlimited]
+  → This is the tier you optimize conversion for
+
+Business: $[4-5X]/mo
+  → Include: [multi-seat, advanced features, priority support]
+  → Anchor effect: makes Pro look like a deal by comparison
+
+Recommended Pro:Starter price ratio: 2.5-3x
+Recommended Business:Pro price ratio: 2x
+
+Annual pricing: 20% discount on Pro tier (target 20-35% of new users choosing annual)
+```
+
+**Example calibration** (generic B2B SaaS tool):
+- Starter: $29/mo (up to 10 documents/month)
+- Pro: $79/mo (unlimited + integrations) ← designed as the landing point
+- Business: $149/mo (multi-seat + API + priority) ← anchor for Pro
+
+---
+
+#### Framework 4: Price Increase Playbook (For Post-Launch)
+
+When to raise: After 50 paying customers with stable conversion rate.
+
+```
+MARC LOU PRICE LADDER:
+ShipFast actual history: $99 → $149 → $199 → $299
+
+RAISE PROTOCOL:
+1. Announce on Twitter/X with 7-day warning: "Raising price from $X to $Y on [date]"
+2. Grandfather ALL existing customers at their current rate (non-negotiable — loyalty signal)
+3. Monitor conversion rate for 2 weeks after increase
+4. Kill signal: conversion drops >50% from prior level → found the price ceiling → return to prior price
+5. Annual lock-in at increase announcement:
+   Offer existing monthly customers: "Lock in annual at current rate before price increases"
+   Expected conversion: 15-25% of monthly → annual
+   Benefit: Cash flow + churn reduction simultaneously
+
+Price increase frequency: Every 50 new customers OR every $5K MRR milestone
+```
+
+---
+
+#### Unified Pricing Output
+
+```
+PRICING ANALYSIS: [Product Name]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ANCHOR VALUE:
+Problem cost / alternative: $[X] per [period]
+Your price: $[X]
+Value multiple: [X]x → [compelling / marginal / weak]
+
+PRICE RANGE (Van Westendorp estimate):
+Too cheap: below $[X]
+Acceptable range: $[X]-$[Y]
+Ceiling: above $[Z]
+
+RECOMMENDED LAUNCH PRICE: $[X]/[period]
 Floor (don't go below): $[X]
-Ceiling (push test): $[X]
+Growth price (after 50 customers): $[X]
+
+TIER STRUCTURE:
+Starter: $[X]/mo — [key limitation]
+Pro (main): $[X]/mo — [full value]
+Business: $[X]/mo — [multi-seat / enterprise]
+
+PRICING RED FLAGS:
+→ Price < $[X]: Underpricing. Raise before launch.
+→ First 20 customers paid without negotiating: ⚠️ TEST HIGHER.
+→ Demo to paid conversion <10%: NOT a pricing problem — wrong buyer or objections.
 ```
 
 ---
@@ -200,9 +332,11 @@ Commitment plan:
   Timeline: [days]
 
 GATE 4: UNIT ECONOMICS? [✅ PASS / ⚠️ UNCLEAR / ❌ FAIL]
-Recommended price: $[X]/[mo|yr|one-time]
-Problem cost: $[X]/mo (basis: [how calculated])
-Price floor: $[X] | Price ceiling: $[X]
+Anchor value: $[X] ([problem cost or alternative cost])
+Recommended price: $[X]/[mo|yr|one-time] (value multiple: [X]x)
+Acceptable range: $[X]-$[Y] (Van Westendorp estimate)
+Price floor: $[X] | Growth target price: $[X]
+Tier structure: Starter $[X] / Pro $[X] / Business $[X]
 
 ════════════════════════════════════════════════════
 OVERALL VERDICT

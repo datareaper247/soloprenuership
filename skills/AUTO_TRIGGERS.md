@@ -364,6 +364,21 @@ When multiple triggers match, apply in this order:
 **Apply fundraising.md: term sheet basics, investor type matrix, financial narrative framework.**
 **ALWAYS include: "This is not financial or legal advice. Engage qualified counsel before signing."**
 
+### PRODUCT-MOAT — fires when:
+- "how do I reduce churn" / "churn is too high"
+- "switching costs" / "stickiness" / "retention features"
+- "how do I make my product sticky"
+- "users churn after [X] days"
+- "competitor copied my feature"
+- "how do I build a moat"
+- "what features increase retention"
+- "customers don't come back"
+
+**Run MOAT GATE first**: D30 retention check. If <40%: "Retention problem first — no moat works on a leaky bucket."
+**Stage check**: <$5K MRR → gather moat intelligence only, don't build yet. $5K-$20K → Workflow Lock-In. $20K+ → layer moats.
+**Apply**: 5 moat architectures ranked by strength + 10 asymmetric retention features with implementation specs.
+**Reference**: `skills/claude-code/product-moat.md`
+
 ---
 
 ## ANTI-PATTERN FLAGS (fire before any skill, always)

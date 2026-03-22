@@ -208,34 +208,162 @@ Revise ICP definition to exclude the segment you consistently lose to.
 
 ### The most underused acquisition strategy: capture competitors' churning customers
 
+> **Real case**: Evernote 2023 price increase + degraded free tier → Notion, Obsidian, Bear all saw measurable traffic from "Evernote alternative" searches. Founders with SEO pages live captured lasting acquisition at $0 CAC. The window is 30-90 days.
+
+---
+
+### System 1: The 4 Warning Signals to Monitor (Set These Up Now)
+
 ```
-DISPLACEMENT OPPORTUNITY PROTOCOL:
+DISPLACEMENT MONITORING SYSTEM:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Fires when: Competitor announces price increase, acquisition, shutdown, or major complaint spike
 
-DISPLACEMENT SIGNALS TO MONITOR:
-→ Competitor announces price increase: [X]% of their customers are now price-displaced
-→ Competitor acquired by PE/enterprise: culture/support often degrades in 6-12 months
-→ Competitor's G2 review volume spikes (especially 1-3 stars): real-time churn signal
-→ Reddit thread complaining about competitor: timing for outreach
+Signal 1: Acquisition Announcements
+→ Google Alert: "[competitor name] acquired"
+→ Google Alert: "[competitor name] funding round"
+→ Why: PE acquisitions → support degradation in 6-12 months
+   Enterprise acquisitions → culture/pricing change in 3-6 months
+→ Action: Start content positioning immediately, outreach in 30 days
 
-DISPLACEMENT OUTREACH SEQUENCE:
-Day 1 (immediately): Post in relevant subreddit/community
-  "We noticed [competitor] just raised prices. We built [your product] for exactly
-  the use case [competitor] serves — here's a direct comparison. Free migration assistance for
-  the first 20 companies that switch this month."
+Signal 2: G2/Capterra Review Velocity Spikes
+→ Threshold: >20 reviews in a month that averaged 3/month = 7x spike
+→ How to monitor: Check G2 profile monthly (free). Sort by "most recent."
+→ What to look for: Sudden influx of 1-3 star reviews OR sudden influx of
+   4-5 star reviews (both signal change — unhappy leavers or grateful arrivals)
+→ Action: Read the negative reviews. Mine the exact complaint language.
+   These are your SEO keywords and outreach hooks.
 
-Day 3: LinkedIn targeting (competitor job title + location filters)
-  Subject: "[Competitor] to [Your product] — what 47 teams told us after switching"
+Signal 3: Reddit Migration Threads
+→ Search monthly: "[competitor] alternatives" on Reddit
+→ Search monthly: "switched from [competitor]" on Reddit
+→ Search monthly: "[competitor] reddit" sorted by "New"
+→ Why: Reddit threads have 30-90 day windows of active discussion
+   These are real buyers in market, expressing live intent
+→ Action: Respond to threads with helpful comparison (no spam — be genuinely useful)
 
-Day 7: Retarget with comparison landing page
-  Build: yourproduct.com/vs/competitor-name (SEO value + conversion tool)
-
-The "Competitive Moat from Someone Else's Crisis" pattern:
-FreshBooks grew significantly from QuickBooks support complaints.
-Notion gained users every time Evernote had outages.
-Shopify accelerated when Amazon closed storefronts.
+Signal 4: Competitor Changelog Gaps
+→ Monitor: competitor's changelog, blog, or release notes page
+→ Threshold: 60+ days without product updates = team distracted
+→ Tool: Visualping or ChangeTower (free tier) on their /changelog URL
+→ Why: Update gaps indicate internal disruption (fundraise, pivot, key hire departure)
+→ Action: Now is the moment to DM their power users with a comparison
 ```
+
+---
+
+### System 2: Displacement Response Playbook (30-90 Day Window)
+
+When any signal fires, execute this sequence:
+
+```
+DAY 1 — Content Strike
+→ Publish: "[Competitor] alternative: How to migrate in 30 minutes"
+→ Format: Step-by-step migration guide (even if your migration isn't yet automated)
+→ SEO target: "[Competitor] alternative", "switch from [Competitor]", "[Competitor] pricing"
+→ Distribution: Your existing email list + social channels
+→ Do NOT frame as attack — frame as "if you're looking for alternatives, here's what
+  teams that switched to us say"
+
+DAY 2 — Community Seeding (Genuine, Not Promotional)
+→ Find the active Reddit threads: r/[industry], r/SaaS, r/entrepreneur
+→ Search for "[Competitor] alternative" posts created in the last 7 days
+→ Post a genuinely helpful comparison (pros AND cons of both tools)
+→ One sentence mention of your product at end: "We built [Product] for exactly this use case"
+→ Rule: Add value first. Mention second. Spam = permaban.
+
+DAYS 3-7 — Targeted Outreach to Identifiable Customers
+→ Find competitor customers via:
+   - LinkedIn: job title + "[Competitor]" in profile or "uses [Competitor]" in posts
+   - G2 reviewer list (public names in many cases)
+   - Twitter/X: search "[Competitor] + [frustration keyword]"
+   - Their integration marketplace listings (public customer logos)
+→ Outreach message (3 sentences max):
+   "Hey [name] — saw you use [Competitor]. We've had [N] teams switch over the past
+   [timeframe] after [their specific pain point]. Happy to do a free 15-minute comparison
+   call if that'd be useful — no pitch, just a comparison."
+→ Volume: 20-50 targeted DMs. Not mass email. Personal.
+
+DAYS 8-30 — Paid Amplification (If Search Volume Warrants)
+→ Check: Google Keyword Planner or Ahrefs for "[Competitor] alternative" monthly searches
+→ Threshold: >200 searches/month = worth running a paid campaign
+→ Target: "[Competitor] alternative" + "[Competitor] pricing" + "[Competitor] vs [YourProduct]"
+→ Landing page: /vs/[competitor-name] with direct feature comparison table
+→ Budget: $5-20/day to start. Scale based on CAC vs. LTV.
+
+DAYS 30-90 — SEO Compound Effect
+→ The "[Competitor] alternative" page you published on Day 1 begins ranking
+→ Monitor ranking weekly: Google Search Console or Ahrefs
+→ Iterate: Add FAQ section with real objections from your displacement outreach calls
+→ Add testimonials from customers who switched (most powerful: "I was on [Competitor] for 2 years")
+→ This page should become a permanent top-5 acquisition channel
+```
+
+---
+
+### System 3: Pricing Change Tracking Automation
+
+```
+SETUP (30 minutes, free):
+→ Tool: Visualping or ChangeTower (free tier) OR Firecrawl API ($16/mo for automation)
+→ URL to monitor: competitor's /pricing page
+→ Alert: Any text change → email or Slack notification
+→ Response time target: <24 hours after detection
+
+WHEN COMPETITOR RAISES PRICES:
+→ Immediate action: Email your best monthly customers offering annual lock-in at current rate
+  Subject: "[Competitor] just raised prices. Here's how to lock in yours."
+  Body: "We've kept our pricing stable while [Competitor] increased theirs. Annual plan
+  locks in your current rate for 12 months. [X]% of our customers who locked in annual
+  are glad they did."
+→ Expected outcome: 15-25% of your monthly customers convert to annual
+→ Secondary benefit: improves your cash position AND reduces future churn simultaneously
+
+WHEN COMPETITOR LOWERS PRICES:
+→ Do NOT panic-match immediately
+→ First: Read the 5-layer autopsy framework — understand WHY they lowered
+→ Options: (a) Hold price + articulate differentiation more clearly, (b) Match + emphasize
+  feature superiority, (c) Add a new value-add without lowering price
+→ Timeline: Respond within 7 days maximum
+```
+
+---
+
+### System 4: Review Mining for Feature Gaps
+
+```
+SETUP (2 hours, free):
+Source: G2 + Capterra 1-3 star reviews, top 3 competitors, first 50 reviews each
+Tag by category: feature complaint / UX pain / support issue / reliability / pricing
+
+PROCESS:
+1. Export or manually copy first 50 1-3 star reviews per competitor to a spreadsheet
+2. Add column: "Category" — tag each complaint
+3. Add column: "Exact language" — copy the verbatim customer phrase
+4. Add column: "Our product does this? Y/N"
+5. Sort by frequency
+
+TRIGGER THRESHOLD:
+→ 5+ reviews mentioning same gap → roadmap candidate
+→ Gap your product already solves → direct outreach / positioning update
+→ Gap your product doesn't solve → build vs. acknowledge decision
+
+COPY MINING VALUE:
+→ Exact customer language from negative competitor reviews = your landing page ammunition
+→ "Impossible to use without a tutorial" → Your copy: "Set up in 8 minutes. No tutorial required."
+→ "Customer support takes days to respond" → Your copy: "Founder replies in 4 hours or less."
+→ This language converts 15-30% better than founder-written copy because it matches exact search intent
+```
+
+---
+
+### The "Competitive Moat from Someone Else's Crisis" Pattern
+
+Historical precedents:
+- FreshBooks grew significantly from QuickBooks support complaints
+- Notion gained users every time Evernote had outages (2023 pricing collapse was largest)
+- Shopify accelerated when Amazon closed storefronts
+- Basecamp grew after every enterprise PM tool pricing increase
+- Bear app (notes) spiked 40%+ monthly downloads after every Evernote degradation
 
 ---
 
