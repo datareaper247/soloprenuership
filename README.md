@@ -7,6 +7,8 @@
 [![Roles: 10](https://img.shields.io/badge/Core%20Roles-10-blue.svg)](#roles)
 [![Works with: Claude Code](https://img.shields.io/badge/Works%20with-Claude%20Code-orange.svg)](#quick-start)
 [![Cross-platform](https://img.shields.io/badge/Also%20works-Claude.ai%20%7C%20API%20%7C%20Any%20LLM-green.svg)](integrations/claude-ai-system-prompt.md)
+[![MCP Server](https://img.shields.io/badge/MCP%20Server-soloos--core-blueviolet.svg)](mcp/soloos-core/)
+[![CLI](https://img.shields.io/badge/CLI-soloos%20command-brightgreen.svg)](mcp/soloos-core/)
 
 ---
 
@@ -15,6 +17,19 @@
 **v1**: Required slash commands. You had to know `/validate` existed.
 **v2**: Auto-triggers. Claude detects intent and fires the right framework.
 **v3**: Learns from you. Every decision logged. Goals drive every answer. Knowledge compounds.
+**v3.1**: Live tool-use. The knowledge base is now a working MCP server — Claude calls `match_pattern()` instead of reading markdown.
+
+```bash
+# Claude Code — add the intelligence engine as a tool
+pip install -e mcp/soloos-core
+claude mcp add soloos-core -- soloos-mcp
+
+# Terminal — query founder intelligence directly
+soloos pattern "should I add a free tier at $3K MRR"
+soloos market "AI resume builder"
+soloos stage '$5K' "hiring decisions"
+soloos signals                        # Kill signal due date check
+```
 
 ---
 

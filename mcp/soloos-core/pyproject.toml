@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "soloos-core"
+version = "1.0.0"
+description = "SoloOS Core MCP Server — Founder Intelligence Engine for Claude Code"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+keywords = ["mcp", "solo-founder", "startup", "claude", "ai", "intelligence"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+]
+
+dependencies = [
+    "mcp[cli]>=1.0.0",
+]
+
+[project.scripts]
+soloos-mcp = "soloos_core.server:main"
+soloos = "soloos_core.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/soloos_core"]
+
+[tool.hatch.metadata]
+allow-direct-references = true
