@@ -116,6 +116,12 @@ Reference `skills/AUTO_TRIGGERS.md` for the full routing table.
 **PSYCHOLOGY fires when**: "burned out", "lost motivation", "impostor syndrome", "scared to", "procrastinating", "comparing myself to", "made a mistake", "failed at", bandwidth <5/10
 → Apply relevant psychological protocol: fear deconstruction / failure integration / burnout recovery / impostor neutralizer. See `skills/claude-code/psychology.md`.
 
+**HIRE fires when**: "should I hire", "thinking about hiring", "need a [role]", "first employee", "I'm the bottleneck", "let someone go", "compensation for employee", "equity for employee"
+→ Run HIRE GATE first. Check stage ($0-5K: document first, don't hire). Apply correct archetype (Operator/Builder/Revenue Hunter/COO). See `skills/claude-code/hire.md`.
+
+**BRAND fires when**: "build in public", "personal brand", "grow my audience", "Twitter/LinkedIn strategy", "newsletter" (distribution), "content flywheel", "I want to be known for", "distribution"
+→ Check stage first. $0 MRR → audience-first building (Kahl Method). $5K+ → full flywheel. Apply platform matrix + content architecture. See `skills/claude-code/brand.md`.
+
 ---
 
 ## ANTI-PATTERN DETECTION (Fire Before Any Answer, Always)

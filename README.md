@@ -3,7 +3,7 @@
 > *A goal-oriented reasoning engine that connects your decisions, actions, and outcomes into an emergent knowledge graph — turning your daily work into a personal playbook.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Skills: 25](https://img.shields.io/badge/Auto--Trigger%20Skills-25-purple.svg)](#skills)
+[![Skills: 27](https://img.shields.io/badge/Auto--Trigger%20Skills-27-purple.svg)](#skills)
 [![Roles: 10](https://img.shields.io/badge/Core%20Roles-10-blue.svg)](#roles)
 [![Works with: Claude Code](https://img.shields.io/badge/Works%20with-Claude%20Code-orange.svg)](#quick-start)
 [![Cross-platform](https://img.shields.io/badge/Also%20works-Claude.ai%20%7C%20API%20%7C%20Any%20LLM-green.svg)](integrations/claude-ai-system-prompt.md)
@@ -188,6 +188,8 @@ All auto-trigger. All still available as slash commands for explicit use.
 | `finance` | "runway" / "pricing" / "what's my company worth" | CFO engine: unit economics, cash flow, valuation, exit prep |
 | `network` | "warm intro" / "investors" / "need an advisor" | Warm intro machine + investor compatibility + partner intelligence |
 | `exit` | "thinking about selling" / "acquisition offer" | Exit engineering: acquirer targeting, deal structure, valuation optimization |
+| `hire` | "should I hire" / "first employee" / "I'm the bottleneck" | Hire Gate + archetype matrix + trial protocol + Arthashastra Amatya principle |
+| `brand` | "build in public" / "personal brand" / "grow my audience" | Kahl Method + platform matrix + content flywheel + 1000 True Fans math |
 
 ### Specialist Tools
 | Skill | Auto-fires when | Framework |

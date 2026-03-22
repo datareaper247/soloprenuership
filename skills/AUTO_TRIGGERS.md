@@ -313,6 +313,38 @@ When multiple triggers match, apply in this order:
 
 ---
 
+### HIRE — fires when:
+- "should I hire" / "thinking about hiring"
+- "need a [role]" / "looking for an engineer/sales/VA"
+- "first employee" / "first full-time hire"
+- "I'm the bottleneck" (also triggers OPS-AUTO)
+- "my team" / "managing people"
+- "let someone go" / "fire [employee]"
+- "compensation" / "equity for employee"
+
+**Run the HIRE GATE first**: "Can you describe exactly what this person will do in Week 1? Do you have a written SOP they can execute without asking you?"
+**Stage check**: If <$5K MRR → "Document the process first. Hire to the document, not to the need."
+**Apply the correct first hire archetype from hire.md: Operator / Builder / Revenue Hunter / COO.**
+
+---
+
+### BRAND — fires when:
+- "build in public" / "building in public"
+- "personal brand" / "grow my audience"
+- "Twitter strategy" / "LinkedIn strategy" / "content flywheel"
+- "newsletter" (distribution context, not content creation)
+- "I want to be known for" / "how do I get more followers"
+- "distribution" (audience-building context)
+- "Pieter Levels" / "Marc Lou" / "Arvid Kahl" style mention
+
+**FIRST: check MRR stage.**
+- $0 MRR → "Perfect time. Build audience before product. Start audience-first."
+- $0-5K MRR → "Narrow niche only. One platform. The audience IS your validation."
+- $5K+ MRR → "Full flywheel. Platform selection + newsletter + content ladder."
+**Apply platform selection matrix → content flywheel architecture → distribution ladder from brand.md.**
+
+---
+
 ## ANTI-PATTERN FLAGS (fire before any skill, always)
 
 These fire as one-line warnings before continuing with the actual answer:
