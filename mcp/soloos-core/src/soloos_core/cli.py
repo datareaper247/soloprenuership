@@ -19,6 +19,8 @@ from .server import (
     match_pattern, calculate_ev, check_market, get_stage_advice,
     validate_idea_gates, check_kill_signals_tool, knowledge_base_stats,
     log_decision, session_synthesis,
+    calculate_unit_economics, calculate_valuation, score_pmf,
+    generate_competitor_brief, calculate_runway,
 )
 
 
@@ -310,6 +312,129 @@ def cmd_stats(args):
             print(f"    · {c}")
 
 
+def cmd_unit_economics(args):
+    result = json.loads(calculate_unit_economics(args.arpu, args.churn, args.gm, args.cac))
+    header("UNIT ECONOMICS")
+    print(f"  ARPU: {cyan(result['inputs']['arpu_monthly'])}  "
+          f"Churn: {result['inputs']['monthly_churn']}  "
+          f"GM: {result['inputs']['gross_margin']}")
+    print()
+    print(bold("LTV Methods:"))
+    for k, v in result["ltv_methods"].items():
+        print(f"  {dim(k.replace('_', ' ').title())}: {green(v)}")
+    print()
+    print(bold("Key Ratios:"))
+    for k, v in result["ratios"].items():
+        print(f"  {k.replace('_', ' ').title()}: {cyan(str(v))}")
+    print()
+    print(bold("Health Assessment:"))
+    for h in result["health_assessment"]:
+        print(f"  {h}")
+    print()
+    print(f"  {bold('Action:')} {result['action']}")
+
+
+def cmd_valuation(args):
+    result = json.loads(calculate_valuation(args.arr, args.growth, args.nrr, sde_annual=args.sde))
+    header("COMPANY VALUATION")
+    m1 = result["method_1_arr_multiple"]
+    print(f"  {bold('ARR:')} {cyan(result['inputs']['arr'])}  "
+          f"Growth: {result['inputs']['yoy_growth']}  "
+          f"NRR: {result['inputs']['nrr']}")
+    print()
+    print(bold("Method 1 — ARR Multiple:"))
+    print(f"  Range: {green(m1['valuation_range'])}")
+    print(f"  Midpoint: {bold(green(m1['midpoint']))}")
+    print(f"  Multiple: {m1['adjusted_multiple']}")
+    print()
+    print(bold("Method 2 — Acquirer ROI:"))
+    m2 = result["method_2_acquirer_roi"]
+    print(f"  Strategic buyer max: {m2['strategic_buyer_max']}")
+    print(f"  Typical bootstrapped deal: {green(m2['typical_bootstrapped_deal'])}")
+    if result["method_3_sde_multiple"] != "Provide sde_annual for SDE-based valuation":
+        m3 = result["method_3_sde_multiple"]
+        print()
+        print(bold("Method 3 — SDE Multiple:"))
+        print(f"  Range: {green(m3['sde_valuation_low'])} – {green(m3['sde_valuation_high'])}")
+    print()
+    print(bold("Value Levers:"))
+    for lever in result["biggest_value_levers"]:
+        print(f"  {lever}")
+    print()
+    print(f"  {cyan(result['key_insight'])}")
+
+
+def cmd_pmf(args):
+    result = json.loads(score_pmf(
+        args.ellis, args.nrr, args.l30, args.referral,
+        args.churn, args.weeks, args.customers
+    ))
+    header("PMF SCORE")
+    print(f"  Score: {bold(cyan(result['pmf_score']))}")
+    print(f"  Verdict: {bold(result['verdict'])}")
+    print()
+    print(bold("Signals:"))
+    for s in result["signals"]:
+        print(f"  {s}")
+    if result["gaps_to_close"]:
+        print()
+        print(bold("Gaps to Close:"))
+        for g in result["gaps_to_close"]:
+            print(f"  {yellow('→')} {g}")
+    if result["warnings"]:
+        print()
+        for w in result["warnings"]:
+            print(f"  {yellow(w)}")
+    print()
+    print(f"  {bold('Scale Gate:')} {result['scale_gate']}")
+
+
+def cmd_runway(args):
+    result = json.loads(calculate_runway(
+        args.cash, args.burn, args.mrr, args.churn, args.new_mrr
+    ))
+    header("RUNWAY PROJECTION")
+    print(f"  Cash: {cyan(result['inputs']['cash_balance'])}  "
+          f"Burn: {result['inputs']['adjusted_burn_with_buffer']}")
+    print(f"  MRR: {cyan(result['inputs']['current_mrr'])}")
+    print()
+    print(f"  Naive runway: {dim(result['naive_runway'])}")
+    print(f"  {bold('True runway:')} {bold(cyan(str(result['true_runway_months']) + ' months'))}")
+    print(f"  Status: {result['status']}")
+    print(f"  Default alive: {'✅ YES' if result['default_alive'] else '🔴 NO'}")
+    print()
+    print(bold("Month-by-Month:"))
+    for m in result["month_by_month"]:
+        cash_str = f"${m['cash_remaining']:,.0f}"
+        cashflow = m['net_cashflow']
+        cf_str = green(f"+${cashflow:,.0f}") if cashflow >= 0 else red(f"-${abs(cashflow):,.0f}")
+        print(f"  Mo {m['month']:>2}: MRR ${m['mrr']:>7,.0f}  Cashflow {cf_str:>20}  Cash {cash_str:>10}  {m['status']}")
+    print()
+    print(f"  Break-even MRR needed: {yellow(result['break_even_mrr'])}")
+    print(f"  Gap to break-even: {yellow(result['mrr_gap_to_break_even'])}")
+    print()
+    print(f"  {bold('Action:')} {result['action']}")
+
+
+def cmd_competitor(args):
+    result = json.loads(generate_competitor_brief(args.name, args.pricing, args.icp))
+    header(f"COMPETITOR AUTOPSY: {args.name.upper()}")
+    print(result["template"])
+    print()
+    print(bold("Research Agenda (Priority Order):"))
+    for i, item in enumerate(result["research_agenda"], 1):
+        print(f"  {i}. {item}")
+    if result["displacement_opportunities"]:
+        print()
+        print(bold("Displacement Opportunities Detected:"))
+        for d in result["displacement_opportunities"]:
+            print(f"  {green(d)}")
+    print()
+    print(bold("Live Research Commands (paste into Claude with MCPs):"))
+    for cmd in result["live_research_commands"]:
+        print(f"  {dim(cmd)}")
+
+
 # ─────────────────────────────────────────────────────────────
 # Main entry point
 # ─────────────────────────────────────────────────────────────
@@ -365,6 +490,44 @@ commands:
     # stats
     subparsers.add_parser("stats", help="Show knowledge base statistics")
 
+    # uniteconomics
+    p_ue = subparsers.add_parser("uniteconomics", help="Calculate LTV, CAC payback, health")
+    p_ue.add_argument("arpu", type=float, help="Monthly ARPU in dollars")
+    p_ue.add_argument("churn", type=float, help="Monthly churn rate (0.03 = 3%)")
+    p_ue.add_argument("--gm", type=float, default=80, help="Gross margin % (default 80)")
+    p_ue.add_argument("--cac", type=float, default=0, help="CAC in dollars")
+
+    # valuation
+    p_val2 = subparsers.add_parser("valuation", help="Multi-method company valuation")
+    p_val2.add_argument("arr", type=float, help="Annual Recurring Revenue in dollars")
+    p_val2.add_argument("growth", type=float, help="YoY growth rate % (50 = 50%)")
+    p_val2.add_argument("--nrr", type=float, default=100, help="Net Revenue Retention % (default 100)")
+    p_val2.add_argument("--sde", type=float, default=0, help="Annual SDE for SDE-multiple method")
+
+    # pmf
+    p_pmf = subparsers.add_parser("pmf", help="Score your Product-Market Fit")
+    p_pmf.add_argument("--ellis", type=float, default=0, help="Sean Ellis %% Very Disappointed")
+    p_pmf.add_argument("--nrr", type=float, default=0, help="Net Revenue Retention %%")
+    p_pmf.add_argument("--l30", type=float, default=0, help="Day 30 retention %%")
+    p_pmf.add_argument("--churn", type=float, default=0, help="Monthly churn %%")
+    p_pmf.add_argument("--referral", type=float, default=0, help="%% new users from referral")
+    p_pmf.add_argument("--customers", type=int, default=0, help="Number of paying customers")
+    p_pmf.add_argument("--weeks", type=int, default=0, help="Weeks since launch")
+
+    # runway
+    p_runway = subparsers.add_parser("runway", help="Calculate true runway with MRR trajectory")
+    p_runway.add_argument("cash", type=float, help="Cash balance in dollars")
+    p_runway.add_argument("burn", type=float, help="Monthly operating expenses")
+    p_runway.add_argument("--mrr", type=float, default=0, help="Current MRR")
+    p_runway.add_argument("--new-mrr", type=float, default=0, help="New MRR added per month")
+    p_runway.add_argument("--churn", type=float, default=0.05, help="Monthly MRR churn rate (0.05 = 5%%)")
+
+    # competitor
+    p_comp = subparsers.add_parser("competitor", help="Generate competitor autopsy template")
+    p_comp.add_argument("name", help="Competitor name")
+    p_comp.add_argument("--pricing", default="", help="Known pricing info")
+    p_comp.add_argument("--icp", default="", help="Their known target ICP")
+
     args = parser.parse_args()
 
     if not args.command:
@@ -381,6 +544,11 @@ commands:
         "validate": cmd_validate,
         "signals": cmd_signals,
         "stats": cmd_stats,
+        "uniteconomics": cmd_unit_economics,
+        "valuation": cmd_valuation,
+        "pmf": cmd_pmf,
+        "runway": cmd_runway,
+        "competitor": cmd_competitor,
     }
 
     fn = dispatch.get(args.command)

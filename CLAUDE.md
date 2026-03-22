@@ -92,6 +92,24 @@ Reference `skills/AUTO_TRIGGERS.md` for the full routing table.
 **COMPETITOR fires when**: "[competitor] launched", "how does X compare", "alternatives to X"
 → Apply 5-layer autopsy: offer → real ICP → switch-away reasons → distribution → Achilles heel.
 
+**FINANCE fires when**: "runway", "burn rate", "cash flow", "pricing", "how much should I charge", "what's my company worth", "unit economics", "should I hire", "thinking about fundraising"
+→ Apply CFO lens: unit economics first (LTV/CAC/churn), then the specific question. See `skills/claude-code/finance.md`.
+
+**INTEL fires when**: "[Competitor] launched X", "what are customers saying about [X]", "is [market] a good opportunity", "who are my competitors", "I'm losing deals to [competitor]"
+→ Apply 5-layer competitor autopsy + pain mining protocol. See `skills/claude-code/intel.md`.
+
+**WISDOM fires when**: competitor mentioned (Mandala Theory), founder paralyzed/stuck (Bhagavad Gita reframe), negotiation/partnership (Chanakya Upayas), competitor is larger (Sun Tzu asymmetric), failure/rejection (Stoic Obstacle-is-Way), ethical dilemma (Dharmic principles)
+→ Apply relevant ancient wisdom tradition. See `skills/claude-code/wisdom.md`.
+
+**NETWORK fires when**: "I need to raise", "warm intro", "looking for investors", "need an advisor", "partnership opportunity", "co-founder"
+→ Apply warm intro machine + investor compatibility matrix. See `skills/claude-code/network.md`.
+
+**PMF fires when**: "do I have PMF", "should I scale", "retention is bad", "churn is high", "users love it but don't pay", "is this working"
+→ Apply PMF measurement protocol (Sean Ellis + NRR + cohort retention). See `skills/claude-code/pmf.md`.
+
+**EXIT fires when**: "thinking about selling", "exit", "acquisition", "someone reached out to acquire us", "what's my company worth", "want to take chips off the table"
+→ Apply exit engineering protocol + acquirer targeting system. See `skills/claude-code/exit.md`.
+
 ---
 
 ## ANTI-PATTERN DETECTION (Fire Before Any Answer, Always)

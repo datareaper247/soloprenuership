@@ -42,3 +42,19 @@ Each entry is linked via `[[FL-XXX]]` and can be referenced from context files, 
 
 <!-- YOUR ENTRIES START HERE -->
 
+---
+**[[FL-002]]**
+- **Date:** 2026-03-22
+- **Type:** Decision
+- **Summary:** Decided to build manual concierge version first before coding
+- **Context:** Applying Levels Test — idea scope was 3 weeks of dev work
+- **Pattern applied:** P01
+- **Hypothesis:** Getting 5 paying customers for manual version in 2 weeks will validate demand
+- **Kill signal set:** If fewer than 3 people respond positively from 20 DMs in 14 days
+- **Kill signal due:** 2026-04-05
+- **Outcome:** [PENDING OUTCOME]
+- **Outcome due:** 2026-04-21
+- **Outcome status:** ⏳ Pending
+
+
+

@@ -1035,6 +1035,631 @@ def knowledge_base_stats() -> str:
 
 
 # ─────────────────────────────────────────────────────────────
+# TOOL 12: calculate_unit_economics
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def calculate_unit_economics(
+    arpu: float,
+    monthly_churn_rate: float,
+    gross_margin_pct: float = 80.0,
+    cac: float = 0.0,
+    monthly_expansion_mrr: float = 0.0,
+) -> str:
+    """
+    Calculate the full unit economics stack for a SaaS business.
+    Returns LTV (3 methods), LTV:CAC ratio, CAC payback, and health assessment.
+
+    Use when: Any pricing or acquisition decision, fundraising prep, or financial health check.
+    The Finance Engine auto-triggers this before any pricing recommendation.
+
+    Args:
+        arpu: Average Revenue Per User (monthly, in dollars)
+        monthly_churn_rate: Monthly churn as decimal (0.05 = 5%)
+        gross_margin_pct: Gross margin percentage (default 80 for SaaS)
+        cac: Cost to Acquire one Customer (0 = not provided)
+        monthly_expansion_mrr: Monthly expansion revenue per customer (for NRR >100% businesses)
+    """
+    if monthly_churn_rate <= 0:
+        monthly_churn_rate = 0.001  # avoid divide by zero
+
+    gm = gross_margin_pct / 100.0
+
+    # LTV method 1: Simple
+    ltv_simple = arpu / monthly_churn_rate
+
+    # LTV method 2: Gross-margin adjusted
+    ltv_gm = (arpu * gm) / monthly_churn_rate
+
+    # LTV method 3: With expansion revenue
+    ltv_expansion = ((arpu * gm) + monthly_expansion_mrr) / monthly_churn_rate
+
+    # LTV:CAC
+    ltv_cac_ratio = None
+    cac_payback_months = None
+    if cac > 0:
+        ltv_cac_ratio = round(ltv_gm / cac, 2)
+        cac_payback_months = round(cac / (arpu * gm), 1) if arpu * gm > 0 else None
+
+    # NRR estimate
+    nrr = (arpu + monthly_expansion_mrr - (arpu * monthly_churn_rate)) / arpu * 100
+
+    # Health assessment
+    health = []
+    if ltv_cac_ratio is not None:
+        if ltv_cac_ratio < 2:
+            health.append("🔴 DANGER: LTV:CAC <2x — acquiring customers is destroying value")
+        elif ltv_cac_ratio < 3:
+            health.append("🟡 WARNING: LTV:CAC 2-3x — barely viable, tighten CAC or improve LTV")
+        elif ltv_cac_ratio < 5:
+            health.append("🟢 HEALTHY: LTV:CAC 3-5x — standard SaaS, scale confidently")
+        else:
+            health.append("🚀 EXCELLENT: LTV:CAC >5x — strong unit economics, accelerate acquisition")
+
+    if monthly_churn_rate > 0.10:
+        health.append("🔴 CHURN CRISIS: >10%/mo — fix retention before any acquisition spend")
+    elif monthly_churn_rate > 0.05:
+        health.append("🟡 CHURN WARNING: 5-10%/mo — investigate top churn reasons immediately")
+    elif monthly_churn_rate < 0.02:
+        health.append("🟢 EXCELLENT RETENTION: <2%/mo churn — strong foundation")
+
+    if cac_payback_months is not None:
+        if cac_payback_months > 18:
+            health.append("🔴 CAC PAYBACK >18mo — high risk, reduce acquisition spend")
+        elif cac_payback_months > 12:
+            health.append("🟡 CAC PAYBACK 12-18mo — monitor closely")
+        else:
+            health.append("🟢 CAC PAYBACK <12mo — healthy, scale acquisition")
+
+    if nrr > 110:
+        health.append("🚀 NRR >110% — customers expand automatically (elite signal)")
+    elif nrr > 100:
+        health.append("🟢 NRR >100% — net negative churn (strong PMF signal)")
+    elif nrr < 90:
+        health.append("🔴 NRR <90% — revenue shrinking from existing customers (retention crisis)")
+
+    return json.dumps({
+        "inputs": {
+            "arpu_monthly": f"${arpu:.2f}",
+            "monthly_churn": f"{monthly_churn_rate*100:.1f}%",
+            "gross_margin": f"{gross_margin_pct:.0f}%",
+            "cac": f"${cac:.2f}" if cac > 0 else "not provided",
+            "monthly_expansion": f"${monthly_expansion_mrr:.2f}",
+        },
+        "ltv_methods": {
+            "method_1_simple": f"${ltv_simple:.0f}  (ARPU ÷ churn — use pre-PMF)",
+            "method_2_gm_adjusted": f"${ltv_gm:.0f}  (ARPU × GM ÷ churn — use post-PMF)",
+            "method_3_with_expansion": f"${ltv_expansion:.0f}  ((ARPU×GM + expansion) ÷ churn — use if NRR>100%)",
+        },
+        "ratios": {
+            "ltv_cac": f"{ltv_cac_ratio}x" if ltv_cac_ratio else "CAC not provided",
+            "cac_payback_months": cac_payback_months,
+            "nrr_estimate": f"{nrr:.1f}%",
+            "annual_churn": f"{(1-(1-monthly_churn_rate)**12)*100:.1f}%",
+        },
+        "health_assessment": health,
+        "break_even_customers": round(cac / (arpu * gm), 1) if cac > 0 and arpu * gm > 0 else None,
+        "action": "Fix retention before acquisition" if monthly_churn_rate > 0.05 else "Unit economics healthy — scale acquisition",
+    }, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# TOOL 13: calculate_valuation
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def calculate_valuation(
+    arr: float,
+    yoy_growth_rate_pct: float,
+    nrr_pct: float = 100.0,
+    gross_margin_pct: float = 80.0,
+    monthly_churn_rate: float = 3.0,
+    is_bootstrapped: bool = True,
+    sde_annual: float = 0.0,
+) -> str:
+    """
+    Multi-method company valuation for bootstrapped SaaS / micro-SaaS founders.
+    Uses ARR multiple, Acquirer ROI, and SDE multiple methods simultaneously.
+
+    Use when: Considering exit, fundraising, taking on investors, or just knowing your number.
+    The Finance Engine auto-triggers this on valuation questions.
+
+    Args:
+        arr: Annual Recurring Revenue in dollars
+        yoy_growth_rate_pct: Year-over-year growth rate (50 = 50%)
+        nrr_pct: Net Revenue Retention percentage (100 = flat, 110 = 10% expansion)
+        gross_margin_pct: Gross margin percentage (default 80 for SaaS)
+        monthly_churn_rate: Monthly churn rate percentage (3 = 3%)
+        is_bootstrapped: True if bootstrapped (clean cap table premium)
+        sde_annual: Annual Seller Discretionary Earnings (0 = not calculated)
+    """
+    mrr = arr / 12
+
+    # Method 1: ARR multiple
+    if yoy_growth_rate_pct < 20:
+        base_multiple_low, base_multiple_high = 2, 4
+    elif yoy_growth_rate_pct < 50:
+        base_multiple_low, base_multiple_high = 4, 8
+    elif yoy_growth_rate_pct < 100:
+        base_multiple_low, base_multiple_high = 8, 12
+    else:
+        base_multiple_low, base_multiple_high = 12, 20
+
+    # Adjustments
+    nrr_adj = 0
+    if nrr_pct > 120:
+        nrr_adj = 3
+    elif nrr_pct > 110:
+        nrr_adj = 2
+    elif nrr_pct > 100:
+        nrr_adj = 1
+    elif nrr_pct < 90:
+        nrr_adj = -2
+
+    gm_adj = 0
+    if gross_margin_pct > 80:
+        gm_adj = 1
+    elif gross_margin_pct < 60:
+        gm_adj = -2
+
+    bootstrap_adj = 0.5 if is_bootstrapped else 0
+
+    adj_multiple_low = base_multiple_low + nrr_adj + gm_adj + bootstrap_adj
+    adj_multiple_high = base_multiple_high + nrr_adj + gm_adj + bootstrap_adj
+    adj_multiple_low = max(1, adj_multiple_low)
+
+    valuation_arr_low = arr * adj_multiple_low
+    valuation_arr_high = arr * adj_multiple_high
+    valuation_arr_midpoint = arr * ((adj_multiple_low + adj_multiple_high) / 2)
+
+    # Method 2: Acquirer ROI (strategic buyer)
+    acquirer_typical_multiple = 10  # public SaaS trades at ~10x ARR
+    strategic_max = arr * acquirer_typical_multiple
+    typical_bootstrapped_deal = arr * 4  # typical bootstrapped acquisition price
+
+    # Method 3: SDE multiple (for profitable bootstrapped)
+    sde_result = None
+    if sde_annual > 0:
+        sde_multiple_low, sde_multiple_high = 2.5, 4.0
+        sde_result = {
+            "sde_annual": f"${sde_annual:,.0f}",
+            "sde_multiple_range": f"{sde_multiple_low}x - {sde_multiple_high}x",
+            "sde_valuation_low": f"${sde_annual * sde_multiple_low:,.0f}",
+            "sde_valuation_high": f"${sde_annual * sde_multiple_high:,.0f}",
+        }
+
+    # Biggest value levers
+    levers = []
+    if nrr_pct < 100:
+        levers.append("🔴 NRR <100%: Fix net revenue retention first — this is the #1 multiple driver")
+    if nrr_pct >= 100 and nrr_pct < 110:
+        levers.append("💡 Increasing NRR from 100% to 110% adds ~2x to your multiple")
+    if monthly_churn_rate > 3:
+        levers.append("🔴 Reduce monthly churn below 3% — churn directly compresses multiples")
+    if gross_margin_pct < 70:
+        levers.append("💡 Gross margin below 70% — each point improvement adds ~$X to valuation")
+    if yoy_growth_rate_pct < 20:
+        levers.append("💡 Sub-20% growth → 2-4x ARR. Accelerating to 50%+ unlocks 4-8x ARR")
+
+    return json.dumps({
+        "inputs": {
+            "arr": f"${arr:,.0f}",
+            "mrr": f"${mrr:,.0f}",
+            "yoy_growth": f"{yoy_growth_rate_pct:.0f}%",
+            "nrr": f"{nrr_pct:.0f}%",
+            "gross_margin": f"{gross_margin_pct:.0f}%",
+            "is_bootstrapped": is_bootstrapped,
+        },
+        "method_1_arr_multiple": {
+            "base_multiple": f"{base_multiple_low}x - {base_multiple_high}x (from growth rate)",
+            "nrr_adjustment": f"+{nrr_adj}x" if nrr_adj >= 0 else f"{nrr_adj}x",
+            "gm_adjustment": f"+{gm_adj}x" if gm_adj >= 0 else f"{gm_adj}x",
+            "bootstrap_adjustment": f"+{bootstrap_adj}x (clean cap table)" if is_bootstrapped else "0x",
+            "adjusted_multiple": f"{adj_multiple_low:.1f}x - {adj_multiple_high:.1f}x",
+            "valuation_range": f"${valuation_arr_low:,.0f} - ${valuation_arr_high:,.0f}",
+            "midpoint": f"${valuation_arr_midpoint:,.0f}",
+        },
+        "method_2_acquirer_roi": {
+            "strategic_buyer_max": f"${strategic_max:,.0f} (if acquirer trades at 10x ARR)",
+            "typical_bootstrapped_deal": f"${typical_bootstrapped_deal:,.0f} (3-5x ARR for bootstrapped)",
+            "note": "Strategic acquirers pay more when you have proprietary data/distribution/ICP they can't build",
+        },
+        "method_3_sde_multiple": sde_result or "Provide sde_annual for SDE-based valuation",
+        "recommendation": f"Use ${valuation_arr_midpoint:,.0f} as your anchor number in conversations",
+        "biggest_value_levers": levers,
+        "key_insight": "NRR is the single biggest multiple driver. 110% NRR businesses sell at 2-3x higher multiples than 95% NRR businesses at identical ARR.",
+        "acquirers_to_target": [
+            "Micro-PE: Tiny Capital, Calm Company Fund, Relay Commerce (3-5x ARR)",
+            "Marketplaces: Acquire.com, Flippa, Empire Flippers (1-5x ARR)",
+            "Strategic: Your largest customers or top 3 competitors (4-10x ARR)",
+            "PE: Searchfunder, independent sponsors (>$500K ARR threshold, 3-6x ARR)",
+        ],
+    }, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# TOOL 14: score_pmf
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def score_pmf(
+    sean_ellis_pct: float = 0.0,
+    nrr_pct: float = 0.0,
+    l30_retention_pct: float = 0.0,
+    referral_pct_of_signups: float = 0.0,
+    monthly_churn_pct: float = 0.0,
+    weeks_since_launch: int = 0,
+    paying_customers: int = 0,
+) -> str:
+    """
+    Score Product-Market Fit across 5 measurement systems. Returns PMF stage,
+    what's blocking PMF, and specific actions to accelerate finding PMF.
+
+    Use when: Founder asks "do I have PMF?", "should I scale?", or "is this working?"
+    The PMF Engine auto-triggers this before any scaling recommendation.
+
+    Args:
+        sean_ellis_pct: % of users who say "Very Disappointed" if product disappeared (target >40%)
+        nrr_pct: Net Revenue Retention % (target >100%)
+        l30_retention_pct: Day 30 retention % (target varies by product type)
+        referral_pct_of_signups: % of new users from referral/WOM (target >20%)
+        monthly_churn_pct: Monthly churn % (target <2% for strong PMF)
+        weeks_since_launch: How long since launch (context for expectations)
+        paying_customers: Number of paying customers (minimum 40 needed for Sean Ellis)
+    """
+    score = 0
+    max_score = 0
+    signals = []
+    gaps = []
+
+    # Sean Ellis score
+    if sean_ellis_pct > 0:
+        max_score += 30
+        if sean_ellis_pct >= 40:
+            score += 30
+            signals.append(f"✅ Sean Ellis: {sean_ellis_pct:.0f}% (>40% = PMF confirmed)")
+        elif sean_ellis_pct >= 30:
+            score += 18
+            signals.append(f"🟡 Sean Ellis: {sean_ellis_pct:.0f}% (approaching PMF, need 40%+)")
+            gaps.append("Sean Ellis below 40% — interview 'somewhat disappointed' users about their core use case")
+        else:
+            score += 5
+            signals.append(f"🔴 Sean Ellis: {sean_ellis_pct:.0f}% (far from PMF threshold of 40%)")
+            gaps.append(f"Sean Ellis at {sean_ellis_pct:.0f}% — major value gap. Find bright spots: who ARE the 'very disappointed'? Build for them exclusively.")
+
+    # NRR
+    if nrr_pct > 0:
+        max_score += 25
+        if nrr_pct >= 110:
+            score += 25
+            signals.append(f"✅ NRR: {nrr_pct:.0f}% (>110% = customers expand automatically = elite PMF signal)")
+        elif nrr_pct >= 100:
+            score += 18
+            signals.append(f"🟢 NRR: {nrr_pct:.0f}% (>100% = net negative churn = strong PMF signal)")
+        elif nrr_pct >= 90:
+            score += 10
+            signals.append(f"🟡 NRR: {nrr_pct:.0f}% (90-100% = acceptable, not exciting)")
+            gaps.append("NRR below 100% — identify expansion opportunities: usage limits, seat expansion, premium features")
+        else:
+            score += 0
+            signals.append(f"🔴 NRR: {nrr_pct:.0f}% (<90% = revenue shrinking from existing base = PMF not found)")
+            gaps.append("NRR below 90% — STOP acquisition. Fix why customers are downgrading or churning first.")
+
+    # L30 retention
+    if l30_retention_pct > 0:
+        max_score += 25
+        if l30_retention_pct >= 40:
+            score += 25
+            signals.append(f"✅ D30 Retention: {l30_retention_pct:.0f}% (>40% = strong habit formation)")
+        elif l30_retention_pct >= 25:
+            score += 15
+            signals.append(f"🟡 D30 Retention: {l30_retention_pct:.0f}% (25-40% = moderate, improve onboarding)")
+            gaps.append("D30 retention 25-40% — map the 'boring middle' between signup and first value. What's the Aha moment? Reduce time-to-value.")
+        else:
+            score += 0
+            signals.append(f"🔴 D30 Retention: {l30_retention_pct:.0f}% (<25% = activation failure)")
+            gaps.append(f"D30 retention at {l30_retention_pct:.0f}% — critical activation problem. Do 5 user copilot sessions this week. Watch them use the product. You'll find the drop-off point.")
+
+    # Referral %
+    if referral_pct_of_signups > 0:
+        max_score += 10
+        if referral_pct_of_signups >= 20:
+            score += 10
+            signals.append(f"✅ Referral: {referral_pct_of_signups:.0f}% from WOM (>20% = organic growth loop)")
+        elif referral_pct_of_signups >= 10:
+            score += 5
+            signals.append(f"🟡 Referral: {referral_pct_of_signups:.0f}% from WOM (building referral momentum)")
+        else:
+            signals.append(f"🔴 Referral: {referral_pct_of_signups:.0f}% from WOM (<10% = people not talking about it)")
+            gaps.append("Low WOM — customers aren't motivated to share. Are results transformational? If not, find the bright spots (top 20% power users) and rebuild for them.")
+
+    # Monthly churn
+    if monthly_churn_pct > 0:
+        max_score += 10
+        if monthly_churn_pct < 2:
+            score += 10
+            signals.append(f"✅ Monthly Churn: {monthly_churn_pct:.1f}% (excellent retention)")
+        elif monthly_churn_pct < 5:
+            score += 6
+            signals.append(f"🟡 Monthly Churn: {monthly_churn_pct:.1f}% (acceptable, optimize)")
+        else:
+            score += 0
+            signals.append(f"🔴 Monthly Churn: {monthly_churn_pct:.1f}% (>5% = leaky bucket)")
+            gaps.append(f"Monthly churn at {monthly_churn_pct:.1f}% — exit interviews on every churned customer. The pattern will emerge after 5-10 interviews.")
+
+    # PMF stage verdict
+    pmf_score_pct = (score / max_score * 100) if max_score > 0 else 0
+    if pmf_score_pct >= 80:
+        verdict = "🚀 STRONG PMF — Scale acquisition confidently"
+        stage = "PMF_CONFIRMED"
+    elif pmf_score_pct >= 60:
+        verdict = "🟢 PMF APPROACHING — Fix gaps before scaling"
+        stage = "PMF_APPROACHING"
+    elif pmf_score_pct >= 40:
+        verdict = "🟡 WEAK PMF SIGNAL — Iterate before scaling"
+        stage = "PMF_WEAK"
+    else:
+        verdict = "🔴 NO PMF YET — Do not scale acquisition"
+        stage = "NO_PMF"
+
+    # Context-based warnings
+    warnings = []
+    if paying_customers < 40 and sean_ellis_pct > 0:
+        warnings.append(f"⚠️ Sean Ellis requires minimum 40 respondents for statistical validity. You have {paying_customers} customers — survey results may not be reliable.")
+    if weeks_since_launch < 8 and stage not in ["PMF_CONFIRMED"]:
+        warnings.append(f"📊 Only {weeks_since_launch} weeks since launch — too early for definitive PMF read. Most companies need 12-24 weeks of data.")
+    if stage == "NO_PMF" and weeks_since_launch > 24:
+        warnings.append("⏰ 24+ weeks without PMF signal — consider ICP pivot or problem pivot. What's the riskiest assumption? Test that first.")
+
+    return json.dumps({
+        "pmf_score": f"{pmf_score_pct:.0f}/100",
+        "stage": stage,
+        "verdict": verdict,
+        "signals": signals,
+        "gaps_to_close": gaps,
+        "warnings": warnings,
+        "next_action": gaps[0] if gaps else "Maintain and grow from strong PMF position",
+        "scale_gate": "PASS — scale acquisition" if stage == "PMF_CONFIRMED" else f"BLOCK — fix PMF first: {gaps[0] if gaps else 'gather more data'}",
+        "benchmarks": {
+            "sean_ellis_target": "40%+ Very Disappointed = PMF (Superhuman: 58%, Slack: 51%)",
+            "nrr_target": ">100% = net negative churn",
+            "d30_retention_target": ">40% for daily tools, >30% for weekly tools",
+            "referral_target": ">20% of new users from WOM",
+            "monthly_churn_target": "<2% for strong PMF",
+        },
+    }, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# TOOL 15: generate_competitor_brief
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def generate_competitor_brief(
+    competitor_name: str,
+    known_pricing: str = "",
+    known_target_icp: str = "",
+    known_complaints: list[str] | None = None,
+    your_mrr: str = "",
+    your_icp: str = "",
+) -> str:
+    """
+    Generate a structured 5-layer competitor autopsy template pre-filled with
+    known data and a research agenda for what to find next.
+
+    Use when: Any competitor is mentioned. Returns the full Intel Engine template
+    populated with known facts and a prioritized research agenda.
+
+    Args:
+        competitor_name: Name of the competitor to profile
+        known_pricing: Any known pricing info (e.g. "$49-199/mo", "freemium")
+        known_target_icp: Their stated target customer (e.g. "SMB marketing teams")
+        known_complaints: List of known complaints (from reviews, Reddit, etc.)
+        your_mrr: Your current MRR (for Mandala positioning)
+        your_icp: Your target ICP (for displacement opportunity detection)
+    """
+    if known_complaints is None:
+        known_complaints = []
+
+    research_agenda = []
+    mandala_position = "Ring 1 (Direct Enemy)" if your_icp and known_target_icp else "Unknown — research needed"
+
+    # Research gaps
+    if not known_pricing:
+        research_agenda.append("🔍 Pricing: Visit their pricing page. Note plan names, prices, annual discount, free tier limits.")
+    if not known_target_icp:
+        research_agenda.append("🔍 Real ICP: Search LinkedIn for people who list this tool in their profile. What's their title and company size?")
+    if not known_complaints:
+        research_agenda.append(f"🔍 Complaints: Search Reddit for 'alternative to {competitor_name}' and 'switched away from {competitor_name}'. Search G2 for 1-3 star reviews.")
+    research_agenda.append(f"🔍 Distribution: Check {competitor_name}.com/blog for content strategy. Check SimilarWeb for traffic sources.")
+    research_agenda.append(f"🔍 Achilles Heel: Check Glassdoor for company reviews — insider complaints reveal strategic weaknesses.")
+
+    # Displacement opportunity
+    displacement_ops = []
+    for complaint in known_complaints:
+        displacement_ops.append(f"→ Complaint detected: '{complaint}' — this is a displacement opening. If you solve this, target their users with this specific pain.")
+
+    # Upaya recommendation
+    if your_mrr:
+        mrr_val = _parse_mrr_string(your_mrr)
+        if mrr_val < 50000:
+            upaya = "SAMA (alliance) — you're the smaller force. Don't fight them directly. Find the ICP segment they explicitly ignore and own it."
+        else:
+            upaya = "DANA + DANDA — you have resources. Use DANA (superior pricing/features for switchers) and DANDA (displacement campaigns targeting their churn)."
+    else:
+        upaya = "SAMA → Research their weakest ICP segment first before declaring war."
+
+    template = f"""
+COMPETITOR PROFILE: {competitor_name}
+Date: {today_str()}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+LAYER 1: THE OFFER
+→ Core product: [RESEARCH NEEDED]
+→ Target ICP: {known_target_icp or "[RESEARCH: Who does their website say they serve?]"}
+→ Pricing: {known_pricing or "[RESEARCH: Check their pricing page]"}
+→ Free tier: [RESEARCH: Yes/No + what's included]
+→ Positioning: [RESEARCH: Their tagline from homepage]
+→ Primary differentiator claim: [RESEARCH: What do they say makes them different?]
+
+LAYER 2: THE REAL ICP
+→ LinkedIn profile mentions: [RESEARCH: Search LinkedIn, filter by tool in profile]
+→ Twitter/X builders: [RESEARCH: Who builds in public using this?]
+→ Subreddits that recommend it: [RESEARCH: Where does it get mentioned positively?]
+→ True ICP conclusion: [Does real ICP differ from Layer 1 claim?]
+
+LAYER 3: SWITCH-AWAY REASONS (Their Churn Intel)
+{chr(10).join(f'→ Known complaint: "{c}"' for c in known_complaints) if known_complaints else "→ [RESEARCH: Search Reddit + G2 1-3 star reviews for verbatim complaints]"}
+→ Feature gaps: [RESEARCH: What do users say they wish it had?]
+→ Pricing complaints: [RESEARCH: Too expensive? Recent increases?]
+→ Support complaints: [RESEARCH: Response time, AI-only support?]
+
+LAYER 4: THEIR DISTRIBUTION
+→ Primary channel: [RESEARCH: SEO / Paid / Community / Viral / Sales-led]
+→ Content strategy: [RESEARCH: Blog frequency, SEO topics, traffic estimate]
+→ Social presence: [RESEARCH: Twitter/X, LinkedIn, YouTube — size + engagement]
+→ Integrations: [RESEARCH: Which tools integrate with them?]
+→ Marketplace presence: [RESEARCH: App stores — Slack, Notion, HubSpot?]
+
+LAYER 5: THE ACHILLES HEEL
+→ Technical: [What does their architecture prevent them from doing?]
+→ Pricing: [Who can't afford them? Who do they over-charge?]
+→ ICP gap: [Who are they explicitly NOT serving well?]
+→ Feature gap: [Most-requested feature they haven't shipped?]
+→ Speed: [How fast do they ship? Check their changelog/blog frequency]
+
+STRATEGIC RESPONSE:
+→ Mandala position: {mandala_position}
+→ Upaya to apply: {upaya}
+→ Our asymmetry: [Where can you win that they cannot match at your ICP?]
+→ Displacement targets: [Who specifically is complaining about them?]
+→ Kill signal: "They are losing to us if: [specific metrics]"
+"""
+
+    return json.dumps({
+        "competitor": competitor_name,
+        "template": template.strip(),
+        "known_data": {
+            "pricing": known_pricing or "unknown",
+            "stated_icp": known_target_icp or "unknown",
+            "complaints_collected": len(known_complaints),
+        },
+        "research_agenda": research_agenda,
+        "displacement_opportunities": displacement_ops,
+        "chanakya_upaya": upaya,
+        "mandala_position": mandala_position,
+        "live_research_commands": [
+            f'reddit_search_reddit(query="alternative to {competitor_name}", limit=25)',
+            f'reddit_search_reddit(query="switched from {competitor_name}", limit=25)',
+            f'reddit_search_reddit(query="{competitor_name} complaints", limit=25)',
+            f'hackernews search: "{competitor_name}" in getTopStories and getShowHNStories',
+            f'jina_reader: "{competitor_name}.com/pricing" for pricing page scrape',
+        ],
+        "next_step": f"Run the live research commands above using Reddit MCP and HN MCP. Then fill in Layers 2-5 with real data.",
+    }, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# TOOL 16: calculate_runway
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def calculate_runway(
+    cash_balance: float,
+    monthly_burn: float,
+    current_mrr: float = 0.0,
+    monthly_churn_rate: float = 0.05,
+    monthly_new_mrr: float = 0.0,
+    committed_upcoming_expenses: float = 0.0,
+) -> str:
+    """
+    Calculate true runway accounting for MRR growth, churn, and upcoming lump expenses.
+    Returns adjusted runway, break-even MRR, and month-by-month projection.
+
+    Use when: Any mention of runway, cash, burn rate, or "how long do I have?"
+    More accurate than simple cash/burn because it accounts for MRR trajectory.
+
+    Args:
+        cash_balance: Current cash in bank (dollars)
+        monthly_burn: Current monthly operating expenses (dollars)
+        current_mrr: Current MRR (0 = pre-revenue)
+        monthly_churn_rate: Monthly MRR churn rate (0.05 = 5%)
+        monthly_new_mrr: Expected new MRR added per month
+        committed_upcoming_expenses: Known future lump sum expenses (annual software, taxes, etc.)
+    """
+    # Naive runway
+    net_burn = monthly_burn - current_mrr
+    naive_runway = cash_balance / max(net_burn, 1) if net_burn > 0 else 999
+
+    # True runway (with MRR growth trajectory and buffer)
+    real_monthly_burn = monthly_burn * 1.2  # 20% buffer for surprises
+    adjusted_cash = cash_balance - committed_upcoming_expenses
+
+    # Month-by-month projection (12 months)
+    months = []
+    cash = adjusted_cash
+    mrr = current_mrr
+
+    for month in range(1, 13):
+        mrr = mrr * (1 - monthly_churn_rate) + monthly_new_mrr
+        net_cashflow = mrr - real_monthly_burn
+        cash += net_cashflow
+        months.append({
+            "month": month,
+            "mrr": round(mrr, 0),
+            "net_cashflow": round(net_cashflow, 0),
+            "cash_remaining": round(cash, 0),
+            "status": "🟢 positive" if cash > 0 else "🔴 BANKRUPT",
+        })
+        if cash <= 0:
+            break
+
+    # Find break-even MRR
+    break_even_mrr = real_monthly_burn  # simplified (ignores churn replacement cost)
+
+    # Runway month count
+    runway_months = sum(1 for m in months if m["cash_remaining"] > 0)
+
+    # Default alive check
+    projected_mrr_12mo = current_mrr * (1 - monthly_churn_rate)**12 + monthly_new_mrr * 12
+    default_alive = projected_mrr_12mo > real_monthly_burn
+
+    # Status assessment
+    if runway_months >= 18:
+        status = "🟢 COMFORTABLE — 18+ months to find next milestone"
+    elif runway_months >= 12:
+        status = "🟡 ADEQUATE — 12-18mo runway, watch growth rate"
+    elif runway_months >= 6:
+        status = "🟠 WARNING — 6-12mo runway, fundraise or cut costs now"
+    else:
+        status = "🔴 CRISIS — <6mo runway. Immediate action required."
+
+    return json.dumps({
+        "inputs": {
+            "cash_balance": f"${cash_balance:,.0f}",
+            "monthly_burn": f"${monthly_burn:,.0f}",
+            "current_mrr": f"${current_mrr:,.0f}",
+            "adjusted_burn_with_buffer": f"${real_monthly_burn:,.0f} (20% safety buffer applied)",
+            "committed_expenses_deducted": f"${committed_upcoming_expenses:,.0f}",
+        },
+        "naive_runway": f"{naive_runway:.1f} months (cash ÷ current net burn — optimistic)",
+        "true_runway_months": runway_months,
+        "status": status,
+        "default_alive": default_alive,
+        "default_alive_explanation": "Will you reach profitability before cash out if growth continues at current rate?",
+        "break_even_mrr": f"${break_even_mrr:,.0f}/mo needed to stop burning cash",
+        "mrr_gap_to_break_even": f"${max(0, break_even_mrr - current_mrr):,.0f}/mo more MRR needed",
+        "month_by_month": months,
+        "action": (
+            "CRISIS PROTOCOL: Cut all non-essential spend + ramp direct sales daily" if runway_months < 6
+            else "Fundraise mode ON" if runway_months < 12
+            else "Monitor monthly — stay above 12 months at all times"
+        ),
+        "sequoia_rule": "Maintain 18+ months runway or be actively fundraising. <6mo = emergency mode.",
+    }, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
 # Entry point
 # ─────────────────────────────────────────────────────────────
 

@@ -11,7 +11,7 @@ claude mcp add soloos-core -- soloos-mcp
 
 ### MCP Server (Claude Code)
 
-Claude can now call 11 tools instead of reading markdown:
+Claude can now call 16 tools instead of reading markdown:
 
 | Tool | Example Claude usage |
 |------|---------------------|
@@ -26,6 +26,11 @@ Claude can now call 11 tools instead of reading markdown:
 | `get_business_context` | Read business-context.md |
 | `validate_idea_gates` | "Validate: AI invoice reconciliation for accountants" |
 | `knowledge_base_stats` | Verify connection |
+| `calculate_unit_economics` | "My ARPU is $99, churn is 3%, CAC is $300 — what's my LTV:CAC?" |
+| `calculate_valuation` | "My ARR is $120K, growing 80% YoY — what's the company worth?" |
+| `score_pmf` | "Sean Ellis 45%, NRR 108%, D30 retention 38% — do I have PMF?" |
+| `generate_competitor_brief` | "Generate autopsy template for Notion competitor" |
+| `calculate_runway` | "I have $50K cash, $8K burn, $4K MRR — true runway?" |
 
 ### CLI Tool
 
@@ -50,6 +55,21 @@ soloos signals
 
 # KB stats
 soloos stats
+
+# Unit economics (ARPU, churn, optional CAC)
+soloos uniteconomics 99 0.03 --cac 300 --gm 80
+
+# Company valuation (ARR, YoY growth, optional NRR and SDE)
+soloos valuation 120000 80 --nrr 105 --sde 40000
+
+# PMF score (any combination of metrics)
+soloos pmf --ellis 45 --nrr 108 --l30 38 --churn 2.1 --customers 55
+
+# Runway projection (accounts for MRR growth + churn)
+soloos runway 50000 8000 --mrr 4000 --new-mrr 1000
+
+# Competitor autopsy template
+soloos competitor "Notion" --pricing "freemium + $8/mo" --icp "teams"
 ```
 
 ## What's Different
