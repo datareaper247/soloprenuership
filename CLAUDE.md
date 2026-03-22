@@ -122,6 +122,15 @@ Reference `skills/AUTO_TRIGGERS.md` for the full routing table.
 **BRAND fires when**: "build in public", "personal brand", "grow my audience", "Twitter/LinkedIn strategy", "newsletter" (distribution), "content flywheel", "I want to be known for", "distribution"
 → Check stage first. $0 MRR → audience-first building (Kahl Method). $5K+ → full flywheel. Apply platform matrix + content architecture. See `skills/claude-code/brand.md`.
 
+**FUNDRAISING fires when**: "thinking about raising", "should I raise money", "seed round", "Series A", "term sheet", "SAFE note", "cap table", "dilution", "VC", "angel investors", "want to raise capital"
+→ Run RAISE GATE first (5 questions). Model bootstrapped path vs. raise path. Apply stage-specific protocol. ALWAYS include financial and legal advice disclaimer. See `skills/claude-code/fundraising.md`.
+
+**SELF-AS-CUSTOMER fires when**: "I do X manually every week", "I keep having to...", "I built this for myself", "I was frustrated by", "I needed a tool that", founder describes their own professional workflow as the target problem
+→ SERVICES-TO-SOFTWARE FAST TRACK: "You ARE the validation. Document your exact painful manual workflow first. Build the tool that replaces your own manual hours. Then validate with 5 others who have the same workflow. This is higher-confidence than any external validation process." See validate.md Gate 0.
+
+**TAX-STRUCTURE fires when**: "what entity should I form", "LLC vs S-Corp", "self-employment tax", "quarterly taxes", "should I set up an S-Corp", founder at $50K+ ARR/MRR mentioned without entity structure
+→ Apply tax optimization ladder: sole prop → S-Corp election → international structure (Dutch BV / Estonian OÜ). See finance.md tax section. Flag: "At your revenue level, entity structure may be costing more than all your tools combined."
+
 ---
 
 ## ANTI-PATTERN DETECTION (Fire Before Any Answer, Always)
@@ -142,6 +151,9 @@ Do not lecture. One flag + alternative. Founder decides.
 | Multiple simultaneous initiatives | ⚠️ BCG 3-AGENT RULE: Max 3 active streams. Which 2 would you kill? |
 | International expansion before $50K MRR | ⚠️ PREMATURE: Fix home-market churn first. |
 | Paid ads without known LTV | ⚠️ UNIT ECONOMICS FIRST: Need LTV before running ads. What's your D30 retention? |
+| AI product where core value = "AI does X" | ⚠️ SUBSTITUTION TEST: Open ChatGPT and try your core value prop manually. If it works 80%: what is your workflow embedding or proprietary data layer? Name it before building. |
+| Founder describes own manual workflow as product idea | ⚠️ SELF-AS-CUSTOMER: You ARE the validation. Document your exact painful manual workflow first. Build the tool that replaces your own manual hours. Then validate with 5 others. Highest-confidence path available. |
+| S-Corp or C-Corp or entity question at $50K+ ARR | ⚠️ TAX LEAK: At $50K+ ARR as sole proprietor you're paying $5-15K/year in avoidable self-employment tax. S-Corp election likely saves more than all your tools combined. See finance.md tax section. |
 
 ---
 

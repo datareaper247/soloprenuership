@@ -93,16 +93,27 @@ For System 2 full debate, run voices in this order:
 4. A reversibility score is assigned
 5. A kill signal is defined (how to know within 30 days if you're wrong)
 
-**BSHR Evidence Display** (mandatory in System 2): The BSHR loop must SHOW its evidence, not apply it silently:
+**BSHR Evidence Display** (mandatory in System 2): The BSHR loop must SHOW its evidence, not apply it silently.
+
+**CRITICAL**: Before starting the debate, Claude MUST explicitly call `search_founder_cases` with the decision topic AND `match_pattern` with relevant keywords. Do not skip this. Do not apply patterns silently. Show the evidence.
 
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-PATTERN INTELLIGENCE (from BSHR search)
+ANALOGOUS CASE (from founder knowledge base)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Closest match: P-[XX] — [Pattern name]
-Founder evidence: "[Founder X] faced [this situation] at [$Y MRR] and chose [Z]. Outcome: [result]."
-Your situation differs in: [what's different — don't pretend it's identical]
-Confidence in pattern match: [High / Medium / Low — and why]
+[Call search_founder_cases("decision topic") and match_pattern("keywords") BEFORE this section]
+
+Case: [Founder name or type] faced "[exactly this decision]" at [$X MRR in Y market].
+They chose: [the option]
+Outcome at 90 days: [specific result — number, not vague]
+What made it work: [1 specific factor]
+What almost killed it: [1 specific risk]
+
+Your situation differs in: [what's different — do NOT pretend it's identical]
+Pattern match confidence: [HIGH — >3 similar cases / MEDIUM — 1-2 cases / LOW — extrapolation only]
+Pattern ID: [[P-XX]] (link to pattern for full detail)
+
+If no case found: "No direct match in knowledge base. Proceeding with first-principles analysis."
 ```
 
 ---
@@ -170,6 +181,15 @@ What I understand about your situation:
 - Business stage: [inference from context]
 - Key constraint: [most limiting factor]
 - What's driving this decision: [the underlying pressure]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ANALOGOUS CASE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Result of search_founder_cases + match_pattern call]
+Founder/case: [Name or type] at [$X MRR in Y category]
+They chose: [option] → 90-day outcome: [specific result]
+Confidence: [HIGH / MEDIUM / LOW] | Pattern: [[P-XX]]
+Differs from yours in: [what's NOT the same]
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 THE DEBATE

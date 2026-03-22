@@ -345,6 +345,27 @@ When multiple triggers match, apply in this order:
 
 ---
 
+### FUNDRAISING — fires when:
+- "thinking about raising" / "should I raise money"
+- "talking to investors" / "investor meetings"
+- "seed round" / "Series A" / "pre-seed"
+- "term sheet" / "SAFE note" / "convertible note"
+- "cap table" / "dilution" / "equity structure"
+- "VC" / "angel investors" / "venture capital"
+- "fundraising" / "raising capital"
+- "want to raise" / "thinking about funding"
+
+**Run RAISE GATE first** (5 questions: ARR, growth rate, NRR, ICP clarity, capital use).
+**Stage check before any fundraising advice**:
+- <$100K ARR → "Focus on PMF first. VCs will pass. Use this time to build the metrics."
+- $100K-$1M ARR → "Seed possible. Apply Raise vs. Bootstrap framework first."
+- $1M+ ARR, 2x+ YoY, 120%+ NRR → "Series A ready. Apply the 60-day sprint protocol."
+**ALWAYS model the bootstrapped path before the raise path. Run dilution cost calculation.**
+**Apply fundraising.md: term sheet basics, investor type matrix, financial narrative framework.**
+**ALWAYS include: "This is not financial or legal advice. Engage qualified counsel before signing."**
+
+---
+
 ## ANTI-PATTERN FLAGS (fire before any skill, always)
 
 These fire as one-line warnings before continuing with the actual answer:

@@ -370,6 +370,67 @@ $200K+ MRR MECHANICS:
 
 ---
 
+## LEGAL / TAX STRUCTURE OPTIMIZATION BY REVENUE STAGE
+
+**The hidden tax drain**: Most solo founders focus on revenue and ignore entity structure. At $100K+ ARR as a sole proprietor or disregarded LLC, self-employment tax alone costs $14K-18K/year — more than most founders spend on all tools combined. This section auto-triggers when stage signals $50K+ MRR.
+
+### The Tax Structure Ladder (US-Based, 2024-2026)
+
+| Revenue Stage | Optimal Structure | Annual Tax Savings | Action Required |
+|---|---|---|---|
+| $0-50K/year | **Sole prop or single-member LLC** | Baseline | None — complexity not worth it yet |
+| $50K-200K/year | **S-Corp election** | $5-15K/year | File Form 2553 within 75 days of fiscal year start. Set "reasonable salary" at $40-60K; remainder as distribution (no SE tax on distributions) |
+| $200K-500K/year | **S-Corp + retirement accounts** | $15-30K/year | Add Solo 401k ($66K/year contribution limit). S-Corp pays you salary + the 401k contributions |
+| $500K+/year | **Multi-entity structure** | $30-80K/year | Consult a CPA specialized in business owners. IP holding company, operating company separation. |
+
+### International Structures (for digital products — location-independent founders)
+
+| Structure | Country | Effective Rate | Best For | Complexity |
+|---|---|---|---|---|
+| **Estonian OÜ + e-Residency** | Estonia | 0% on reinvested profits (20% on distributions) | Founders who reinvest most profits into growth | Low-Medium |
+| **Dutch BV + Innovation Box** | Netherlands | 9% effective rate on IP income | Product companies with IP-heavy revenue | Medium-High |
+| **Dubai Freezone** | UAE | 0% corporate tax, 0% personal tax | Founders who can establish genuine residency | Medium |
+| **Georgia LLC** | Republic of Georgia | 1% on small business | Bootstrapped, small-scale operations | Low |
+
+**Warning**: International structures require genuine business presence/activity. Consult a cross-border tax specialist before implementing. Penalties for non-compliance exceed any tax savings.
+
+### The S-Corp Math (Most Impactful for US Founders at $80K-400K ARR)
+
+```
+Example: $150K annual profit, currently sole proprietor
+
+Current tax liability:
+  Self-employment tax (15.3%): $22,950
+  Income tax (~25% bracket): $37,500
+  Total: $60,450
+
+With S-Corp election:
+  Reasonable salary: $60,000
+  SE tax on salary only: $9,180
+  Remaining distribution: $90,000 (no SE tax)
+  Income tax (same): $37,500
+  Total: $46,680
+
+Annual savings: $13,770
+S-Corp setup cost: ~$1,500-3,000
+Ongoing CPA cost: $2,000-5,000/year
+Net benefit: $8,000-12,000/year from year 1
+```
+
+**The 2553 deadline trap**: The S-Corp election (Form 2553) must be filed within 75 days of the start of the tax year you want it to take effect. Miss it → wait a full year. Calendar this if you're approaching the $50K threshold.
+
+### Kill Signal
+
+```
+KILL SIGNAL — Is S-Corp right for me?
+If you cannot set a "reasonable salary" that your CPA defends as legitimate → the structure isn't valid.
+IRS scrutiny threshold: salary below 50% of distributions triggers audit risk.
+```
+
+*This is not tax advice. Consult a qualified CPA or tax attorney before any entity changes.*
+
+---
+
 ## The 5 Financial Mistakes That Kill Profitable Companies
 
 1. **LTV blindness**: Growing MRR while CAC > LTV. The faster you grow, the faster you die.

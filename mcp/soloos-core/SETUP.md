@@ -11,7 +11,7 @@ claude mcp add soloos-core -- soloos-mcp
 
 ### MCP Server (Claude Code)
 
-Claude can now call 16 tools instead of reading markdown:
+Claude can now call 18 tools instead of reading markdown:
 
 | Tool | Example Claude usage |
 |------|---------------------|
@@ -31,6 +31,8 @@ Claude can now call 16 tools instead of reading markdown:
 | `score_pmf` | "Sean Ellis 45%, NRR 108%, D30 retention 38% — do I have PMF?" |
 | `generate_competitor_brief` | "Generate autopsy template for Notion competitor" |
 | `calculate_runway` | "I have $50K cash, $8K burn, $4K MRR — true runway?" |
+| `monitor_competitor` | "Weekly intel brief on Linear with signal classification + MCP research commands" |
+| `enrich_prospect` | "90-second prospect brief for Acme Corp + 3 outreach variants" |
 
 ### CLI Tool
 
@@ -70,6 +72,12 @@ soloos runway 50000 8000 --mrr 4000 --new-mrr 1000
 
 # Competitor autopsy template
 soloos competitor "Notion" --pricing "freemium + $8/mo" --icp "teams"
+
+# Weekly competitive intelligence brief with signal classification
+soloos monitor "Linear" --url "https://linear.app" --mrr '$20K' --category "project management"
+
+# 90-second prospect research brief + 3 outreach variants
+soloos prospect "Acme Corp" --contact "Jane Smith" --role "Head of Ops" --mrr '$5K' --product "automates invoice reconciliation"
 ```
 
 ## What's Different

@@ -1660,6 +1660,282 @@ def calculate_runway(
 
 
 # ─────────────────────────────────────────────────────────────
+# Tool 17: monitor_competitor — Weekly competitive intelligence brief
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def monitor_competitor(
+    competitor_name: str,
+    competitor_url: str = "",
+    your_mrr: str = "$0",
+    your_icp: str = "",
+    known_recent_changes: str = "",
+    category: str = "",
+) -> str:
+    """
+    Generate a structured weekly competitive intelligence brief for a specific competitor.
+    Provides a monitoring checklist, signal classification, and strategic response recommendations.
+    Includes specific MCP commands to run for live data collection.
+
+    Args:
+        competitor_name: Name of the competitor to monitor
+        competitor_url: Their website URL (optional but improves output)
+        your_mrr: Your current MRR for stage-calibrated framing
+        your_icp: Your ideal customer profile
+        known_recent_changes: Any changes you already know about (pricing, features, etc.)
+        category: Market category (e.g., "AI email tools", "project management for designers")
+    """
+    import json as _json
+
+    founder_mrr_val = _parse_mrr_string(your_mrr)
+
+    # Stage-calibrated monitoring intensity
+    if founder_mrr_val < 5000:
+        monitoring_intensity = "LIGHT — check monthly, focus on pricing/positioning only"
+        threat_level_context = "At your stage, competitor moves matter less than getting first customers."
+    elif founder_mrr_val < 20000:
+        monitoring_intensity = "MODERATE — check bi-weekly, track pricing + new features + customer complaints"
+        threat_level_context = "At your stage, competitor weaknesses = your acquisition opportunities."
+    else:
+        monitoring_intensity = "ACTIVE — weekly monitoring, full signal tracking"
+        threat_level_context = "At your stage, competitor intelligence directly informs positioning and roadmap."
+
+    # Layer 1: Offer analysis
+    offer_signals = [
+        f"Pricing page changes (scrape {competitor_url}/pricing if available)",
+        "Free tier limits and paid tier feature gates",
+        "New product lines or feature announcements",
+        "Trial length and onboarding flow changes",
+        "Integration additions (their API/integrations page)",
+    ]
+
+    # Layer 2: ICP signals
+    icp_signals = [
+        f"Who is upvoting their ProductHunt page (job titles, company sizes)",
+        f"Case studies and testimonials (which company types they highlight)",
+        f"Job postings (what roles they're hiring = what segments they're going after)",
+        "LinkedIn page followers — company size and industry breakdown",
+        "Content topics (what customer segments their blog/content targets)",
+    ]
+
+    # Layer 3: Customer sentiment
+    sentiment_sources = [
+        f"Reddit: search '{competitor_name} review', '{competitor_name} alternative', '{competitor_name} problems'",
+        f"HackerNews: search '{competitor_name}' in comments (hn.algolia.com)",
+        f"G2 / Capterra: most recent 1-star and 2-star reviews (what specifically they complain about)",
+        f"Twitter/X: '{competitor_name} -filter:retweets' sorted by Latest",
+        f"Indie Hackers: search their name in community posts",
+    ]
+
+    # Layer 4: Distribution channels
+    distribution_signals = [
+        "Content publishing frequency and topics (Similarweb/Semrush for free estimate)",
+        "Backlink profile changes (new partnerships indicated by referring domains)",
+        "Social media posting cadence and engagement",
+        "Podcast / conference appearances (Google: 'site:buzzsprout.com OR site:transistor.fm [competitor]')",
+        "Affiliate / partner program activity",
+    ]
+
+    # Layer 5: Achilles heel — the systematic weakness
+    achilles_patterns = {
+        "complexity": "Complex product targeting power users → opportunity: simpler tool for same outcome",
+        "price": "High price point → opportunity: lower entry price for specific segment",
+        "support": "Poor support reviews → opportunity: obsessive customer success as differentiator",
+        "niche": "Broad generalist product → opportunity: deep specialization for one vertical",
+        "legacy": "Legacy tech/UX → opportunity: modern stack, better developer experience",
+        "size": "Large company, slow roadmap → opportunity: faster shipping, founder relationship with customers",
+    }
+
+    # Build research agenda with MCP commands
+    mcp_commands = [
+        f"mcp__reddit__reddit_search_reddit(query='{competitor_name} problems OR sucks OR alternative OR switch', limit=25)",
+        f"mcp__reddit__reddit_search_reddit(query='{competitor_name} review', subreddit='SaaS', limit=10)",
+        f"mcp__hackernews__getItem (search HN Algolia for '{competitor_name}')",
+    ]
+    if competitor_url:
+        mcp_commands.append(f"mcp__jina__jina_reader(url='{competitor_url}/pricing') — extract current pricing")
+        mcp_commands.append(f"mcp__jina__jina_reader(url='{competitor_url}/blog') — track content topics")
+
+    # Signal classification
+    signal_types = {
+        "🔴 THREAT (act within 1 week)": [
+            "Price cut >20% (may pull price-sensitive customers)",
+            "Feature launch that directly matches your core value prop",
+            "Funding announcement (more resources incoming)",
+            "Partnership with your distribution channel",
+        ],
+        "🟡 MONITOR (track monthly)": [
+            "New enterprise tier (signals upmarket move — opens SMB)",
+            "New integrations (what tools their customers use)",
+            "Content pivots to new ICP",
+            "Leadership changes (new CEO/CMO = strategy change possible)",
+        ],
+        "🟢 OPPORTUNITY (act within 30 days)": [
+            "Spike in 1-star reviews (capture their churning customers)",
+            "Raising prices (offer price-locked migration deal)",
+            "Shutting down feature (announce yours is staying)",
+            "Layoffs / support degradation (outreach to their customers)",
+        ],
+    }
+
+    output = {
+        "competitor": competitor_name,
+        "monitoring_intensity": monitoring_intensity,
+        "stage_context": threat_level_context,
+        "five_layer_monitoring": {
+            "layer_1_offer": offer_signals,
+            "layer_2_icp_signals": icp_signals,
+            "layer_3_customer_sentiment": sentiment_sources,
+            "layer_4_distribution": distribution_signals,
+            "layer_5_achilles_heel_patterns": achilles_patterns,
+        },
+        "known_recent_changes": known_recent_changes if known_recent_changes else "None provided — start with live search",
+        "mcp_commands_to_run_now": mcp_commands,
+        "signal_classification": signal_types,
+        "weekly_brief_format": {
+            "pricing_changes": "[none / raised / lowered / new tier added]",
+            "new_features": "[list or none]",
+            "customer_sentiment_trend": "[improving / stable / declining]",
+            "top_complaint_this_week": "[from review sites / reddit]",
+            "recommended_action": "[one specific response this week]",
+        },
+        "displacement_outreach_trigger": (
+            f"If their review sentiment is declining: search Reddit for '{competitor_name} alternative' posters. "
+            f"DM them directly with: 'I saw you're looking for alternatives to {competitor_name}. "
+            f"I built [your product] specifically for [ICP]. Happy to show you — what's your biggest pain with them?'"
+        ),
+        "kill_signal": (
+            f"If {competitor_name} launches a feature that directly replicates your core value prop within 30 days "
+            f"AND you cannot name a defensible differentiator → pause acquisition spend and define new positioning before continuing."
+        ),
+    }
+
+    return _json.dumps(output, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# Tool 18: enrich_prospect — 90-second prospect research brief
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def enrich_prospect(
+    company_name: str,
+    contact_name: str = "",
+    contact_role: str = "",
+    your_icp: str = "",
+    your_product: str = "",
+    your_mrr: str = "$0",
+) -> str:
+    """
+    Generate a comprehensive prospect research brief to replace 30-45 minutes of manual research.
+    Produces: company context, pain hypothesis, conversation starters, and 3 outreach variants.
+    Includes specific MCP/search commands to execute for live data enrichment.
+
+    Args:
+        company_name: Target company name
+        contact_name: Decision-maker name (optional)
+        contact_role: Their role/title (optional, helps personalize outreach)
+        your_icp: Your ideal customer profile description
+        your_product: What your product does (1 sentence)
+        your_mrr: Your current MRR (for ACV routing)
+    """
+    import json as _json
+
+    founder_mrr_val = _parse_mrr_string(your_mrr)
+
+    # ACV-based outreach motion
+    if founder_mrr_val < 10000:
+        outreach_motion = "HIGH-TOUCH: Personal DM → short value observation → ask for 20-min call"
+        follow_up_sequence = "Day 0: initial DM/email | Day 3: value-add resource | Day 7: ask | Day 14: final"
+    elif founder_mrr_val < 50000:
+        outreach_motion = "STRUCTURED: Cold email sequence + LinkedIn connection + call offer"
+        follow_up_sequence = "Day 0: email | Day 2: LinkedIn connect | Day 5: email 2 (case study) | Day 10: final ask"
+    else:
+        outreach_motion = "SALES-LED: Full SDR sequence, discovery call targeting, demo offer"
+        follow_up_sequence = "Day 0: research + personalized email | Day 3: LinkedIn | Day 7: phone | Day 14: email | Day 21: final"
+
+    # Research agenda — what to look up
+    research_checklist = {
+        "company_signals": [
+            f"Recent news: Google '{company_name} news site:techcrunch.com OR site:linkedin.com last 90 days'",
+            f"Hiring signals: search '{company_name}' on LinkedIn Jobs → what roles? = their priorities",
+            f"Funding history: Crunchbase '{company_name}' → when last funded? How much? Stage?",
+            f"Tech stack: BuiltWith '{company_name}' → what tools they use reveals pain points",
+            f"Employee count trajectory: LinkedIn company page → growth rate signals health",
+        ],
+        "contact_signals": [
+            f"LinkedIn activity: what has {contact_name or 'the contact'} posted/liked/commented in last 30 days?",
+            f"Pain signals: search '{contact_name or contact_role} {company_name}' on Twitter/X — any public frustrations?",
+            f"Mutual connections: LinkedIn → who do you share that can make an intro?",
+            f"Content: have they written any articles, talks, podcasts? What topics?",
+        ],
+        "pain_hypothesis_triggers": [
+            f"mcp__reddit__reddit_search_reddit(query='{contact_role or company_name} pain problem struggle', limit=10)",
+            f"Search Indie Hackers for '[industry] problems' to understand their context",
+            f"Check G2/Capterra for tools they likely use → their reviews reveal workflow frustrations",
+        ],
+    }
+
+    # Pain hypothesis framework
+    pain_hypothesis = {
+        "template": f"If {company_name} is a [size] company doing [activity], their biggest pain in [your product category] is probably: [specific problem].",
+        "validation_question": f"'I've been talking to {contact_role or 'founders'} at similar companies and the most common challenge I hear is [X]. Is that something you deal with, or is it different for you?'",
+        "note": "Never assume the pain — use this as a hypothesis to validate in the opening question, not as a claim.",
+    }
+
+    # The 3 outreach variants
+    outreach_variants = {
+        "variant_1_insight": {
+            "approach": "Lead with a relevant insight specific to their company/role",
+            "template": f"Hi {contact_name or '[Name]'},\n\nI noticed [company_specific_observation — from hiring/news/product/content].\n\nMost {contact_role or 'teams'} I talk to at [similar company type] are dealing with [specific pain] because of this.\n\nIs that relevant for you, or are you in a different place?\n\n[Your name]",
+            "best_for": "Cold email, LinkedIn DM to someone who posts actively",
+        },
+        "variant_2_case_study": {
+            "approach": "Lead with a relevant outcome from a similar company",
+            "template": f"Hi {contact_name or '[Name]'},\n\nI helped [similar company type] [specific outcome — e.g., 'reduce manual reporting time from 4hrs/week to 20min'] using [your product].\n\nGiven what [company_name] is building, it might apply.\n\nWorth a 15-minute call to see if the situation is similar?\n\n[Your name]",
+            "best_for": "Cold email when you have a relevant case study",
+        },
+        "variant_3_resource": {
+            "approach": "Lead with pure value — no ask",
+            "template": f"Hi {contact_name or '[Name]'},\n\nI've been researching [their industry/problem space] and wrote up [relevant resource — framework, analysis, tool]. Thought it might be useful given what [company_name] is working on.\n\n[Link or attach]\n\nNo ask — just hope it's useful. [Your name]",
+            "best_for": "First touch when you want to start a relationship without a pitch",
+        },
+    }
+
+    # Conversation starters for discovery
+    discovery_openers = [
+        f"'What's the most painful part of [relevant workflow] for your team right now?'",
+        f"'I saw you're hiring for [role from job board] — what's driving that decision?'",
+        f"'I noticed {company_name} recently [news/product/hiring signal] — is [related challenge] something you're focused on?'",
+        f"'What does your current workflow for [relevant activity] look like today?'",
+    ]
+
+    return _json.dumps({
+        "prospect": {
+            "company": company_name,
+            "contact": contact_name or "Not specified",
+            "role": contact_role or "Not specified",
+        },
+        "outreach_motion": outreach_motion,
+        "follow_up_sequence": follow_up_sequence,
+        "research_agenda": research_checklist,
+        "pain_hypothesis_framework": pain_hypothesis,
+        "outreach_variants": outreach_variants,
+        "discovery_openers": discovery_openers,
+        "qualification_checklist": {
+            "budget_signal": "Are they funded / profitable? (Crunchbase funding round or employee count trend)",
+            "authority_signal": f"Is {contact_name or 'the contact'} a decision maker or influencer? (Title + LinkedIn connections)",
+            "need_signal": "Do their hiring signals or content indicate the pain your product solves?",
+            "timing_signal": "Are there triggers suggesting NOW is the right time? (new hire, new initiative, funding, competitor problem)",
+        },
+        "kill_signal": (
+            "If after 2 full outreach sequences (14 touchpoints) there is zero response: "
+            "either wrong ICP, wrong channel, or wrong pain hypothesis. Do not increase volume — improve targeting."
+        ),
+    }, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
 # Entry point
 # ─────────────────────────────────────────────────────────────
 

@@ -21,6 +21,7 @@ from .server import (
     log_decision, session_synthesis,
     calculate_unit_economics, calculate_valuation, score_pmf,
     generate_competitor_brief, calculate_runway,
+    monitor_competitor, enrich_prospect,
 )
 
 
@@ -435,6 +436,63 @@ def cmd_competitor(args):
         print(f"  {dim(cmd)}")
 
 
+def cmd_monitor(args):
+    result = json.loads(monitor_competitor(
+        args.name,
+        competitor_url=args.url,
+        your_mrr=args.mrr,
+        category=args.category,
+        known_recent_changes=args.changes,
+    ))
+    header(f"COMPETITIVE BRIEF: {args.name.upper()}")
+    print(f"{bold('Monitoring Intensity:')} {result['monitoring_intensity']}")
+    print(f"{bold('Stage Context:')} {result['stage_context']}")
+    print()
+    print(bold("MCP Commands to Run Now (paste into Claude):"))
+    for cmd in result["mcp_commands_to_run_now"]:
+        print(f"  {dim(cmd)}")
+    print()
+    print(bold("Signal Classification:"))
+    for signal_type, signals in result["signal_classification"].items():
+        print(f"  {bold(signal_type)}")
+        for s in signals:
+            print(f"    • {s}")
+    print()
+    print(bold("Displacement Trigger:"))
+    print(f"  {result['displacement_outreach_trigger']}")
+    print()
+    print(bold("Kill Signal:"))
+    print(f"  {red(result['kill_signal'])}")
+
+
+def cmd_prospect(args):
+    result = json.loads(enrich_prospect(
+        args.company,
+        contact_name=args.contact,
+        contact_role=args.role,
+        your_product=args.product,
+        your_mrr=args.mrr,
+    ))
+    header(f"PROSPECT BRIEF: {args.company.upper()}")
+    print(f"{bold('Outreach Motion:')} {result['outreach_motion']}")
+    print(f"{bold('Follow-up Sequence:')} {result['follow_up_sequence']}")
+    print()
+    print(bold("Research Agenda:"))
+    for section, items in result["research_agenda"].items():
+        print(f"  {bold(section.replace('_', ' ').title())}:")
+        for item in items:
+            print(f"    • {dim(item)}")
+    print()
+    print(bold("Outreach Variants:"))
+    for key, v in result["outreach_variants"].items():
+        print(f"\n  {bold(v['approach'])}")
+        print(f"  Best for: {v['best_for']}")
+        print(f"  {dim(v['template'][:200] + '...' if len(v['template']) > 200 else v['template'])}")
+    print()
+    print(bold("Kill Signal:"))
+    print(f"  {red(result['kill_signal'])}")
+
+
 # ─────────────────────────────────────────────────────────────
 # Main entry point
 # ─────────────────────────────────────────────────────────────
@@ -528,6 +586,22 @@ commands:
     p_comp.add_argument("--pricing", default="", help="Known pricing info")
     p_comp.add_argument("--icp", default="", help="Their known target ICP")
 
+    # monitor — weekly competitive intelligence brief
+    p_monitor = subparsers.add_parser("monitor", help="Weekly competitive intelligence brief")
+    p_monitor.add_argument("name", help="Competitor name")
+    p_monitor.add_argument("--url", default="", help="Their website URL")
+    p_monitor.add_argument("--mrr", default="$0", help="Your current MRR")
+    p_monitor.add_argument("--category", default="", help="Market category")
+    p_monitor.add_argument("--changes", default="", help="Known recent changes")
+
+    # prospect — 90-second prospect research brief
+    p_prospect = subparsers.add_parser("prospect", help="90-second prospect research + outreach brief")
+    p_prospect.add_argument("company", help="Target company name")
+    p_prospect.add_argument("--contact", default="", help="Contact name")
+    p_prospect.add_argument("--role", default="", help="Contact role/title")
+    p_prospect.add_argument("--mrr", default="$0", help="Your current MRR")
+    p_prospect.add_argument("--product", default="", help="What your product does (1 sentence)")
+
     args = parser.parse_args()
 
     if not args.command:
@@ -549,6 +623,8 @@ commands:
         "pmf": cmd_pmf,
         "runway": cmd_runway,
         "competitor": cmd_competitor,
+        "monitor": cmd_monitor,
+        "prospect": cmd_prospect,
     }
 
     fn = dispatch.get(args.command)
