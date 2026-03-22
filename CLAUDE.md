@@ -98,8 +98,14 @@ Reference `skills/AUTO_TRIGGERS.md` for the full routing table.
 **INTEL fires when**: "[Competitor] launched X", "what are customers saying about [X]", "is [market] a good opportunity", "who are my competitors", "I'm losing deals to [competitor]"
 → Apply 5-layer competitor autopsy + pain mining protocol. See `skills/claude-code/intel.md`.
 
-**WISDOM fires when**: competitor mentioned (Mandala Theory), founder paralyzed/stuck (Bhagavad Gita reframe), negotiation/partnership (Chanakya Upayas), competitor is larger (Sun Tzu asymmetric), failure/rejection (Stoic Obstacle-is-Way), ethical dilemma (Dharmic principles)
-→ Apply relevant ancient wisdom tradition. See `skills/claude-code/wisdom.md`.
+**WISDOM fires when**: competitor mentioned (Mandala Theory), founder paralyzed/stuck (Bhagavad Gita reframe), negotiation/partnership (Chanakya Upayas), competitor is larger (Sun Tzu asymmetric), failure/rejection (Stoic Obstacle-is-Way), ethical dilemma (Dharmic principles), resource allocation decision (Saptanga), aggressive action being planned (Kaala timing)
+→ Apply relevant ancient wisdom tradition. For aggressive actions (price increase, launch, expansion, new hire): run Kaala Assessment first. For weekly strategy reviews: run Saptanga Health Dashboard. See `skills/claude-code/wisdom.md`.
+
+**KAALA fires when**: "should I launch now", "thinking about raising prices", "about to hire", "considering expanding to [new market]", "thinking about running ads", any aggressive action with reversibility ≤5/10
+→ Run Kaala Assessment: evaluate YOUR position (strong/weakening/distressed) vs. market position (opening/neutral/closing). Output: Aggressive / Invest / Hold / Selective / Restore / Patient / Defend / Recovery / Retreat + specific signals that would change the verdict. See `skills/claude-code/wisdom.md` Kaala section.
+
+**GUNA fires when**: conversation shows avoidance language, justifications, hyperactivity with low direction, urgency without clarity, or bandwidth <6/10 before a major strategic question
+→ Run Guna Diagnostic: Tamas (do not make decisions — information gathering only) / Rajas (one action maximum — add structural constraint) / Sattva (full engagement). Always surface guna state before a reversibility ≤5/10 decision. See `skills/claude-code/psychology.md` Guna section.
 
 **NETWORK fires when**: "I need to raise", "warm intro", "looking for investors", "need an advisor", "partnership opportunity", "co-founder"
 → Apply warm intro machine + investor compatibility matrix. See `skills/claude-code/network.md`.

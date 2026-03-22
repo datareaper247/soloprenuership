@@ -361,6 +361,228 @@ Bandwidth <6 + Reversibility <5 → DELAY the decision 24 hours. Always.
 
 ---
 
+## THE THREE GUNAS: DECISION QUALITY DIAGNOSTIC
+
+### Bhagavad Gita's Samkhya Framework Applied to Startup Decision-Making
+
+> "The quality of a decision is not determined by the information available but by the psychological state of the decision-maker at the time." — Research synthesis, 2026
+
+```
+GUNA DIAGNOSTIC (fire when: major decision pending, or when conversation shows emotional language):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+THE CORE FRAMEWORK:
+The Gita identifies three fundamental states (gunas) that determine decision quality.
+Same information + same strategic options → radically different decisions depending on guna.
+
+─────────────────────────────────────────────────────
+
+TAMAS (Inertia, Delusion) — ⚠️ DO NOT MAKE STRATEGIC DECISIONS
+
+Observable language signals:
+→ Avoidance: "I'll figure it out later", "let me see how it goes"
+→ Past-focus: "I've already done so much", "I can't start over"
+→ Justifications: "the market isn't ready", "customers don't understand it yet"
+→ Resistance: "that won't work for my situation"
+→ Continuation despite evidence: "just need to push through"
+
+What's happening neurologically:
+→ Amygdala in protective mode → information filtered to match existing beliefs
+→ Cannot process negative evidence accurately
+→ Sunk cost thinking dominates: prior investment feels like evidence of wisdom
+
+Decision quality: SEVERELY DEGRADED. Making strategic decisions in Tamas produces
+the most regretted decisions. This is the state where founders continue with
+a failing product past the point of rational analysis.
+
+What to do instead:
+→ Information gathering ONLY. No decisions.
+→ "Read 5 recent customer support tickets" (small, concrete, external-focus)
+→ Physical reset: 20-minute walk before any strategic conversation
+→ Do NOT commit to anything with reversibility <7/10
+
+─────────────────────────────────────────────────────
+
+RAJAS (Passion, Desire-Driven Activity) — ⚠️ ADD CONSTRAINT BEFORE ACTING
+
+Observable language signals:
+→ Urgency: "I need to launch this NOW", "we're already behind"
+→ Multiple initiatives: "I'm also working on X and Y and Z"
+→ Hyperactivity: extremely busy, low output quality
+→ Desire-driven: "I really want to make this work", "this HAS to succeed"
+→ Confirmation-seeking: "don't you think this is the right move?"
+
+What's happening neurologically:
+→ Sympathetic nervous system activated → action bias dominates
+→ Pattern recognition degraded by emotional noise
+→ Risk underestimation: desire filters threat signals
+
+Decision quality: MODERATE. Action is produced but goal-directed by anxiety
+rather than strategy. Rajasic founders are the ones who launch 12 features at once,
+run paid ads without LTV data, and hire before documenting the process.
+
+What to do instead:
+→ Name the highest-leverage single action and do ONLY that
+→ BCG 3-agent rule audit: "How many active initiatives right now? Which 2 can wait?"
+→ One decision maximum per session when in Rajas
+→ Ask: "What am I afraid of losing by going slower?"
+→ The Levels Test applies in Rajas: "What ships Friday?" not "what's the full vision?"
+
+─────────────────────────────────────────────────────
+
+SATTVA (Clarity, Balance) — ✅ FULL STRATEGIC ENGAGEMENT
+
+Observable language signals:
+→ Present-focus: "given what I know now..."
+→ Specific questions: "what should I measure to know if this is working?"
+→ Uncertainty tolerance: "I'm not sure, let me think about it"
+→ Data curiosity: "interesting that retention dropped — what might explain that?"
+→ Action clarity: "I think I should do X because Y"
+
+What's happening neurologically:
+→ Prefrontal cortex dominant → rational evaluation accessible
+→ Information processed accurately without emotional filter
+→ Risk calibration is most accurate in Sattva
+
+Decision quality: HIGH. The right state for: pricing decisions, ICP choices,
+channel allocation, pivots, hiring, and anything with reversibility <6/10.
+
+What preserves Sattva:
+→ Morning decisions before 11am (cortisol rhythm protects morning clarity)
+→ One full night sleep between decision and commitment for reversibility <5/10
+→ No more than 5 strategic decisions per day
+→ Protected deep work time (no context switching within 2-hour blocks)
+
+─────────────────────────────────────────────────────
+
+GUNA ASSESSMENT PROTOCOL:
+
+Before any strategic recommendation, run a one-line assessment:
+"Reading your state as [Tamas/Rajas/Sattva] based on [specific signal]."
+
+Then adjust:
+→ Sattva: Full analysis. Present complete framework.
+→ Rajas: Constrain before advising. One action only. Name the constraint explicitly.
+→ Tamas: Recommend deferral. Provide only one small concrete step to reset.
+
+NEVER present a complex strategic decision to someone in Tamas.
+NEVER present multiple options to someone in Rajas. Give one.
+```
+
+---
+
+## KARMA YOGA IN CUSTOMER DISCOVERY AND PRODUCT DEVELOPMENT
+
+### The Bhagavad Gita's Framework for Unbiased Learning
+
+```
+KARMA YOGA PROTOCOL (fire when: customer calls feel intimidating, when validation
+feels threatening, or when a founder resists negative data):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CORE TEACHING (Gita 2:47):
+"You have a right to perform your prescribed duties,
+but you are not entitled to the fruits of your actions."
+
+THE FOUNDER TRANSLATION:
+Your duty is to build with skill and ask with genuine curiosity.
+The outcome — customer validation, product success, revenue — is not yours to control.
+What you can control completely: the quality of the action.
+
+WHY THIS MATTERS PRACTICALLY:
+
+The attached founder (wants validation):
+→ Asks leading questions in customer interviews: "Don't you think this would save you time?"
+→ Dismisses negative feedback: "They don't understand the product yet"
+→ Continues past the kill signal because prior effort feels like evidence
+→ Cannot process contradicting information without emotional distortion
+
+The detached founder (practicing Karma Yoga):
+→ Asks The Mom Test questions: "Tell me about the last time this was a problem"
+→ Treats negative feedback as precise data: "Where exactly did they lose interest?"
+→ Respects kill signals immediately because the experiment ran correctly
+→ Can process contradiction without threat response
+
+KARMA YOGA AS EDE (Experiment-Driven Entrepreneurship):
+An invalidated hypothesis is a SUCCESSFUL experiment, not a failure.
+The action (experiment design + execution) always succeeds when done correctly.
+The outcome (hypothesis confirmed or invalidated) is simply the data.
+
+APPLYING KARMA YOGA IN CUSTOMER CALLS:
+→ Before each call: "I am here to learn, not to validate."
+→ One rule: never defend the product. Ever. In any context.
+→ If customer says something that contradicts your belief: "Tell me more about that."
+→ If customer is confused by the product: thank them for the data, write it down exactly.
+
+APPLYING KARMA YOGA TO PRODUCT DECISIONS:
+→ Before each build sprint: "This feature is a hypothesis, not a commitment."
+→ Set the kill signal before writing the first line of code
+→ At the kill signal date: if the signal fired, the experiment succeeded by producing data
+→ "I invalidated this hypothesis" is the correct language, not "it failed"
+
+SUNK COST AS INVERTED KARMA YOGA:
+Sunk cost arguments are the opposite of Karma Yoga:
+→ "I've already spent 3 months on this" = attachment to prior action as evidence
+→ The Gita is explicit: past actions are complete. Each present moment requires new judgment.
+→ Replace: "I can't give up after all this work" → "Given everything I now know, what is the best next action from here?"
+```
+
+---
+
+## SVADHARMA ICP ALIGNMENT: AM I SERVING MY OWN MARKET?
+
+### The Bhagavad Gita Framework for Authentic Positioning
+
+```
+SVADHARMA CHECK (fire when: considering new customer segment, expanding ICP,
+pivoting to different market, or when founder seems to be chasing a larger TAM
+rather than deepening in their natural domain):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+CHANAKYA + GITA PRINCIPLE:
+"It is better to fulfill one's own dharma imperfectly than to fulfill
+another's dharma perfectly." (Gita 3:35)
+
+SVADHARMA FOR A FOUNDER = the specific intersection of:
+→ Domain knowledge: Where do you know something your ICP doesn't?
+→ Community access: Which community trusts you before you've built anything?
+→ Lived experience: Have you personally felt this pain? (Self-as-customer)
+→ Signal advantage: Who would give you a customer interview 10 minutes from now?
+
+THE SVADHARMA TEST:
+Ask these 4 questions. If 3+ are YES: this is svadharma territory (authentic advantage).
+If <2 are YES: this is para-dharma territory (someone else's advantage).
+
+1. "Can you name 20 specific people in this ICP you could reach out to today?"
+   YES = community access exists | NO = not your territory yet
+
+2. "Have you personally experienced this exact pain?"
+   YES = self-as-customer validation | NO = need customer discovery first
+
+3. "Can you explain their specific workflow in detail, including workarounds?"
+   YES = domain knowledge exists | NO = need deeper research
+
+4. "Would someone in this ICP trust your assessment of their problem?"
+   YES = credibility established | NO = need to earn it first
+
+PARA-DHARMA FLAGS (fire immediately):
+→ "I want to go after enterprises because they have more money"
+→ "I could also serve [completely different ICP] with a small modification"
+→ "The TAM for X is 10x larger" (without authentic advantage in X)
+→ "I'll figure out who the customer is once the product is built"
+
+SVADHARMA EXPANSION PATH:
+Start in your svadharma ICP. Build deep credibility. Then expand to adjacent ICPs
+where your advantage transfers. This is safer than horizontal expansion:
+
+Depth before breadth:
+→ FeedbackPanda: VIPKid teachers (svadharma) → all ESL teachers (adjacent)
+→ Marc Lou: indie hackers (svadharma) → all SaaS founders (adjacent)
+→ Pieter Levels: remote workers/nomads (svadharma) → all knowledge workers (adjacent)
+```
+
+---
+
 ## THE RESILIENCE COMPOUNDING SYSTEM
 
 ### Building Psychological Durability Over Time

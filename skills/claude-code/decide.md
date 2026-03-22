@@ -248,6 +248,24 @@ KILL SIGNAL
 [If [this specific thing] happens within [X days], reverse the decision]
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PRE-MORTEM (only for reversibility ≤ 5/10)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Apply Gary Klein's pre-mortem technique for hard-to-reverse decisions]
+
+Imagine it's 90 days from now. You made [this decision]. It failed badly.
+What happened?
+
+Most likely failure scenario: [specific cause]
+Core assumption that turned out wrong: [what had to be true but wasn't]
+Second most likely failure scenario: [different failure path]
+
+What would prevent failure scenario 1: [specific action]
+What would prevent failure scenario 2: [specific action]
+
+Pre-mortem confidence: If you can name specific, credible failure scenarios, the decision is well-understood.
+If you cannot name how this fails, you don't yet understand the decision well enough to make it.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 LOG THIS DECISION?
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Save to context/decision-log.md: [y/n]

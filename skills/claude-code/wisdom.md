@@ -30,22 +30,128 @@ Every MBA teaches Porter's Five Forces and Blue Ocean. No one teaches the framew
 ## THE ARTHASHASTRA ENGINE (Chanakya, ~300 BCE)
 
 ### Saptanga Theory — The 7 Elements of a Winning State
-Applied to startups: your "kingdom" has 7 pillars. Weakness in any = vulnerability.
+Applied to startups: your "kingdom" has 7 pillars. Weakness in any = vulnerability. Chanakya's rule: the pillar with the lowest score is what your competitor will attack.
 
 ```
-SAPTANGA AUDIT (fires when strategy question asked):
+SAPTANGA HEALTH DASHBOARD (fire weekly, or on any strategic question):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-1. SWAMI (Founder/Leader)     → Clarity of vision, decision quality, coachability
-2. AMATYA (Ministers/Team)    → Your systems, advisors, VA, co-founder
-3. JANAPADA (Territory)       → Your specific market niche — how well-defined?
-4. DURGA (Fortification)      → Your moat — data, compliance, integrations, brand
-5. KOSHA (Treasury)           → Cash flow, runway, unit economics health
-6. DANDA (Enforcement/Army)   → Your distribution, sales engine, outreach capacity
-7. MITRA (Allies)             → Integrations, partnerships, community, advisors
 
-Scan: Rate 1-10. Lowest score = biggest strategic vulnerability.
-Chanakya's rule: "A king who neglects any limb will fall to an enemy exploiting that limb."
-Modern translation: Your weakest pillar is what your competitor will attack.
+PILLAR 1: SWAMI (Founder Condition)
+→ Questions: "Is your decision quality high this week? Energy level?"
+→ Healthy: Sattvic state, clear priorities, 8-10 energy
+→ Warning: Tamasic or Rajasic patterns, >5 strategic decisions today, bandwidth <6
+→ Action if weak: Personal recovery FIRST. No strategic decisions until restored.
+→ Chanakya: "A ruler who neglects his own mind gives all power to his enemies."
+
+PILLAR 2: AMATYA (Advisory Inputs)
+→ Questions: "Are you getting honest external feedback? Or validation?"
+→ Healthy: Customer calls weekly, genuine sounding boards, someone who pushes back
+→ Warning: Last external honest feedback >2 weeks ago, only positive signals
+→ Action if weak: Schedule 3 customer calls this week. Find one person who will disagree.
+
+PILLAR 3: JANAPADA (Market Territory)
+→ Questions: "Is your ICP still well-defined? Are you serving your svadharma?"
+→ Healthy: Single ICP clearly defined, 20+ reachable names, ICP validates pain weekly
+→ Warning: Multiple ICPs being served, unclear who the product is actually for
+→ Action if weak: Svadharma check (see psychology.md). Re-narrow to one ICP.
+
+PILLAR 4: DURGA (Competitive Moat)
+→ Questions: "What would a customer lose if they cancelled today?"
+→ Healthy: Workflow lock-in OR compliance layer OR proprietary data accumulating
+→ Warning: Product is easily replaceable; no switching cost mechanism in place
+→ Action if weak: Pick ONE moat architecture from product-moat.md and start building.
+
+PILLAR 5: KOSHA (Treasury)
+→ Questions: "What is MRR trend? Runway? Unit economics?"
+→ Healthy: MoM growth >10%, runway >12 months, LTV:CAC >3x
+→ Warning: MRR flat or declining, runway <6 months, CAC not yet known
+→ Action if weak: STOP all acquisition. Fix churn. Then return to acquisition.
+→ Chanakya: "All other elements depend on the treasury. It is not an outcome — it is a precondition."
+
+PILLAR 6: BALA (Distribution/Army)
+→ Questions: "Is the primary acquisition channel still working? CAC trend?"
+→ Healthy: One channel producing customers at CAC <1/3 LTV, consistency
+→ Warning: No working channel, or primary channel CAC rising, or channel saturated
+→ Action if weak: Stage diagnosis. $0-10K: direct outreach. $10-50K: exhaust primary channel.
+
+PILLAR 7: MITRA (Strategic Allies)
+→ Questions: "Are key partnerships and integrations stable? Allies' interests aligned with yours?"
+→ Healthy: 2+ integration partners with aligned interests, no single platform dependency
+→ Warning: Single platform dependency (all customers from one marketplace), no integrations
+→ Action if weak: Build one direct channel that works without the ally. Reduce dependency.
+
+─────────────────────────────────────────────────
+SAPTANGA DIAGNOSIS PROTOCOL:
+1. Rate each pillar 1-10
+2. Lowest score = biggest vulnerability = competitor attack vector
+3. Action this week on the lowest-scoring pillar ONLY
+4. Resist the urge to fix multiple pillars simultaneously (diffusion of resources)
+
+SAPTANGA OUTPUT FORMAT:
+┌────────────────────────────────────────────┐
+│ SAPTANGA HEALTH CHECK                       │
+│ Swami (Founder): X/10                       │
+│ Amatya (Advisors): X/10                     │
+│ Janapada (ICP/Territory): X/10              │
+│ Durga (Moat): X/10                          │
+│ Kosha (Treasury): X/10                      │
+│ Bala (Distribution): X/10                   │
+│ Mitra (Allies): X/10                        │
+│                                             │
+│ WEAKEST PILLAR: [Name]                      │
+│ THIS WEEK'S PRIORITY: [One specific action] │
+└────────────────────────────────────────────┘
+```
+
+### The Kaala Timing Framework — Strategic Timing Oracle
+
+Chanakya's theory of strategic timing (kaala): the same action can be correct or catastrophic depending on when it is taken. Evaluate your resource position AND the competitive environment BEFORE any aggressive action.
+
+```
+KAALA ASSESSMENT (fire before any aggressive move: price increase, new product launch,
+market expansion, new hire, ad campaign, pivots, or any reversibility <5/10 decision):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+STEP 1: Assess YOUR position
+→ STRONG: MoM growth >15%, D30 retention >45%, MRR trend positive 3+ months, CAC:LTV >3x
+→ WEAKENING: MoM growth <10% for 2 months, D30 retention declining, churn increasing
+→ DISTRESSED: MRR declining, churn >8%, runway <6 months, no working acquisition channel
+
+STEP 2: Assess ADVERSARY/MARKET position
+→ WEAKENING ADVERSARY signals: G2 complaint spike, changelog gaps >60 days, price increase announcement, acquisition rumors, feature rollbacks, Reddit migration threads
+→ STRENGTHENING ADVERSARY signals: funding round, major feature launch, pricing expansion, top talent hires visible on LinkedIn
+
+STEP 3: Kaala Decision Matrix
+
+│                    │ Market Opening   │ Market Neutral   │ Market Closing  │
+│ YOUR POSITION      │ (Adversary Weak) │                  │ (Adversary Str.)│
+│────────────────────│──────────────────│──────────────────│─────────────────│
+│ STRONG             │ 🔴 AGGRESSIVE    │ 🟡 INVEST        │ 🟡 HOLD + MOAT  │
+│                    │ Double down now  │ Selective bets   │ Fortify before  │
+│                    │ Raise prices     │ One new channel  │ attacking       │
+│────────────────────│──────────────────│──────────────────│─────────────────│
+│ WEAKENING          │ 🟡 SELECTIVE     │ 🟠 RESTORE       │ 🔵 PATIENT      │
+│                    │ Fix moat, then   │ Fix treasury     │ Survive first.  │
+│                    │ capture window   │ before any bet   │ Find one anchor │
+│────────────────────│──────────────────│──────────────────│─────────────────│
+│ DISTRESSED         │ 🟠 DEFEND        │ 🔵 RECOVERY      │ 🔵 RETREAT      │
+│                    │ Find defensible  │ Learning goals   │ Find a patron   │
+│                    │ niche, hold it   │ only             │ or pivot now    │
+
+KAALA OUTPUT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TIMING VERDICT: [Aggressive / Invest / Hold / Selective / Restore / Patient / Defend / Recovery / Retreat]
+
+What this means: [one sentence]
+
+Action this week: [specific]
+Action to defer: [specific]
+
+SIGNALS THAT WOULD UPGRADE your position:
+→ [specific metric reaching specific threshold → allows more aggressive posture]
+
+SIGNALS THAT WOULD DOWNGRADE your position:
+→ [specific metric declining to specific threshold → requires defensive posture]
 ```
 
 ### Mandala Theory — Rings of Competitors and Allies
