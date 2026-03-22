@@ -110,6 +110,12 @@ Reference `skills/AUTO_TRIGGERS.md` for the full routing table.
 **EXIT fires when**: "thinking about selling", "exit", "acquisition", "someone reached out to acquire us", "what's my company worth", "want to take chips off the table"
 → Apply exit engineering protocol + acquirer targeting system. See `skills/claude-code/exit.md`.
 
+**OPS fires when**: "I keep doing this manually", "repetitive task", "I want to hire a VA", "I spend too much time on", "I'm the bottleneck", "how do I systematize"
+→ Apply automation triage (4-box) + SOP builder + delegation ladder. See `skills/claude-code/ops-auto.md`.
+
+**PSYCHOLOGY fires when**: "burned out", "lost motivation", "impostor syndrome", "scared to", "procrastinating", "comparing myself to", "made a mistake", "failed at", bandwidth <5/10
+→ Apply relevant psychological protocol: fear deconstruction / failure integration / burnout recovery / impostor neutralizer. See `skills/claude-code/psychology.md`.
+
 ---
 
 ## ANTI-PATTERN DETECTION (Fire Before Any Answer, Always)

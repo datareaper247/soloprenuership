@@ -3,7 +3,7 @@
 > *A goal-oriented reasoning engine that connects your decisions, actions, and outcomes into an emergent knowledge graph — turning your daily work into a personal playbook.*
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Skills: 17](https://img.shields.io/badge/Auto--Trigger%20Skills-17-purple.svg)](#skills)
+[![Skills: 25](https://img.shields.io/badge/Auto--Trigger%20Skills-25-purple.svg)](#skills)
 [![Roles: 10](https://img.shields.io/badge/Core%20Roles-10-blue.svg)](#roles)
 [![Works with: Claude Code](https://img.shields.io/badge/Works%20with-Claude%20Code-orange.svg)](#quick-start)
 [![Cross-platform](https://img.shields.io/badge/Also%20works-Claude.ai%20%7C%20API%20%7C%20Any%20LLM-green.svg)](integrations/claude-ai-system-prompt.md)
@@ -149,7 +149,7 @@ Real founder data encoded as reference intelligence. Claude consults these befor
 
 ---
 
-## The 17 Skills
+## The 25 Skills (v4)
 
 All auto-trigger. All still available as slash commands for explicit use.
 
@@ -160,6 +160,7 @@ All auto-trigger. All still available as slash commands for explicit use.
 | `listen` | "what do customers want" / "community research" | Arvid Kahl community intelligence pipeline |
 | `research` | Market/competitor/ICP questions | 5-layer autopsy, bottom-up sizing, Signal Classifier |
 | `onboard` | New session with no context | 10-question flow → writes all 4 context files |
+| `pmf` | "do I have PMF" / "should I scale" | 5-system PMF scorer: Sean Ellis + NRR + L30 + referral + churn |
 
 ### Daily Operations
 | Skill | Auto-fires when | Framework |
@@ -167,6 +168,8 @@ All auto-trigger. All still available as slash commands for explicit use.
 | `morning` | "good morning" / "prioritize today" | Chief of Staff daily brief |
 | `decide` | "should I X or Y" / "I can't decide" | Adversarial 3-voice: Operator / Devil's Advocate / Expert |
 | `prospect` | "cold outreach to [X]" / "find leads at [Y]" | Research → trigger events → 3 outreach variants → 6-touch sequence |
+| `psychology` | "burned out" / "impostor" / "procrastinating" / bandwidth <5 | Fear deconstruction, burnout recovery, impostor neutralizer |
+| `ops-auto` | "I'm the bottleneck" / "too much manual work" | Time audit → automation triage → delegation ladder |
 
 ### Launch + Growth
 | Skill | Auto-fires when | Framework |
@@ -176,6 +179,15 @@ All auto-trigger. All still available as slash commands for explicit use.
 | `seo` | SEO/content/keywords question | Stage-gated: $0-5K (no), $5-20K (bottom-funnel), $20K+ (full funnel) |
 | `sales` | Pipeline/outreach/demos | ACV-gated: <$100 (self-serve), $100-500 (email), $500+ (calls) |
 | `content` | "I need to write X" / "what to post" | Stage-matched content + distribution ladder |
+
+### Intelligence + Strategy
+| Skill | Auto-fires when | Framework |
+|---|---|---|
+| `intel` | Competitor mentioned / market question | 5-layer autopsy + pain mining + displacement protocol |
+| `wisdom` | Competitor larger / stuck / negotiation / failure | Arthashastra + Bhagavad Gita + Sun Tzu + Stoic encoded as algorithms |
+| `finance` | "runway" / "pricing" / "what's my company worth" | CFO engine: unit economics, cash flow, valuation, exit prep |
+| `network` | "warm intro" / "investors" / "need an advisor" | Warm intro machine + investor compatibility + partner intelligence |
+| `exit` | "thinking about selling" / "acquisition offer" | Exit engineering: acquirer targeting, deal structure, valuation optimization |
 
 ### Specialist Tools
 | Skill | Auto-fires when | Framework |
@@ -324,6 +336,53 @@ Every decision you make gets logged to `knowledge-base/personal/founder-log.md` 
 - **SESSION SYNTHESIS**: At session end, key decisions auto-logged with hypothesis + kill signal.
 
 Everything that works, works today with stock Claude Code.
+
+---
+
+## What's New in v4
+
+Five capability layers added on top of v3. Each is a tool no competitor provides.
+
+### 1. Live Financial Intelligence (MCP Tools)
+5 new callable tools replace static financial markdown:
+- `calculate_unit_economics` — LTV (3 methods), LTV:CAC health scoring, NRR estimate
+- `calculate_valuation` — ARR multiple + acquirer ROI + SDE multiple simultaneously
+- `score_pmf` — 5-system PMF scorer with stage verdict and scale gate
+- `generate_competitor_brief` — 5-layer autopsy template + live MCP research commands
+- `calculate_runway` — Month-by-month cashflow projection accounting for MRR growth + churn
+
+CLI: `soloos uniteconomics 99 0.03 --cac 300`, `soloos runway 50000 8000`, etc.
+
+### 2. Ancient Wisdom as Behavioral Algorithms (wisdom.md)
+No competitor has encoded ancient philosophy as auto-triggering behavioral algorithms:
+- **Arthashastra Engine**: Saptanga audit, Mandala Theory, 4 Upayas, 6 Shadgunya postures
+- **Bhagavad Gita Engine**: Nishkama Karma (anti-sunk-cost), Svadharma, Three Gunas framework
+- **Sun Tzu Engine**: 5 Factors audit, 5-tactic asymmetric warfare playbook
+- **Stoic Engine**: Dichotomy of Control, Memento Mori, Obstacle is the Way
+
+### 3. Complete Finance CFO Layer (finance.md)
+- Unit economics with hidden CAC trap calculation
+- 12-month cash flow fortress with adjusted runway formula
+- Van Westendorp pricing discovery + pricing model selection matrix
+- Multi-method valuation + 20-point exit readiness checklist + fundraising gate
+
+### 4. Competitive Intelligence Engine (intel.md)
+- 5-layer competitor autopsy (offer / real ICP / switch-away / distribution / Achilles heel)
+- Pain mining protocol with Reddit + HN + G2 search templates
+- Displacement opportunity scanner with 7-day outreach sequence
+- Competitive moat audit with 7 moat types and clone-resistance ratings
+
+### 5. Psychological Performance Layer (psychology.md)
+The most underrated founder tool — a mental OS no startup OS provides:
+- Burnout detection + 5-stage map + recovery protocol
+- Fear deconstruction (5 founder fears with specific neutralizers)
+- Impostor syndrome neutralizer (evidence-based, not motivational)
+- Procrastination decoder (4 causes, not laziness)
+- Comparison trap neutralizer + survivorship bias filter
+- Decision fatigue prevention + Sattvic state gate
+
+### Plus: Network, PMF, Exit, Ops-Auto Engines
+See the full skill list below.
 
 ---
 
