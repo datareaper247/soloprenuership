@@ -140,6 +140,27 @@ Reference `skills/AUTO_TRIGGERS.md` for the full routing table.
 **PRODUCT-MOAT fires when**: "how do I reduce churn", "users churn after X days", "switching costs", "retention features", "make my product sticky", "competitor copied my feature", "build a moat", "customers don't come back", "what features increase retention"
 → Run MOAT GATE: D30 retention check first. If <40%: retention problem before moat. Stage-calibrated: <$5K → gather intel / $5K-$20K → Workflow Lock-In / $20K+ → layer moats. Apply 5 moat architectures + 10 asymmetric retention features. See `skills/claude-code/product-moat.md`.
 
+**CONCENTRATION-RISK fires when**: "80% of revenue from one customer", "my biggest customer is X% of MRR", "top customer might churn", "customer concentration", "losing [customer] would hurt us", or when any single customer represents an inferred >30% of revenue
+→ Run Customer Concentration Audit immediately: identify % of MRR from top 1, 2, 3 customers. If top customer >25% MRR: "CONCENTRATION ALERT — this is a business risk, not just a sales problem. Diversification is a survival imperative." Output: time-to-safe diversification plan + which acquisition channel produces customers most unlike the concentrated one. Reversibility: 2/10.
+
+**COMPOUNDING-NEGLECT fires when**: "haven't talked to customers in weeks", "inbox is overflowing", "I've been putting off [process] for months", "debt is piling up", "things are slipping", "I know I should but haven't", "the [fundamental thing] isn't working but I've been ignoring it"
+→ Compounding neglect is silent churn — it accelerates with every week of delay. Apply Neglect Triage: list every neglected item, classify by time-sensitivity (URGENT <48h / SERIOUS <1 week / IMPORTANT <1 month), then output ONE action for each tier. Do not plan. Do one action from URGENT tier first. Surface the compounding math: "Each week of neglect on [X] costs approximately [Y]."
+
+**MOMENTUM-TRAP fires when**: "revenue is growing but feels wrong", "we're growing but burning more", "acquisition costs are going up", "customers aren't profitable", "we're scaling but margins are shrinking", "CAC is creeping up", "unit economics are worse than last quarter"
+→ Momentum Trap: revenue growth masking unit economics deterioration. Run full Unit Economics Health Check before any growth recommendation: CAC trend (rising?), payback period trend (lengthening?), margin per customer (shrinking?), NRR (declining?). Flag: "Growing into a worse business is worse than not growing. Fix unit economics before adding acquisition fuel."
+
+**FIRST-CUSTOMER-EFFECT fires when**: "my biggest customer wants X", "our anchor customer is asking for Y", "we built this for [specific customer]", "the customer who got us here wants us to", "the customer paying most of our bills needs", founder describing a product direction driven by one customer's requests
+→ First Customer Effect: the first large customer shapes the product toward their specific needs, which may be atypical. Surface immediately: "Is this feature request from a pattern (3+ customers asking) or a single customer with outsized revenue influence? Single-customer-driven features optimize for retention of one customer at the expense of ICP clarity." Apply: [request maps to ICP] vs [request maps to this customer only]. Confirm before building.
+
+**ACQUIHIRE fires when**: "team is great but product isn't working", "thinking about acquisition for the team", "company isn't going anywhere but people are talented", "considering a soft landing", "should we explore strategic acquisition", "looking for a home for the team"
+→ Apply Acquihire Engineering Protocol: talent packaging (individual LinkedIn + output portfolio), acquirer targeting (who needs this team's specific skills — map to companies actively hiring in this domain), timing (acquihires happen 60-90 days before runway ends — start now if <6 months runway), valuation anchoring ($100-500K per engineer is the realistic range for early-stage acquihires). ALWAYS include: "This is not legal or financial advice — engage qualified counsel before any acquisition discussion." Reversibility: 2/10.
+
+**POSITIONING fires when**: "how do I explain what we do", "nobody gets it when I describe the product", "my messaging isn't landing", "what's our positioning", "elevator pitch", "how should I describe this to [ICP]", "category creation", "we're competing with X but we're different because", "value proposition"
+→ Apply Dunford Positioning Protocol: competitive alternatives (what would they do if you didn't exist?) → unique attributes (what do you have that alternatives don't?) → value (what does that enable for them?) → target customer (who cares most about that value?) → market category (what frame makes your value obvious?). Output: one 25-word positioning statement + 3 differentiating proof points. See `skills/claude-code/positioning.md`.
+
+**NEGOTIATION fires when**: "they came back with a counteroffer", "how do I negotiate pricing", "customer wants a discount", "contract negotiation", "vendor is pushing back", "how do I ask for more", "partnership terms", "I don't know how to respond to their offer"
+→ Apply Voss Tactical Empathy + Fisher/Ury Interest-Based framework. Identify: anchor position, BATNA, key interests behind stated positions, emotional dynamics. Output: specific response script + 2-3 calibrated questions + concession ladder with clear floor. See `skills/claude-code/negotiation.md`.
+
 ---
 
 ## ANTI-PATTERN DETECTION (Fire Before Any Answer, Always)
@@ -167,6 +188,9 @@ Do not lecture. One flag + alternative. Founder decides.
 | "I need to pivot because [competitor did X]" | ⚠️ FALSE URGENCY: Pivots driven by competitor moves fail 80%+ of the time. What do YOUR customers say is missing? |
 | Planning major initiative in response to bad week/bad day | ⚠️ FALSE URGENCY: Emotional state is generating urgency. Wait 48 hours. Same signal 48 hours later = real. Gone = false. |
 | Urgency without named kill signal timeline | ⚠️ URGENCY TEST: Real urgency has a specific deadline with evidence. "I feel like I need to move fast" is anxiety, not urgency. What specific event closes this window and when? |
+| Optimizing vanity metrics (open rates, social likes, page views) while core metrics unclear | ⚠️ OPTIMIZATION TRAP: You're polishing a metric that doesn't pay rent. What's the conversion rate from [metric] to paying customer? If unknown, that's the metric that matters. |
+| Using community/audience/waitlist response as customer validation | ⚠️ AUDIENCE SUBSTITUTION: Community members are not customers. "People liked it" ≠ "people pay for it." Have you asked anyone to pay? Even $1 of commitment changes the signal entirely. |
+| "Adding features" as the answer to competitive pressure, pricing pressure, or churn | ⚠️ FEATURE-AS-STRATEGY: Features are tactics, not strategy. What's the job-to-be-done customers hire your product for? More features that don't serve that job deepen complexity without deepening value. |
 
 ---
 

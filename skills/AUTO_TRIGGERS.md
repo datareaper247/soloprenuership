@@ -381,6 +381,59 @@ When multiple triggers match, apply in this order:
 
 ---
 
+### POSITIONING — fires when:
+- "how do I explain what we do" / "nobody gets it"
+- "my messaging isn't landing" / "what's our positioning"
+- "elevator pitch" / "value proposition" / "tagline"
+- "we're competing with X but different because"
+- "how should I describe this to [ICP]"
+- "landing page isn't converting" / "category creation"
+- "I keep having to explain why we're not X"
+
+**Apply Dunford 5-step protocol**: competitive alternative → unique attributes → value mapping → best-fit segment → market category frame.
+**Output**: 25-word positioning statement + 3 proof points + objection map.
+**Reference**: `skills/claude-code/positioning.md`
+
+---
+
+### NEGOTIATION — fires when:
+- "counteroffer" / "how do I negotiate" / "wants a discount"
+- "contract negotiation" / "vendor is pushing back"
+- "how do I ask for more" / "how do I respond to their offer"
+- "partnership terms" / "renewal negotiation"
+- "investor term negotiation"
+- Any situation involving competing interests / offers
+
+**Apply**: Voss Tactical Empathy + Fisher/Ury Interest-Based framework. Identify anchor, BATNA, interests behind positions, emotional dynamics.
+**Output**: Specific response script + 2-3 calibrated questions + concession ladder.
+**Reference**: `skills/claude-code/negotiation.md`
+
+---
+
+### CUSTOMER-SUCCESS — fires when:
+- "customer is unhappy" / "at-risk account" / "customer is churning"
+- "how do I onboard customers"
+- "customers aren't using the product" / "low engagement after signup"
+- "what do I do after a customer signs up"
+- "customer health" / "expansion opportunity"
+- "customer doesn't see value" / "not getting ROI"
+- "customer asked for a refund"
+
+**Apply 90-Day CS Framework**: time-to-Aha Moment → health scoring → activation rescue → expansion protocol.
+**Reference**: `skills/claude-code/customer-success.md`
+
+---
+
+### CONCENTRATION-RISK — fires when:
+- Single customer represents >25% of MRR (stated or inferred)
+- "my biggest customer" / "top customer might leave"
+- "customer concentration" / "losing [customer] would hurt"
+
+**Apply**: Customer Concentration Audit → time-to-safe diversification plan → channel selection for non-concentrated customers.
+**Reversibility**: 2/10. Fire urgently.
+
+---
+
 ## ANTI-PATTERN FLAGS (fire before any skill, always)
 
 These fire as one-line warnings before continuing with the actual answer:
@@ -396,6 +449,9 @@ These fire as one-line warnings before continuing with the actual answer:
 | "launching soon" with no launch content | ⚠️ MARC LOU RULE: Two products ship. Generate launch assets before going live. |
 | Scope creep (>2-week MVP) | ⚠️ LEVELS TEST: What's the version that ships Friday? Can this be a spreadsheet first? |
 | Multiple features being built simultaneously | ⚠️ BCG 3-AGENT RULE: Max 3 active initiatives. Which 2 would you kill? |
+| Optimizing vanity metrics while core metrics unclear | ⚠️ OPTIMIZATION TRAP: Metric doesn't pay rent. What's the conversion rate from [metric] to paying customer? |
+| Using community/audience/waitlist as customer validation | ⚠️ AUDIENCE SUBSTITUTION: Community ≠ customers. Has anyone been asked to pay? Even $1 changes the signal. |
+| "Adding features" as the answer to competitive pressure or churn | ⚠️ FEATURE-AS-STRATEGY: Features are tactics. What's the job-to-be-done? More features without serving that job = complexity without value. |
 
 ---
 

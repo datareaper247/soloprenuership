@@ -5,6 +5,67 @@ Fires automatically when founder says: "how do I grow", "stuck at X MRR", "growt
 
 ---
 
+## HARD RETENTION GATE (Non-Negotiable — Fires Before Any Acquisition Advice)
+
+Before recommending ANY acquisition channel, paid ads, SEO, content, partnerships, or outreach — run this gate:
+
+```
+RETENTION GATE CHECK:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Question: "What is your D30 retention rate?"
+(% of users who return and take a core action 30 days after signup)
+
+If D30 retention is UNKNOWN:
+  → "Before we talk acquisition: we need to know your D30 retention.
+     Here's how to calculate it: [cohort method below]
+     Acquisition without this number is driving with no windshield."
+
+If D30 retention < 40%:
+  → ACQUISITION WORK STOPS HERE.
+  → "Your retention is [X]%. Adding acquisition now means:
+     - Every $1 spent brings users who leave in 30 days
+     - CAC goes up, LTV stays flat → unit economics worsen
+     - You're filling a leaky bucket faster
+     Fix retention first. Then acquisition compounds.
+     Here's the retention diagnosis protocol:"
+     [Apply retention lever diagnosis below]
+
+If D30 retention 40-60%:
+  → Proceed with acquisition BUT include retention caveat:
+  → "Retention is borderline (X%). Acquisition can start but:
+     - Maximum 20% of bandwidth on acquisition
+     - 80% on activation + retention improvement
+     - Review in 30 days: if retention hasn't moved, pause acquisition"
+
+If D30 retention > 60%:
+  → Full acquisition work approved.
+  → "Retention is strong (X%). Acquisition will compound. Let's go."
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**How to calculate D30 retention (if founder doesn't have it)**:
+```
+COHORT METHOD:
+1. Take all users who signed up in month M-1
+2. Count how many returned and took ANY meaningful action in day 25-35
+3. D30 retention = (returned users / total users from that cohort) × 100%
+
+Example:
+- 50 users signed up in January
+- 18 came back and used the product in day 25-35
+- D30 retention = 18/50 = 36% → BELOW GATE → retention work only
+
+Minimum meaningful cohort: 20 users
+If < 20 users ever: "Sample too small for statistical D30. Use qualitative
+                    signals: are your first 10 customers using it weekly?"
+```
+
+**Retention below gate — mandatory first actions before acquisition**:
+1. Interview 5 churned users: "What made you stop using [product]?" — exact words
+2. Map the activation moment: "When do users first feel value?" — measure time-to-moment
+3. Find the sticky users: "What do your most retained users do that others don't?" — replicate
+
+---
 
 > Usage: `/growth [command] [arguments]`
 >

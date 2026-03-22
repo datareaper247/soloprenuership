@@ -816,6 +816,201 @@ KILL SIGNAL: [specific measurable data that proves current approach wrong within
 
 ---
 
+## SEQUOIA ARC PMF ARCHETYPE SYSTEM
+
+**Critical insight**: PMF looks completely different depending on which archetype your product is. Applying uniform PMF advice across archetypes produces wrong recommendations. This section routes your PMF work to the correct framework.
+
+### Archetype Detection (Run at start of any PMF assessment)
+
+```
+PMF ARCHETYPE DETECTOR:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Question 1: "How do your best customers describe their situation before finding you?"
+
+□ "I was desperate / couldn't believe how painful this was / it was killing us"
+  → HAIR ON FIRE archetype
+
+□ "I knew this was a problem but assumed it was just how things work / I'd given up on it being solved"
+  → HARD FACT archetype
+
+□ "I didn't realize this was even a problem until [product] showed me a different way"
+  → FUTURE VISION archetype
+
+Question 2 (if still unclear): "What was your customer's life like the week BEFORE they found you?"
+- Acute daily pain that was costing them time/money/customers → Hair on Fire
+- Chronic background problem they'd normalized → Hard Fact
+- No conscious problem — a new possibility was revealed → Future Vision
+```
+
+---
+
+### Archetype 1: HAIR ON FIRE 🔥
+
+**Definition**: Customers have an acute, urgent problem causing immediate pain. They're already looking for a solution. The market "gets it" immediately.
+
+**Recognition signals**:
+- First-touch conversion is high (people understand immediately what you do)
+- Customers can articulate the pain in vivid, emotional terms
+- Short sales cycle — they buy before fully testing
+- Referrals flow easily because the problem is universally recognized
+
+**Examples**: Stripe (accepting payments was broken), PagerDuty (on-call alerting was hell), Zendesk (customer support tickets in an inbox)
+
+**PMF measurement adjustments for Hair on Fire**:
+```
+HAIR ON FIRE PMF THRESHOLDS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Sean Ellis: Standard 40% applies. But expect to hit it faster (60-90 days vs. 6-18 months).
+            If you're NOT hitting 40% quickly: you've misidentified the archetype OR
+            your solution isn't actually better than the current workaround.
+
+NRR: Target >110%. Hair on Fire products have high switching costs — if NRR is <100%,
+     your solution isn't actually better enough. The bar is high because users ALREADY
+     KNEW THEY HAD THIS PROBLEM — they won't tolerate a weak solution.
+
+Referral: Expect >30% organic. Pain is universally recognized — if they love you,
+          they tell everyone with the same pain.
+
+Time to PMF signal: 3-6 months with first 100 users. If you need >6 months: wrong archetype.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**PMF obstacles specific to Hair on Fire**:
+1. **Competitive Noise**: Many solutions exist for acute pain. PMF = being clearly 10x better, not just better.
+2. **Urgency-Price Trap**: Early users pay because desperate. Later users price-compare. True PMF requires value beyond urgency.
+3. **First-Mover Erosion**: Competitors copy fast once the pain is confirmed. Build switching costs BEFORE scaling.
+
+**PMF acceleration for Hair on Fire**:
+- Focus on "time to relief" — how fast can the customer feel the pain go away?
+- Build the product around the MOMENT OF PAIN, not general utility
+- Referrals are your engine — make sharing the product part of the relief experience
+
+---
+
+### Archetype 2: HARD FACT 📊
+
+**Definition**: Customers have a real problem they've accepted as inevitable. They weren't actively looking for a solution. "That's just how it works" is the mindset you're breaking.
+
+**Recognition signals**:
+- Education is required before conversion — customers need to understand there's a better way
+- Longer sales cycle — trust must be built before they believe the problem is solvable
+- Early adopters are visionaries (not the majority)
+- Referrals are slower — "you have to experience it to believe it"
+
+**Examples**: Salesforce (CRM in spreadsheets was "normal"), Dropbox (file sharing via email was "normal"), Calendly (back-and-forth scheduling was "just how it works")
+
+**PMF measurement adjustments for Hard Fact**:
+```
+HARD FACT PMF THRESHOLDS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Sean Ellis: 40% threshold still applies but expect <40% for 6-18 months. This is NOT failure.
+            "Somewhat Disappointed" responses are CRITICAL here — they're your converts-in-waiting.
+            Hard Fact PMF success = the Somewhat Disappointed cohort converts to Very Disappointed
+            as they use the product longer. Measure this transition, not just the current score.
+
+NRR: Target >100%. Expansion comes from users who finally "get it" and expand usage.
+     Watch for slow initial adoption then sharp expansion — this is the Hard Fact pattern.
+     If NRR is declining: you haven't solved the "normal" belief. Education is failing.
+
+Time to PMF signal: 6-18 months with first 100 users. Be patient. The breakthrough is a
+                    threshold effect — once users "get it," they become evangelists.
+
+Activation metric: TIME TO "AHA MOMENT" is the most important metric.
+                   The moment they go from "I guess this works" to "oh my god why didn't I do this sooner"
+                   is the PMF signal for Hard Fact. Track this moment explicitly.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**PMF obstacles specific to Hard Fact**:
+1. **The Patience Trap**: Slow traction gets misread as lack of demand → premature pivot
+2. **Wrong Segment Sequencing**: Leading with the wrong ICP (skeptics vs. visionaries) kills early traction
+3. **Education Overload**: Spending all energy convincing vs. serving the people already convinced
+
+**PMF acceleration for Hard Fact**:
+- Find the visionaries (people who already BELIEVE the status quo is broken) — they're your early majority
+- "Before/after" case studies are your highest-leverage marketing asset
+- Free trial or freemium almost always required — users must experience the product to believe in it
+- The KEY insight: stop trying to convince skeptics. Find the believers and serve them until they evangelize.
+
+---
+
+### Archetype 3: FUTURE VISION 🔭
+
+**Definition**: Customers don't know they have the problem until you show them a new possibility. You're creating a category, not entering one. The hardest PMF to find — but most defensible when found.
+
+**Recognition signals**:
+- Customer can't articulate the problem before experiencing the product
+- "Demo-to-aha" ratio is high — live demos convert much better than messaging
+- First reaction often: "I didn't know I needed this"
+- Long time to PMF — often 18-36 months before signal is clear
+
+**Examples**: iPhone (people didn't know they wanted a touchscreen computer in their pocket), Notion (people didn't know they wanted documents + databases combined), Figma (designers didn't know they wanted collaborative browser-based design)
+
+**PMF measurement adjustments for Future Vision**:
+```
+FUTURE VISION PMF THRESHOLDS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Sean Ellis: Standard 40% threshold still applies but SEGMENT before measuring.
+            Future Vision PMF is almost always NARROW before it's broad.
+            Measure Sean Ellis on your earliest, most engaged cohort only.
+            If >40% in your first 20-50 users: you have Future Vision PMF with visionaries.
+            Scale from there.
+
+Do NOT: Average Sean Ellis across all users including those who "tried it and left."
+        Future Vision products have a bimodal distribution: people who "get it" (love) and
+        people who don't (leave). Averaging = 20% = false negative.
+
+Organic growth: Word of mouth is SLOW until a breakthrough moment. Track NPS trajectory
+                instead: if NPS is increasing each month (even slowly), you're building.
+
+Time to PMF signal: 12-36 months. Do not interpret slow traction as product failure.
+                    Monitor: "Are the users who DO get it passionate (>70 NPS)?" If yes, continue.
+
+Key question: "If we showed 1,000 of the right person this product, how many would 'get it' immediately?"
+              If <5%: positioning/discovery problem. If 30%+: you have niche Future Vision PMF.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**PMF obstacles specific to Future Vision**:
+1. **Category Education Cost**: You're spending to educate the market while competitors watch and copy
+2. **CAC Explosion**: Without a recognized category, inbound CAC is impossible — outbound is required, which is expensive
+3. **Premature Scaling**: Raising $10M to "educate the market" before PMF = the most expensive startup mistake
+
+**PMF acceleration for Future Vision**:
+- Find the "naturals" — people for whom the new vision is instantly obvious (often specific job title/industry)
+- Build a community of naturals before building for the mainstream — they become your content/referral engine
+- Demo-first GTM: get people to experience the product before buying it (webinars, free tools, viral features)
+- The KEY insight: you're not convincing — you're finding people who already think like your vision. Map the archetype of the believer PRECISELY.
+
+---
+
+### Archetype-Informed PMF Assessment Output
+
+When running a PMF assessment, add one line at the top of the output:
+
+```
+ARCHETYPE DETECTED: [Hair on Fire / Hard Fact / Future Vision]
+ARCHETYPE EVIDENCE: [1 sentence — what customer words/behavior supports this classification]
+ARCHETYPE-ADJUSTED TIMELINE: [Expected time to PMF signal for this archetype]
+ARCHETYPE-ADJUSTED THRESHOLD: [Any modifications to standard thresholds explained above]
+```
+
+**The most common archetype misclassification**: Founders with Future Vision products who apply Hair on Fire timelines → quit too early because "traction is slow." The product needed 18 months. They gave it 6.
+
+**The most expensive archetype error**: Assuming you have a Future Vision product (market education excuse) when you actually have a Hair on Fire product that's just not 10x better than alternatives → years spent "educating the market" for a problem people have other solutions for.
+
+```
+ARCHETYPE VALIDATION CHECK:
+If founder says "the market doesn't understand yet" → verify archetype.
+Ask: "Do customers with this pain KNOW they have it and actively look for solutions?"
+→ YES: Hair on Fire (and your product isn't differentiated enough)
+→ NOT EXACTLY: Hard Fact (and education is your primary GTM lever)
+→ NO: Future Vision (and finding naturals is your PMF path)
+```
+
+---
+
 ## INTEGRATION
 
 **PMF connects to everything — it is the gate between phases.**
