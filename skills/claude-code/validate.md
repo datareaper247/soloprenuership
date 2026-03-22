@@ -198,6 +198,44 @@ DEMAND SIGNAL STRENGTH: [Strong / Medium / Weak / Unknown]
 Basis: [evidence]
 ```
 
+### Phase 2B: Competitor Failure Audit (Mandatory)
+
+The Competing Solutions Audit asks "what do people pay for today?" — this asks "why did similar products fail?" These are different questions with different answers.
+
+**Run this before Gate 2 passes.** A strong demand signal means nothing if the last 3 products serving this demand died.
+
+```
+COMPETITOR FAILURE AUDIT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Failed/stalled products in this space (find 2-3 minimum):
+1. [Product name] — [what happened] — [root cause of failure]
+2. [Product name] — [what happened] — [root cause of failure]
+3. [Product name] — [what happened] — [root cause of failure]
+
+Failure cause categories (identify which apply):
+□ Commoditization — ChatGPT/LLMs absorbed the use case (P36)
+□ Distribution — built a good product, couldn't reach buyers at scale
+□ Timing — too early (market not ready) or too late (window closed)
+□ Unit economics — CAC too high, LTV too low, couldn't reach profitability
+□ Acquisition — bought out, pivoted, founder left
+□ Product-market mismatch — built wrong solution for the right problem
+□ Competition — a better-funded competitor solved it first
+
+Does any failure cause above apply to YOUR approach?
+[Yes — failure cause X applies because Y] / [No — here's why our approach differs]
+
+If YES → What specifically prevents you from repeating the same failure?
+[answer required — "we're better" is not an answer]
+
+COMPETITOR FAILURE VERDICT: [CLEAR / YELLOW FLAG / RED FLAG]
+```
+
+**Red flag**: If 2+ prior products failed due to the same root cause your approach shares → do not proceed to Gate 3 until you resolve this. The market is not the problem. The approach has a structural flaw.
+
+**Yellow flag**: One failure with a documented cause your approach avoids → proceed with awareness. Name the mitigation explicitly.
+
+**Clear**: Failures have different root causes than yours → Gate 2 passes.
+
 ### Phase 3: The 5 Commitments Test
 
 The validation gate. Not signups. Not "interested." Real commitments.
@@ -211,7 +249,36 @@ Tier 4: LOI / Letter of Intent (for B2B)
 Tier 5 (strongest): Pre-payment / deposit / founding member purchase
 ```
 
-**SoloOS validation standard: You need 5 Tier 4+ commitments before building.**
+**SoloOS validation standard — stage-calibrated:**
+
+The commitment threshold depends on your stage. A founder with 200 customers has a different validation toolkit than one with 0:
+
+```
+STAGE-CALIBRATED COMMITMENT THRESHOLD:
+
+$0 MRR (pre-revenue):
+→ STANDARD: 5 Tier 4+ external commitments before writing code
+→ Evidence must come from outside your social circle
+→ Exception: Self-as-customer path (see Gate 0) — document workflow first
+
+$1K-5K MRR (early traction):
+→ New product/direction: 5 Tier 4+ from non-existing customers
+→ New feature: 3 existing paying customers must have requested it in their own words
+   OR churn interview data must point to this gap in at least 3 separate conversations
+
+$5K-20K MRR (PMF search):
+→ New product line: 5 Tier 4+ from target ICP (not current customers)
+→ Feature addition: 3+ existing customers explicitly requested it, AND
+   retention/churn data supports it (don't build what customers say they want if
+   they're not churning without it)
+
+$20K+ MRR (post-PMF):
+→ Validation is now internal, not external
+→ Use: analytics (usage patterns), cohort analysis (where do users drop),
+   support ticket volume (what's a recurring problem), upgrade data (what triggers paid)
+→ External interviews used to CONFIRM signal found in data, not to DISCOVER signal
+→ Kill signal before building: "Can I see this gap in the data?" If not in data, it's a founder assumption.
+```
 
 For founders who say "I can't get pre-payments before building" — you can:
 - B2B: "We're building this. Would you sign a letter of intent to pay $X/month if it does Y?"

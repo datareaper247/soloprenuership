@@ -1,4 +1,4 @@
-# SoloOS v2 — Cognitive Operating System for Solo Founders
+# SoloOS v4 — Cognitive Operating System for Solo Founders
 # Auto-Intelligence Layer: No Slash Commands Required
 
 > This file transforms Claude from a generic AI assistant into a founder-aware co-pilot.
