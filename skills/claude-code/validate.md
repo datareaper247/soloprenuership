@@ -32,9 +32,86 @@ This skill won't let you pass without real demand signals.
 
 ## The Validation Framework
 
-Every idea must pass through a Pre-Gate and then 4 gates in sequence. Fail any gate = don't build yet.
+Every idea must pass through the Terrain Map, a Pre-Gate, and then 4 gates in sequence. Fail any gate = don't build yet.
 
-### GATE 0: ChatGPT Substitution Test (NEW — Pre-Gate)
+---
+
+### TERRAIN MAP PROTOCOL (Pre-Entry Intelligence — Before Any Gate)
+
+**Fires when**: entering a new market, building a first product, pivoting to a new segment, or when the idea is >4 weeks old without a paying customer.
+
+The Terrain Map is a 5-section pre-entry intelligence package assembled before any validation work begins. Its purpose: understand the battlefield before committing resources. Generals don't move armies without maps. Neither should founders.
+
+**Time required**: 2-4 hours. **Prevents**: weeks of work on a battlefield you don't understand.
+
+```
+TERRAIN MAP: [Product/Market Name]
+Date: [today]
+Founder: [your name]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 1: CUSTOMER TERRAIN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Target persona: [1 sentence — specific job title, company size, specific pain]
+Where they gather: [3 specific online communities / subreddits / Slack groups]
+Current workaround: [what they do today to solve this — tool, process, ignore]
+Language they use for this pain: [exact words, not your marketing language]
+Validated: [Have you read 20+ posts/comments using these exact words? Y/N]
+
+Sources: [Reddit search used] | [HN search used] | [direct interviews N=X]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 2: COMPETITOR TERRAIN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Top 3 competitors by awareness (not quality):
+1. [Name] — [pricing] — [top complaint from reviews]
+2. [Name] — [pricing] — [top complaint from reviews]
+3. [Name] — [pricing] — [top complaint from reviews]
+
+The gap none of them fill: [1 specific underserved use case or segment]
+Why they don't fill it: [structural reason — not just "they haven't tried"]
+Evidence of gap: [where customers complain about the gap]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 3: REGULATORY WEATHER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Industry: [healthcare / finance / legal / education / other]
+Compliance requirements that affect product: [HIPAA / SOC2 / PCI / GDPR / none]
+Can solo founder meet these requirements in 90 days? [Y / N / partial]
+If N: is there a version that avoids the requirement entirely? [describe]
+
+(Skip this section if B2C consumer product with no regulated data)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 4: TIMING ASSESSMENT (Kaala Check)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Market trend direction: [growing / stable / declining] — evidence: [source]
+Triggering event (if any): [AI breakthrough / regulation / economic shift that created this window]
+Window duration estimate: [6 months / 12 months / 3+ years / permanent]
+Timing signal: [early → INVEST | mature → SELECTIVE | declining → DEFEND/RETREAT]
+
+Is this a window that closes, or a permanent problem? [window / permanent]
+If window: when does it close and why?
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 5: DISTRIBUTION READINESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+How will first 10 customers hear about this? [specific channel + tactic]
+Do you have access to the channel? [Y/N — audience, community trust, relationships]
+What's the distribution moat (if any)? [SEO head start / community / integrations / none]
+Estimated days to first paying customer via this channel: [X days]
+
+Distribution readiness score: READY / PARTIAL / NOT READY
+If NOT READY: "Build the distribution before the product." What's the distribution-first version?
+```
+
+**Terrain Map Gate**: If any section scores RED (no competitor gap found, regulatory blocker, wrong timing, no distribution path), resolve before starting Gate 0.
+
+**Terrain Map → Gate connection**: The gap from Section 2 becomes the hypothesis for Gate 1. The customer language from Section 1 becomes the exact words for your landing page. The distribution channel from Section 5 determines your Gate 3 commitment ask channel.
+
+---
+
+### GATE 0: ChatGPT Substitution Test (Pre-Gate)
 
 **The #1 undetected failure mode (25-30% of AI product failures): the free LLM absorbed your use case.**
 

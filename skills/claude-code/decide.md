@@ -266,6 +266,29 @@ Pre-mortem confidence: If you can name specific, credible failure scenarios, the
 If you cannot name how this fails, you don't yet understand the decision well enough to make it.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CALIBRATED CONFIDENCE CHECK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[Fires when founder expresses uncertainty, doubt, or hesitation about the decision]
+
+Uncertainty type: **INFORMATION GAP** or **ATTACHMENT**
+
+**INFORMATION GAP** (you need data, not courage):
+Signals: "I don't know if X is true", "I haven't tested Y", "I need more data on Z"
+Response: "This is an information gap. Design the cheapest experiment that produces the signal in ≤7 days."
+→ Experiment: [what to do] / Signal: [what data you get] / Cost: [time + money] / Go/no-go: [threshold]
+
+**ATTACHMENT** (you know the answer but resisting it):
+Signals: "I feel like I should...", "everyone says I should...", kill signal already fired, sunk cost framing
+Response: "This looks like attachment — the information exists but the decision is hard because of [what's at stake].
+Karma Yoga reframe: The kill signal already fired on [X]. The data is clear. The resistance is about [loss/identity/sunk cost].
+What's the actual cost of deciding vs. the cost of not deciding?"
+
+Confidence calibration scale:
+- "I'm pretty sure" → Translate to probability: 60%? 80%? State the number.
+- "I don't know" → Which type? Information gap (design experiment) or attachment (name what you're resisting)?
+- "I feel confident" → What evidence supports that confidence? Name 2 data points or restate as hypothesis.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 LOG THIS DECISION?
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Save to context/decision-log.md: [y/n]

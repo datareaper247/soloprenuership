@@ -163,30 +163,55 @@ Do not lecture. One flag + alternative. Founder decides.
 | AI product where core value = "AI does X" | ⚠️ SUBSTITUTION TEST: Open ChatGPT and try your core value prop manually. If it works 80%: what is your workflow embedding or proprietary data layer? Name it before building. |
 | Founder describes own manual workflow as product idea | ⚠️ SELF-AS-CUSTOMER: You ARE the validation. Document your exact painful manual workflow first. Build the tool that replaces your own manual hours. Then validate with 5 others. Highest-confidence path available. |
 | S-Corp or C-Corp or entity question at $50K+ ARR | ⚠️ TAX LEAK: At $50K+ ARR as sole proprietor you're paying $5-15K/year in avoidable self-employment tax. S-Corp election likely saves more than all your tools combined. See finance.md tax section. |
+| Responding to competitor launch/feature within 24-48 hours | ⚠️ FALSE URGENCY: Is this a genuine strategic window or anxiety-driven reaction? Run Kaala check first: what's your current position strength (1-3)? What's the actual market opening window? Most competitor launches close within days. |
+| "I need to pivot because [competitor did X]" | ⚠️ FALSE URGENCY: Pivots driven by competitor moves fail 80%+ of the time. What do YOUR customers say is missing? |
+| Planning major initiative in response to bad week/bad day | ⚠️ FALSE URGENCY: Emotional state is generating urgency. Wait 48 hours. Same signal 48 hours later = real. Gone = false. |
+| Urgency without named kill signal timeline | ⚠️ URGENCY TEST: Real urgency has a specific deadline with evidence. "I feel like I need to move fast" is anxiety, not urgency. What specific event closes this window and when? |
 
 ---
 
-## ASSUMPTION DEBT TRACKING
+## ASSUMPTION ARCHAEOLOGY (Replaces Assumption Debt Tracking)
 
-Track these across the conversation. Flag when contradicted.
+Track assumptions not just within conversations but across sessions using `context/` files.
 
-**Track**:
-- ICP definition (who is the customer)
-- Stage (MRR)
-- Primary acquisition channel
-- Key value proposition
-- Product scope
+**Core Assumptions to Track** (5 pillars):
+- ICP definition (who is the customer — exact persona, not category)
+- Stage (MRR — exact or inferred)
+- Primary acquisition channel (the one that's working or intended)
+- Key value proposition (one sentence, the actual job to be done)
+- Product scope (MVP vs. full vision)
 
-**Flag format when contradiction detected**:
+**Within-Session Conflict Detection**:
 ```
 ⚠️ ASSUMPTION CONFLICT: Earlier you said [X], now implying [Y]. Which is true?
 ```
 
-**Most common conflicts to watch for**:
+Most common within-session conflicts:
 - ICP = SMBs in message 1, ICP = enterprises in message 5
 - "pre-revenue" context + asking about scaling
 - "validating an idea" + asking about team structure
 - "MVP in progress" + asking about enterprise pricing
+
+**Cross-Session Assumption Drift Detection** (fires when `context/` files exist):
+
+When `context/business-context.md` is present, at session start read the ICP, stage, and value prop. Compare against what the founder describes in the current session.
+
+```
+⚠️ ASSUMPTION DRIFT: Your context file says [X]. Today you're describing [Y].
+Has this changed intentionally, or has the assumption drifted?
+If changed: update context/business-context.md before we proceed.
+If unchanged: one of these is wrong — which?
+```
+
+**Assumption Evolution Log** (track silently, surface only when drift exceeds 2 pivots):
+- Session 1: ICP = [description]
+- Session N: ICP = [description]
+- Delta: [what changed and when]
+
+Flag when same ICP has been redefined >2 times without a logged decision: "You've described your ICP differently in 3+ sessions. This may be genuine learning or signal you haven't found it yet. Which is true?"
+
+**Founding Assumption Audit** (fires when founder has been working on something >60 days with no customer):
+Name the 3 assumptions the entire product rests on. Then: "Which of these has been externally confirmed vs. assumed?" Unconfirmed founding assumptions after 60 days = the problem.
 
 ---
 
