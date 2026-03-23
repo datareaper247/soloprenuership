@@ -84,9 +84,32 @@ solved? The thing you don't have an answer to yet."
 
 ---
 
-## Output After All 10 Questions
+## QUESTION 11 — FL-001: YOUR FIRST KILL SIGNAL (v5 addition)
 
-Claude writes four files and confirms:
+The most important output from onboarding is not the context files — it's your first kill signal.
+A kill signal is the specific, measurable data that, if it appears within 30 days, tells you to stop,
+pivot, or fundamentally change your current approach.
+
+```
+QUESTION 11 — FL-001: FIRST KILL SIGNAL
+"Based on everything you just told me — what is the ONE outcome in the next 30 days
+that would tell you this is working? And what's the opposite: the specific data
+that would tell you to change course immediately?"
+
+Format I'll use to capture it:
+  Working signal: [what success looks like in 30 days — specific number]
+  Kill signal: [what failure looks like — specific threshold that triggers a change]
+  Review date: [30 days from today]
+```
+
+This gets written to `knowledge-base/personal/founder-log.md` as entry [[FL-001]].
+It is the first entry in your personal knowledge graph — your company's decision history starts here.
+
+---
+
+## Output After All 11 Questions
+
+Claude writes four context files + creates FL-001, then confirms:
 
 ```
 ONBOARDING COMPLETE
@@ -97,6 +120,7 @@ Files written:
   ✅ context/customer-voice.md — [N customer quotes captured]
   ✅ context/experiment-log.md — [N experiments logged]
   ✅ context/decision-log.md — [N decisions logged, 1 open]
+  ✅ knowledge-base/personal/founder-log.md — [[FL-001]] kill signal created
 
 WHAT YOU TOLD ME (confirm this is right):
   Product: [one-sentence description]
@@ -105,11 +129,13 @@ WHAT YOU TOLD ME (confirm this is right):
   This quarter's goal: [OKR]
   Open decision: [decision]
   Biggest blocker: [blocker]
+  Kill signal: [FL-001 summary — what data in 30 days means change course]
 
 WHAT I'LL DO DIFFERENTLY NOW:
   Every response will be calibrated to [stage].
   I won't recommend [things wrong for your stage] until [condition].
   When you describe [blocker], I'll prioritize solving that.
+  At session start, I'll check FL-001 if [review date] has passed.
 
 FIRST RECOMMENDED ACTION:
   Given what you told me, the highest-leverage thing right now is:
