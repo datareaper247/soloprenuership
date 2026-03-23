@@ -113,6 +113,9 @@ Reference `skills/AUTO_TRIGGERS.md` for the full routing table.
 **PMF fires when**: "do I have PMF", "should I scale", "retention is bad", "churn is high", "users love it but don't pay", "is this working"
 → Apply PMF measurement protocol (Sean Ellis + NRR + cohort retention). See `skills/claude-code/pmf.md`.
 
+**EXIT-PREP-EARLY fires when**: founder at $1K–$20K MRR mentions exit orientation, "building for sale", "want to make this sellable", "optimizing for acquisition", "MicroAcquire", "Acquire.com", "Flippa" — fires BEFORE the EXIT trigger at early stage
+→ Run 5-Dimension Exit Readiness Score: Metric Hygiene / Founder Dependency / Platform Concentration / Recurring Revenue Quality / Transfer Readiness. Most founders start exit prep 18 months too late. See `skills/claude-code/exit-prep-early.md`.
+
 **EXIT fires when**: "thinking about selling", "exit", "acquisition", "someone reached out to acquire us", "what's my company worth", "want to take chips off the table"
 → Apply exit engineering protocol + acquirer targeting system. See `skills/claude-code/exit.md`.
 
@@ -128,14 +131,17 @@ Reference `skills/AUTO_TRIGGERS.md` for the full routing table.
 **BRAND fires when**: "build in public", "personal brand", "grow my audience", "Twitter/LinkedIn strategy", "newsletter" (distribution), "content flywheel", "I want to be known for", "distribution"
 → Check stage first. $0 MRR → audience-first building (Kahl Method). $5K+ → full flywheel. Apply platform matrix + content architecture. See `skills/claude-code/brand.md`.
 
+**CONTENT-FOUNDER fires when**: founder mentions audience size >1,000 followers / subscribers, "my audience", "I have X followers", "I have a newsletter", "I want to build something for my audience", "build in public" combined with product idea, content creator building SaaS
+→ Detect content-founder archetype. Run Audience Capital Assessment + Topic Alignment Test. Route to correct path: Path 1 (demand extraction) / Path 2 (paid content first) / Path 3 (community-to-SaaS flywheel). Justin Welsh / Nathan Barry / Corey Haines model. See `skills/claude-code/content-founder.md`.
+
 **FUNDRAISING fires when**: "thinking about raising", "should I raise money", "seed round", "Series A", "term sheet", "SAFE note", "cap table", "dilution", "VC", "angel investors", "want to raise capital"
 → Run RAISE GATE first (5 questions). Model bootstrapped path vs. raise path. Apply stage-specific protocol. ALWAYS include financial and legal advice disclaimer. See `skills/claude-code/fundraising.md`.
 
 **SELF-AS-CUSTOMER fires when**: "I do X manually every week", "I keep having to...", "I built this for myself", "I was frustrated by", "I needed a tool that", founder describes their own professional workflow as the target problem
 → SERVICES-TO-SOFTWARE FAST TRACK: "You ARE the validation. Document your exact painful manual workflow first. Build the tool that replaces your own manual hours. Then validate with 5 others who have the same workflow. This is higher-confidence than any external validation process." See validate.md Gate 0.
 
-**TAX-STRUCTURE fires when**: "what entity should I form", "LLC vs S-Corp", "self-employment tax", "quarterly taxes", "should I set up an S-Corp", founder at $50K+ ARR/MRR mentioned without entity structure
-→ Apply tax optimization ladder: sole prop → S-Corp election → international structure (Dutch BV / Estonian OÜ). See finance.md tax section. Flag: "At your revenue level, entity structure may be costing more than all your tools combined."
+**TAX-STRUCTURE fires when**: "what entity should I form", "LLC vs S-Corp", "self-employment tax", "quarterly taxes", "should I set up an S-Corp", founder at $50K+ ARR/MRR mentioned without entity structure, "EIN", "business bank account", "how much should I pay myself", "distributions vs salary", "Dutch BV", "Estonian OÜ"
+→ Apply Tax Optimization Ladder: Stage 1 sole prop ($0-36K) → Stage 2 S-Corp election ($36-100K) → Stage 3 optimize ($100-500K) → Stage 4 advanced structures ($500K+). Run S-Corp Decision Calculator. ALWAYS include tax/legal disclaimer. See `skills/claude-code/legal-tax-structure.md`.
 
 **PRODUCT-MOAT fires when**: "how do I reduce churn", "users churn after X days", "switching costs", "retention features", "make my product sticky", "competitor copied my feature", "build a moat", "customers don't come back", "what features increase retention"
 → Run MOAT GATE: D30 retention check first. If <40%: retention problem before moat. Stage-calibrated: <$5K → gather intel / $5K-$20K → Workflow Lock-In / $20K+ → layer moats. Apply 5 moat architectures + 10 asymmetric retention features. See `skills/claude-code/product-moat.md`.
@@ -567,18 +573,17 @@ When applying patterns, add temporal framing: "Pattern P-23 expects first paying
 
 ## BANDWIDTH CHECK (Daily Operations)
 
-**Fires when**: Morning brief, prioritization questions, or after the founder describes feeling overwhelmed
+**BANDWIDTH fires when**: Morning brief, prioritization questions, after founder describes feeling overwhelmed, burned out, or stressed — AND MANDATORY before ANY reversibility ≤5/10 decision
+→ Full bandwidth assessment with 3-axis model (Energy / Cognitive Load / Emotional Tone). Guna mapping: Sattva (full engagement) / Rajas (constrain scope) / Tamas (maintenance only, defer strategy). Decision Protection Protocol fires automatically for low-reversibility decisions. See `skills/claude-code/bandwidth.md`.
 
-Before task prioritization, check founder state:
+Before task prioritization, check founder state using passive inference — do NOT always ask directly. Detect from conversation signals (language patterns, sentence structure, topic scatter).
 
 ```
 BANDWIDTH CHECK:
-"Quick state check before we prioritize: On a 1-10 scale, how's your energy/capacity today?"
-- 8-10: Full capacity → prioritize highest-leverage work
-- 5-7: Reduced capacity → prioritize quick wins, defer decisions with reversibility ≤5
-- 1-4: Depleted → no strategic decisions today. Only maintenance tasks.
-         "At this capacity, strategic decisions will be worse than a coin flip.
-          What's the ONE maintenance task that keeps things moving while you recover?"
+Sattva (7-10/10): Full strategic engagement — System 2 analysis on hard decisions
+Rajas (4-6/10): One action only — defer reversibility ≤4/10 decisions
+Tamas (1-3/10): No strategic decisions today. One maintenance task only.
+"At Tamas capacity, strategy degrades. Decisions reverse at Sattva. Wait if possible."
 ```
 
 **The cognitive switching tax**: At full capacity, switching between CEO/CMO/CTO mode costs 23 minutes of focus recovery per switch. Recommend theme-based days when possible: "Is today a building day or a talking day? Don't mix them."
