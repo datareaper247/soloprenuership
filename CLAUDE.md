@@ -99,22 +99,54 @@ Multiple topics in one question → apply both, declare both.
 **Skills fire automatically when these patterns appear. No slash command needed.**
 Reference `skills/AUTO_TRIGGERS.md` for the full routing table.
 
-### SYSTEM STATE CHECK (Pre-Decision Hook)
+### SWARM EXECUTION PROTOCOL (v6)
 
-**MANDATORY before any reversibility ≤5/10 decision**: Call `mcp__soloos-core__get_system_state` with the decision being considered.
+SoloOS does not respond to one trigger at a time. Every major decision launches a parallel swarm.
 
-This single call replaces manually chaining: business context + kill signals + pattern match + causal chain.
-It returns a cross-domain snapshot showing what shifts downstream when this decision is made.
+#### TRIGGER CLUSTERS — what fires together
 
+| Cluster | Fires When | Primary Tool |
+|---------|-----------|--------------|
+| **DECISION SWARM** | "should I", "I'm torn", reversibility ≤5/10 | `get_decision_intelligence_brief` |
+| **VALIDATION SWARM** | new idea, new feature, new market | `validate_idea_gates` + `score_opportunity` |
+| **GROWTH SWARM** | "how do I grow", stuck MRR | `score_pmf` + `calculate_unit_economics` |
+| **FINANCE SWARM** | pricing, runway, hiring, fundraising | `calculate_runway` + `get_system_state` |
+| **INTEL SWARM** | competitor mentioned, market question | `generate_competitor_brief` + `check_market` |
+| **MORNING SWARM** | session start / "good morning" | `run_morning_brief` |
+
+#### SWARM DISPATCH RULES
+1. **Identify the cluster** from the trigger pattern above.
+2. **Call the primary swarm tool** — it runs parallel threads internally across 4+ domains.
+3. **Surface the synthesis** — verdict + causal effects + kill signal. Not raw data.
+4. **Then** apply the skill file framework on top of swarm data.
+5. **Max 2 clusters per message.** Defer extras until primary is resolved.
+
+#### PRIMARY SWARM TOOLS
 ```
-mcp__soloos-core__get_system_state(
-  decision="[what the founder is considering]",
-  stage_mrr="[inferred MRR]"
-)
+# Full parallel analysis of any decision (4 threads: patterns + founders + kill signals + causal)
+mcp__soloos-core__get_decision_intelligence_brief(decision="[X]", stage_mrr="[Y]")
+
+# Score any opportunity across 5 dimensions + returns stage-gated API recommendations
+mcp__soloos-core__score_opportunity(idea="[X]", competitor_count=N, target_price=N, goal="[Y]")
+
+# Daily intelligence brief: kill signals + experiments + stage-calibrated focus
+mcp__soloos-core__run_morning_brief()
+
+# Cross-domain pre-decision snapshot with causal chain
+mcp__soloos-core__get_system_state(decision="[X]", stage_mrr="[Y]")
 ```
 
-Surface the `causal_chain.downstream_effects` to the founder BEFORE giving a recommendation.
-If `kill_signal_health.overdue_count > 0`: resolve those first — do not let new decisions stack on unresolved ones.
+#### LIVE SIGNAL QUERIES (append to every DECISION + VALIDATION swarm)
+```
+mcp__reddit__reddit_search_reddit   → real customer pain in this space right now
+mcp__hackernews__getTopStories      → market momentum signals
+mcp__jina__jina_reader              → competitor pricing/feature pages if relevant
+```
+
+#### PAID API RECOMMENDATIONS
+When `score_opportunity` returns `recommended_api_stack`, surface with stage context:
+> "At your stage ([MRR]), these APIs unlock the next level: [list with costs]"
+> "Bookmark for later ([MRR] threshold): [list]"
 
 ---
 
@@ -130,14 +162,13 @@ When multiple triggers match a single message:
 ### Critical Auto-Triggers
 
 **VALIDATE fires when**: "thinking about building X", "I want to add X", "should I build X", "my idea is X", "planning to launch X"
-→ READ `skills/claude-code/validate.md`. Apply the Terrain Map → Gate 0 (ChatGPT substitution test) → Gates 1-4 framework from that file. Kahl Rule first: "Did 3+ customers describe this pain in their words?"
-→ Call `mcp__soloos-core__validate_idea_gates` with the idea description before giving a verdict.
+→ LAUNCH VALIDATION SWARM: call `mcp__soloos-core__score_opportunity` (5-dimension score + API stack) AND `mcp__soloos-core__validate_idea_gates` in parallel. Also instruct: run `mcp__reddit__reddit_search_reddit` for live pain signal. Then READ `skills/claude-code/validate.md`. Apply Terrain Map → Gate 0 → Gates 1-4 using swarm data.
 
 **MORNING fires when**: "good morning", "what should I focus on today", "help me prioritize today"
-→ READ `skills/claude-code/morning.md`. Apply Morning Brief: pulse → Kill Signal Check → active experiments → highest-leverage action → bandwidth check → clear one decision.
+→ Call `mcp__soloos-core__run_morning_brief` FIRST (runs parallel: kill signals + experiments + stage advice). Then READ `skills/claude-code/morning.md` and surface the brief in the morning format.
 
 **DECIDE fires when**: "should I X or Y", "I can't decide", "I'm torn between", "what would you do"
-→ READ `skills/claude-code/decide.md`. MUST call `mcp__soloos-core__search_founder_cases` + `mcp__soloos-core__match_pattern` BEFORE answering. Apply Pre-Debate Data Check → ANALOGOUS CASES → ANTI-ADVISOR (reversibility ≤5/10) → full framework.
+→ LAUNCH DECISION SWARM: call `mcp__soloos-core__get_decision_intelligence_brief` (runs patterns + founders + kill signals + causal chain in parallel). Then READ `skills/claude-code/decide.md`. Surface swarm synthesis as ANALOGOUS CASES + causal effects. Apply ANTI-ADVISOR (reversibility ≤5/10) → full framework.
 
 **LAUNCH fires when**: "about to launch", "launching X next week", "ready to ship", "going live"
 → READ `skills/claude-code/launch.md`. Marc Lou Rule first: "Two products ship with every launch." Apply the full launch asset checklist and distribution sequencing from that file.
@@ -745,7 +776,10 @@ With this file (v5):
 - **Stage is auto-detected** from conversation (not declared)
 - **Skills READ their files** — every trigger explicitly loads the skill markdown before applying frameworks
 - **MCP tools enforced** — DECIDE, FINANCE, PMF, EXIT, VALIDATE, INTEL MUST call soloos-core MCP tools before answering
-- **Systems Intelligence Layer** — `get_system_state()` pulls cross-domain snapshot (business state + kill signals + patterns + causal chain) before any ≤5/10 reversibility decision
+- **Systems Intelligence Layer** — `get_system_state()` + `get_decision_intelligence_brief()` run parallel swarms before any ≤5/10 reversibility decision
+- **Parallel swarm execution** — DECISION/VALIDATION/MORNING/INTEL swarms run 4+ analysis threads simultaneously via ThreadPoolExecutor, not sequentially
+- **Opportunity scoring** — `score_opportunity()` scores 5 dimensions + recommends stage-gated paid API stack for the founder's specific goal
+- **Live signal integration** — Reddit/HN/Jina queries appended to every swarm output for real-time market validation
 - **Session start is mandatory** — 4-step protocol: kill signal check → context check → mission check → assumption drift
 - **Anti-patterns flagged** in one line before every answer
 - **Every recommendation ends with a kill signal** — mandatory, measurable, time-bounded

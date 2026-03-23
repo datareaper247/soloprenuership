@@ -11,6 +11,8 @@ Or:  uvx --from soloos-core soloos-mcp
 import json
 import random
 import math
+import threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Optional, Annotated
 
 from mcp.server.fastmcp import FastMCP
@@ -2198,6 +2200,601 @@ def get_system_state(
     }
 
     return json.dumps(result, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# SWARM HELPERS — parallel analysis threads
+# ─────────────────────────────────────────────────────────────
+
+def _swarm_pattern_analysis(decision: str) -> dict:
+    """Thread: BM25 pattern match from PATTERN_LIBRARY."""
+    patterns = get_patterns()
+    matched = search_patterns(decision, patterns, top_n=3) if patterns else []
+    return {
+        "domain": "pattern_match",
+        "matches": [
+            {"id": p.id, "name": p.name,
+             "situation": p.situation[:180],
+             "kill_signal": getattr(p, "kill_signal", "")}
+            for p in matched
+        ] if matched else [],
+        "note": f"{len(matched)} pattern(s) matched via BM25" if matched else "No pattern match — novel situation",
+    }
+
+
+def _swarm_founder_cases(decision: str) -> dict:
+    """Thread: Analogous founder case search."""
+    founders = get_founders()
+    matched = search_founders(decision, founders, top_n=3) if founders else []
+    return {
+        "domain": "analogous_founders",
+        "cases": [
+            {"founder": c.founder, "product": c.product,
+             "decision": c.decision[:160], "outcome": c.outcome[:160],
+             "tags": c.tags[:4]}
+            for c in matched
+        ] if matched else [],
+        "note": f"{len(matched)} analogous case(s) found" if matched else "No direct analogues — check FOUNDER_INTELLIGENCE.md",
+    }
+
+
+def _swarm_kill_signal_check() -> dict:
+    """Thread: Current kill signal health."""
+    entries = load_log()
+    alerts = check_kill_signals(entries)
+    overdue = [a for a in alerts if a.urgency == "OVERDUE"]
+    urgent  = [a for a in alerts if a.urgency == "URGENT"]
+    warning = [a for a in alerts if a.urgency == "WARNING"]
+    return {
+        "domain": "kill_signal_health",
+        "overdue": len(overdue),
+        "urgent": len(urgent),
+        "warning": len(warning),
+        "blocker": len(overdue) > 0,
+        "alerts": [{"id": a.entry_id, "urgency": a.urgency,
+                    "summary": a.summary[:120], "days_remaining": a.days_remaining}
+                   for a in alerts[:5]],
+        "note": (f"🚨 {len(overdue)} OVERDUE — resolve before new decisions"
+                 if overdue else
+                 f"🟡 {len(urgent)} urgent within 7 days"
+                 if urgent else "✅ Kill signals healthy"),
+    }
+
+
+def _swarm_causal_impact(decision: str, stage_mrr: str) -> dict:
+    """Thread: Causal chain + system state snapshot."""
+    ctx = read_business_context()
+    mrr = stage_mrr or ctx.get("mrr", "unknown")
+    dtype = _detect_decision_type(decision)
+    chain = _CAUSAL_CHAINS.get(dtype, _CAUSAL_CHAINS["default"])
+
+    # Stage-specific risk amplifiers
+    risk_notes = []
+    mrr_int = _parse_mrr_string(mrr) if mrr not in ("unknown", "") else 0
+    if dtype == "hire_first_employee" and mrr_int < 5000:
+        risk_notes.append("⚠️ Hiring before $5K MRR — Tringas Rule violation")
+    if dtype == "raise_funding" and mrr_int < 50000:
+        risk_notes.append("⚠️ Fundraising below $50K MRR — model bootstrapped path first")
+    if dtype == "enter_new_market" and mrr_int < 50000:
+        risk_notes.append("⚠️ International expansion before $50K MRR — fix home-market churn first")
+
+    return {
+        "domain": "causal_impact",
+        "decision_type": dtype,
+        "stage_mrr": mrr,
+        "downstream_effects": chain,
+        "stage_risk_flags": risk_notes,
+        "icp": ctx.get("icp", "not set"),
+        "biggest_challenge": ctx.get("biggest_challenge", "not set"),
+    }
+
+
+def _swarm_market_signals(decision: str) -> dict:
+    """Thread: Market intelligence queries to run (instructions for live MCPs)."""
+    keywords = " ".join(decision.lower().split()[:6])
+    return {
+        "domain": "market_signals",
+        "status": "query_ready",
+        "note": "Run these live queries for real-time signals:",
+        "reddit_query": {
+            "tool": "mcp__reddit__reddit_search_reddit",
+            "params": {"query": keywords, "limit": 10},
+            "subreddits_to_check": ["entrepreneur", "startups", "SaaS", "indiehackers"],
+        },
+        "hackernews_query": {
+            "tool": "mcp__hackernews__getTopStories",
+            "note": f"Filter for: {keywords}",
+        },
+        "competitor_query": {
+            "tool": "mcp__soloos-core__generate_competitor_brief",
+            "trigger": "if competitor name mentioned in decision",
+        },
+        "jina_scrape": {
+            "tool": "mcp__jina__jina_reader",
+            "note": "Scrape competitor pricing/feature pages if relevant",
+        },
+    }
+
+
+# ─────────────────────────────────────────────────────────────
+# TOOL 19: get_decision_intelligence_brief
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def get_decision_intelligence_brief(
+    decision: str,
+    stage_mrr: str = "",
+    include_market_signals: bool = True,
+) -> str:
+    """
+    SWARM INTELLIGENCE BRIEF — parallel multi-domain analysis of a decision.
+
+    Runs 4 analysis threads simultaneously (patterns, founders, kill signals,
+    causal impact) and synthesizes into a single Decision Intelligence Brief.
+    Replaces manually calling 5+ separate tools.
+
+    This is the Systems Intelligence Layer upgrade: not just "what does the
+    framework say?" but "what do ALL domains say simultaneously?"
+
+    Args:
+        decision: What the founder is considering
+        stage_mrr: Current MRR for stage-calibrated analysis
+        include_market_signals: Include live query instructions for Reddit/HN (default True)
+
+    Returns:
+        Unified JSON: 4 parallel analyses + synthesis + recommended action + kill signal
+    """
+    brief: dict = {
+        "decision": decision,
+        "timestamp": today_str(),
+        "stage_mrr": stage_mrr or "unknown",
+        "swarm_domains": [],
+    }
+
+    # ── Parallel execution ───────────────────────────────────
+    futures_map = {}
+    with ThreadPoolExecutor(max_workers=5) as ex:
+        futures_map[ex.submit(_swarm_pattern_analysis, decision)]   = "patterns"
+        futures_map[ex.submit(_swarm_founder_cases, decision)]       = "founders"
+        futures_map[ex.submit(_swarm_kill_signal_check)]             = "kill_signals"
+        futures_map[ex.submit(_swarm_causal_impact, decision, stage_mrr)] = "causal"
+        if include_market_signals:
+            futures_map[ex.submit(_swarm_market_signals, decision)]  = "market"
+
+        domain_results: dict[str, dict] = {}
+        for future in as_completed(futures_map):
+            key = futures_map[future]
+            try:
+                domain_results[key] = future.result()
+            except Exception as e:
+                domain_results[key] = {"domain": key, "error": str(e)}
+
+    brief["swarm_domains"] = list(domain_results.values())
+
+    # ── Synthesis ────────────────────────────────────────────
+    kill = domain_results.get("kill_signals", {})
+    causal = domain_results.get("causal", {})
+    patterns = domain_results.get("patterns", {})
+    founders = domain_results.get("founders", {})
+
+    blocker = kill.get("blocker", False)
+    risk_flags = causal.get("stage_risk_flags", [])
+    dtype = causal.get("decision_type", "unknown")
+    effects = causal.get("downstream_effects", [])
+
+    # Reversibility from causal chain
+    rev_effect = next((e for e in effects if "Reversibility" in e.get("variable", "")), None)
+    reversibility = rev_effect["direction"] if rev_effect else "assess"
+
+    # Top pattern
+    top_pattern = patterns.get("matches", [{}])[0] if patterns.get("matches") else None
+    top_case = founders.get("cases", [{}])[0] if founders.get("cases") else None
+
+    synthesis = {
+        "decision_type": dtype,
+        "reversibility": reversibility,
+        "blocker": ("🚨 RESOLVE OVERDUE KILL SIGNALS FIRST" if blocker
+                    else "No blockers — proceed with analysis"),
+        "stage_flags": risk_flags,
+        "top_pattern": top_pattern["name"] if top_pattern else "none",
+        "top_analogue": f"{top_case['founder']} ({top_case['product']})" if top_case else "none",
+        "key_effects": [f"{e['variable']} {e['direction']}" for e in effects[:3]],
+        "recommended_action": (
+            "STOP: resolve overdue kill signals before this decision compounds risk"
+            if blocker else
+            f"PROCEED with caution — reversibility {reversibility}. "
+            f"Run live market scan (Reddit + HN) before committing."
+            if reversibility in ("2/10", "3/10") else
+            "PROCEED — collect 3 data points this week to validate, then commit"
+        ),
+        "kill_signal_template": (
+            f"If [{decision[:50]}...] does not show [measurable signal] "
+            f"within 30 days, this approach is wrong. Pivot or stop."
+        ),
+    }
+
+    brief["synthesis"] = synthesis
+    brief["next_live_queries"] = domain_results.get("market", {})
+
+    return json.dumps(brief, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# TOOL 20: run_morning_brief
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def run_morning_brief(
+    include_kill_signals: bool = True,
+    include_experiments: bool = True,
+) -> str:
+    """
+    Morning intelligence brief — synthesizes overnight business state.
+
+    Parallel analysis: kill signal health + active experiments + context
+    summary + stage advice + recommended single action for today.
+
+    Call at session start when: "good morning", "what should I focus on today",
+    or any morning/daily planning message.
+
+    Returns:
+        Structured brief: pulse + alerts + experiments + recommended action
+    """
+    ctx = read_business_context()
+    entries = load_log()
+    alerts = check_kill_signals(entries)
+
+    # Active experiments
+    pending = [e for e in entries if e.outcome_status == "⏳ Pending"]
+    overdue_alerts = [a for a in alerts if a.urgency == "OVERDUE"]
+    urgent_alerts  = [a for a in alerts if a.urgency == "URGENT"]
+    warning_alerts = [a for a in alerts if a.urgency == "WARNING"]
+
+    mrr = ctx.get("mrr", "unknown")
+    stage = ctx.get("stage", "unknown")
+    mrr_int = _parse_mrr_string(mrr) if mrr not in ("unknown", "") else 0
+
+    # Stage-gated focus recommendation
+    if mrr_int == 0:
+        focus_rec = "Get your first paying customer today. ONE outreach, ONE demo, ONE close attempt."
+    elif mrr_int < 5000:
+        focus_rec = "Talk to a customer. Not build. Not design. Talk. What made them pay? What almost stopped them?"
+    elif mrr_int < 20000:
+        focus_rec = "What's the #1 thing blocking the next $5K MRR? Work only on that."
+    elif mrr_int < 50000:
+        focus_rec = "What's churning and why? Retention beats acquisition at this stage every time."
+    else:
+        focus_rec = "Systematise. What are you still doing manually that should be automated or delegated?"
+
+    brief = {
+        "date": today_str(),
+        "pulse": {
+            "mrr": mrr,
+            "stage": stage,
+            "icp": ctx.get("icp", "not set"),
+            "context_populated": ctx.get("status") != "not_found",
+        },
+        "kill_signal_status": {
+            "total_pending": len(pending),
+            "overdue": len(overdue_alerts),
+            "urgent": len(urgent_alerts),
+            "warning": len(warning_alerts),
+            "alerts": [{"id": a.entry_id, "urgency": a.urgency,
+                        "summary": a.summary[:100],
+                        "days_remaining": a.days_remaining}
+                       for a in alerts[:5]],
+        },
+        "active_experiments": [
+            {"id": e.id, "summary": e.summary[:100],
+             "due": e.outcome_due, "days_left": e.days_until_kill_signal()}
+            for e in pending[:5]
+        ],
+        "highest_leverage_action": focus_rec,
+        "live_queries_to_run": {
+            "market_pulse": {
+                "reddit": "mcp__reddit__reddit_search_reddit — search your category for new pain points",
+                "hackernews": "mcp__hackernews__getTopStories — filter for your market keywords",
+            },
+            "competitor_check": "mcp__soloos-core__generate_competitor_brief — if competitor changed pricing/features",
+        },
+        "decision_to_clear": ctx.get("open_decisions", "none logged — run /onboard to set one"),
+        "session_intent": (
+            "🚨 RESOLVE OVERDUE KILL SIGNALS" if overdue_alerts else
+            "⚠️ Review urgent experiments" if urgent_alerts else
+            "✅ Clear today's one decision. Then execute."
+        ),
+    }
+
+    return json.dumps(brief, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# TOOL 21: score_opportunity
+# ─────────────────────────────────────────────────────────────
+
+# Paid API recommendations by goal + stage
+_API_RECOMMENDATIONS: dict[str, list[dict]] = {
+    "prospecting": [
+        {"name": "Apollo.io", "url": "apollo.io", "free_tier": True,
+         "paid_from_mrr": "$1K", "cost": "$49-99/mo",
+         "unlocks": "50M+ B2B contacts, email sequences, intent signals",
+         "best_for": "outbound prospecting at scale"},
+        {"name": "Hunter.io", "url": "hunter.io", "free_tier": True,
+         "paid_from_mrr": "$1K", "cost": "$49/mo",
+         "unlocks": "Email finding + verification, domain search",
+         "best_for": "finding decision-maker emails"},
+        {"name": "Clay", "url": "clay.com", "free_tier": False,
+         "paid_from_mrr": "$10K", "cost": "$149-800/mo",
+         "unlocks": "Waterfall enrichment across 50+ data sources, AI personalization",
+         "best_for": "hyper-personalized outbound at $10K+ MRR"},
+    ],
+    "competitive_intel": [
+        {"name": "SimilarWeb", "url": "similarweb.com", "free_tier": True,
+         "paid_from_mrr": "$5K", "cost": "$167-833/mo",
+         "unlocks": "Competitor traffic, channels, audience overlap",
+         "best_for": "understanding how competitors acquire users"},
+        {"name": "Semrush", "url": "semrush.com", "free_tier": True,
+         "paid_from_mrr": "$5K", "cost": "$130-500/mo",
+         "unlocks": "Competitor keywords, backlinks, ad copy, content gaps",
+         "best_for": "SEO + paid channel intelligence"},
+        {"name": "Ahrefs", "url": "ahrefs.com", "free_tier": False,
+         "paid_from_mrr": "$5K", "cost": "$99-399/mo",
+         "unlocks": "Backlink analysis, keyword research, content explorer",
+         "best_for": "Content-led growth strategy"},
+    ],
+    "customer_analytics": [
+        {"name": "PostHog", "url": "posthog.com", "free_tier": True,
+         "paid_from_mrr": "$0", "cost": "Free up to 1M events",
+         "unlocks": "Product analytics, session replay, feature flags, A/B tests",
+         "best_for": "Understanding product behaviour — use from day 1"},
+        {"name": "Mixpanel", "url": "mixpanel.com", "free_tier": True,
+         "paid_from_mrr": "$5K", "cost": "$28-833/mo",
+         "unlocks": "Funnel analysis, cohort retention, user paths",
+         "best_for": "Retention analysis and churn diagnosis"},
+        {"name": "LogRocket", "url": "logrocket.com", "free_tier": True,
+         "paid_from_mrr": "$5K", "cost": "$99-500/mo",
+         "unlocks": "Session replay, error tracking, performance monitoring",
+         "best_for": "Debugging why users churn at specific steps"},
+    ],
+    "customer_intelligence": [
+        {"name": "Intercom", "url": "intercom.com", "free_tier": False,
+         "paid_from_mrr": "$5K", "cost": "$74-374/mo",
+         "unlocks": "Live chat, product tours, surveys, knowledge base",
+         "best_for": "Customer success at scale + in-app messaging"},
+        {"name": "Crisp", "url": "crisp.chat", "free_tier": True,
+         "paid_from_mrr": "$1K", "cost": "$25-95/mo",
+         "unlocks": "Live chat, CRM, email campaigns, chatbots",
+         "best_for": "Affordable Intercom alternative for early stage"},
+        {"name": "Attio", "url": "attio.com", "free_tier": True,
+         "paid_from_mrr": "$1K", "cost": "$34-119/mo",
+         "unlocks": "CRM with real-time data enrichment, relationship intelligence",
+         "best_for": "Modern CRM that enriches contacts automatically"},
+    ],
+    "payments": [
+        {"name": "Stripe", "url": "stripe.com", "free_tier": True,
+         "paid_from_mrr": "$0", "cost": "2.9% + 30¢ per transaction",
+         "unlocks": "Subscriptions, usage billing, invoicing, tax, Stripe Sigma",
+         "best_for": "Default choice — deepest ecosystem and reporting"},
+        {"name": "LemonSqueezy", "url": "lemonsqueezy.com", "free_tier": True,
+         "paid_from_mrr": "$0", "cost": "5% + 50¢ (Merchant of Record)",
+         "unlocks": "Global tax compliance handled, easy setup, EU VAT",
+         "best_for": "Solo founders who want zero tax headaches globally"},
+        {"name": "Paddle", "url": "paddle.com", "free_tier": False,
+         "paid_from_mrr": "$5K", "cost": "5% + 50¢ (Merchant of Record)",
+         "unlocks": "Subscription management, global tax, localized pricing",
+         "best_for": "B2B SaaS with international customers"},
+    ],
+    "financial_ops": [
+        {"name": "Pilot.com", "url": "pilot.com", "free_tier": False,
+         "paid_from_mrr": "$20K", "cost": "$599-1500/mo",
+         "unlocks": "Automated bookkeeping, financial statements, tax prep",
+         "best_for": "Replacing a part-time bookkeeper"},
+        {"name": "Mercury", "url": "mercury.com", "free_tier": True,
+         "paid_from_mrr": "$0", "cost": "Free (+ Treasury at $0)",
+         "unlocks": "Business banking, no fees, API, multi-user, runway dashboard",
+         "best_for": "Default business bank for startups — use from day 1"},
+        {"name": "Ramp", "url": "ramp.com", "free_tier": True,
+         "paid_from_mrr": "$5K", "cost": "Free (+ Premium $15/user/mo)",
+         "unlocks": "Corporate cards, spend management, bill pay, auto-categorization",
+         "best_for": "Expense management once you have recurring business spend"},
+    ],
+    "email_marketing": [
+        {"name": "Resend", "url": "resend.com", "free_tier": True,
+         "paid_from_mrr": "$0", "cost": "Free up to 3K/mo, then $20+",
+         "unlocks": "Transactional email API, React Email, excellent deliverability",
+         "best_for": "Transactional emails from day 1 — best developer experience"},
+        {"name": "Customer.io", "url": "customer.io", "free_tier": False,
+         "paid_from_mrr": "$5K", "cost": "$100-1000/mo",
+         "unlocks": "Event-triggered campaigns, user segmentation, lifecycle automation",
+         "best_for": "Sophisticated lifecycle email sequences tied to product events"},
+        {"name": "Beehiiv", "url": "beehiiv.com", "free_tier": True,
+         "paid_from_mrr": "$0", "cost": "Free up to 2.5K subscribers",
+         "unlocks": "Newsletter platform with monetization, referral program, analytics",
+         "best_for": "Content-founder building audience before product launch"},
+    ],
+    "legal_compliance": [
+        {"name": "Stripe Atlas", "url": "stripe.com/atlas", "free_tier": False,
+         "paid_from_mrr": "$0", "cost": "$500 one-time",
+         "unlocks": "US LLC/C-Corp incorporation, bank account, EIN in days",
+         "best_for": "Non-US founders incorporating a US entity quickly"},
+        {"name": "Clerky", "url": "clerky.com", "free_tier": False,
+         "paid_from_mrr": "$0", "cost": "$499-2000",
+         "unlocks": "Incorporation, SAFEs, NDAs, employment docs — lawyer-quality",
+         "best_for": "Founders who will raise funding — documents are VC-standard"},
+        {"name": "Vanta", "url": "vanta.com", "free_tier": False,
+         "paid_from_mrr": "$50K", "cost": "$800+/mo",
+         "unlocks": "SOC 2, ISO 27001, HIPAA automated compliance",
+         "best_for": "Enterprise sales requiring security certification"},
+    ],
+}
+
+_OPPORTUNITY_DIMENSIONS = [
+    "market_size",      # TAM evidence
+    "founder_fit",      # does the founder have edge here?
+    "timing",           # is the market opening or closing?
+    "competition",      # how differentiated is the position?
+    "monetization",     # can this charge enough to be a business?
+]
+
+@mcp.tool()
+def score_opportunity(
+    idea: str,
+    market_size_signal: str = "",
+    founder_background: str = "",
+    competitor_count: int = -1,
+    target_price: float = 0,
+    stage_mrr: str = "",
+    goal: str = "",
+) -> str:
+    """
+    Unified opportunity scoring across 5 dimensions + API recommendations.
+
+    Scores market_size, founder_fit, timing, competition, monetization
+    and recommends the specific paid APIs/services needed to execute this
+    opportunity based on the goal and stage.
+
+    Args:
+        idea: The opportunity being evaluated
+        market_size_signal: Any evidence about market size (search volume, subreddit size, etc.)
+        founder_background: Relevant founder experience
+        competitor_count: How many direct competitors exist (-1 = unknown)
+        target_price: Expected monthly price point
+        stage_mrr: Current MRR
+        goal: Primary goal (e.g. "reach $10K MRR", "sell in 18 months", "lifestyle")
+
+    Returns:
+        Opportunity score + dimension breakdown + API stack recommendations
+    """
+    ctx = read_business_context()
+    mrr = stage_mrr or ctx.get("mrr", "unknown")
+    mrr_int = _parse_mrr_string(mrr) if mrr not in ("unknown", "") else 0
+
+    scores: dict[str, dict] = {}
+
+    # ── Market Size ───────────────────────────────────────────
+    ms_score = 5  # neutral default
+    ms_note = "No market size signal provided — run Reddit/HN scan to validate"
+    if market_size_signal:
+        kw = market_size_signal.lower()
+        if any(x in kw for x in ["billion", "b market", "100m+", "large"]):
+            ms_score, ms_note = 8, "Large market signal detected — validate narrowing strategy"
+        elif any(x in kw for x in ["million", "m market", "10m"]):
+            ms_score, ms_note = 6, "Mid-size market — sufficient for lifestyle, tight for venture scale"
+        elif any(x in kw for x in ["niche", "small", "few thousand"]):
+            ms_score, ms_note = 4, "Niche market — verify pricing supports revenue goals"
+    scores["market_size"] = {"score": ms_score, "max": 10, "note": ms_note}
+
+    # ── Founder Fit ───────────────────────────────────────────
+    ff_score = 5
+    ff_note = "No founder background provided"
+    if founder_background:
+        fb = founder_background.lower()
+        if any(x in fb for x in ["built", "sold", "exited", "worked at", "domain expert", "years in"]):
+            ff_score, ff_note = 8, "Strong domain signal — unfair advantage likely"
+        elif any(x in fb for x in ["interested", "learning", "exploring", "curious"]):
+            ff_score, ff_note = 4, "Interest signal — validate you have edge over someone already in this domain"
+    elif ctx.get("icp"):
+        ff_note = f"ICP known ({ctx['icp'][:60]}) — assess if you can reach them credibly"
+        ff_score = 6
+    scores["founder_fit"] = {"score": ff_score, "max": 10, "note": ff_note}
+
+    # ── Timing ───────────────────────────────────────────────
+    # Heuristic: if market is young (no SaaS leader) timing is open
+    timing_score = 5
+    timing_note = "Run Kaala assessment: mcp__soloos-core__get_system_state for position vs market window"
+    if competitor_count == 0:
+        timing_score, timing_note = 9, "No direct competitors — either pioneer or premature"
+    elif 0 < competitor_count <= 3:
+        timing_score, timing_note = 7, "Early market with few players — differentiation achievable"
+    elif 4 <= competitor_count <= 10:
+        timing_score, timing_note = 5, "Crowded enough to need sharp positioning"
+    elif competitor_count > 10:
+        timing_score, timing_note = 3, "Saturated — need category creation or significant wedge"
+    scores["timing"] = {"score": timing_score, "max": 10, "note": timing_note}
+
+    # ── Competition ───────────────────────────────────────────
+    comp_score = max(0, 10 - (competitor_count if competitor_count >= 0 else 5))
+    comp_note = (f"{competitor_count} known competitors" if competitor_count >= 0
+                 else "Competitor count unknown — run generate_competitor_brief")
+    scores["competition"] = {"score": min(comp_score, 10), "max": 10, "note": comp_note}
+
+    # ── Monetization ──────────────────────────────────────────
+    mon_score = 5
+    mon_note = "Target price not specified"
+    if target_price > 0:
+        if target_price >= 200:
+            mon_score, mon_note = 9, f"${target_price}/mo — B2B pricing, strong unit economics"
+        elif target_price >= 50:
+            mon_score, mon_note = 7, f"${target_price}/mo — viable if CAC < $300"
+        elif target_price >= 15:
+            mon_score, mon_note = 5, f"${target_price}/mo — needs volume, tight on margin"
+        else:
+            mon_score, mon_note = 3, f"${target_price}/mo — requires mass scale or freemium-to-paid upgrade"
+    scores["monetization"] = {"score": mon_score, "max": 10, "note": mon_note}
+
+    # ── Overall Score ─────────────────────────────────────────
+    total = sum(v["score"] for v in scores.values())
+    max_total = sum(v["max"] for v in scores.values())
+    overall_pct = round((total / max_total) * 100)
+    verdict = (
+        "🟢 HIGH conviction — pursue aggressively, set 30-day kill signal" if overall_pct >= 70 else
+        "🟡 MEDIUM conviction — validate 2 weak dimensions before building" if overall_pct >= 50 else
+        "🔴 LOW conviction — too many unknowns. Validate before committing any weeks"
+    )
+
+    # ── API recommendations by goal ───────────────────────────
+    recommended_apis = []
+    if goal:
+        gl = goal.lower()
+        if any(x in gl for x in ["mrr", "revenue", "customers", "sales", "outbound"]):
+            recommended_apis.extend(_API_RECOMMENDATIONS.get("prospecting", [])[:2])
+            recommended_apis.extend(_API_RECOMMENDATIONS.get("payments", [])[:1])
+        if any(x in gl for x in ["retain", "churn", "product", "engagement"]):
+            recommended_apis.extend(_API_RECOMMENDATIONS.get("customer_analytics", [])[:2])
+        if any(x in gl for x in ["sell", "exit", "acquire", "valuation"]):
+            recommended_apis.extend(_API_RECOMMENDATIONS.get("financial_ops", [])[:2])
+        if any(x in gl for x in ["compete", "market", "seo", "content", "grow"]):
+            recommended_apis.extend(_API_RECOMMENDATIONS.get("competitive_intel", [])[:2])
+    # Always recommend analytics + banking from day 0
+    recommended_apis.extend(_API_RECOMMENDATIONS.get("customer_analytics", [{}])[:1])
+    recommended_apis.extend(_API_RECOMMENDATIONS.get("financial_ops", [{}])[:1])
+
+    # Deduplicate
+    seen, unique_apis = set(), []
+    for api in recommended_apis:
+        if api.get("name") and api["name"] not in seen:
+            seen.add(api["name"])
+            # Filter by stage
+            api_mrr_str = api.get("paid_from_mrr", "$0").replace("$", "").replace("K", "000")
+            try:
+                api_mrr_int = int(api_mrr_str)
+                if mrr_int >= api_mrr_int or api_mrr_int == 0:
+                    unique_apis.append(api)
+                else:
+                    unique_apis.append({**api, "note": f"Unlocks at {api['paid_from_mrr']} MRR — bookmark for later"})
+            except (ValueError, TypeError):
+                unique_apis.append(api)
+
+    kill_signal = (
+        f"If [{idea[:40]}...] does not generate [measurable signal] within 30 days, "
+        f"abandon or pivot the approach."
+    )
+
+    return json.dumps({
+        "idea": idea,
+        "overall_score": f"{overall_pct}%",
+        "verdict": verdict,
+        "dimensions": scores,
+        "goal": goal or "not specified",
+        "recommended_api_stack": unique_apis[:6],
+        "kill_signal": kill_signal,
+        "next_actions": [
+            "Run mcp__soloos-core__validate_idea_gates for Gate 0-4 validation",
+            "Run mcp__reddit__reddit_search_reddit to find real customer pain in this space",
+            "Run mcp__soloos-core__get_decision_intelligence_brief for full swarm analysis",
+            f"Set a 30-day kill signal: {kill_signal}",
+        ],
+    }, indent=2)
 
 
 # ─────────────────────────────────────────────────────────────
