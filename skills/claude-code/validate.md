@@ -111,24 +111,54 @@ If NOT READY: "Build the distribution before the product." What's the distributi
 
 ---
 
-### GATE 0: ChatGPT Substitution Test (Pre-Gate)
+### GATE 0: ChatGPT Substitution Test (AI Products Only — Runs Before All Other Gates)
 
-**The #1 undetected failure mode (25-30% of AI product failures): the free LLM absorbed your use case.**
+**Fires when**: product involves AI, ML, LLM, automation, or "AI-powered [task]"
+**Stage**: ANY — this is a product risk, not a stage risk. Applies at $0 MRR and $50K MRR equally.
+**Pattern**: [[P-36]] — ChatGPT Substitution Risk (25-30% of AI product failures trace to this cause)
 
-Before ANY validation work, run this test in 5 minutes:
+**The #1 undetected failure mode**: the free LLM already does your core value proposition. Discovering this in Gate 0 costs 5 minutes. Discovering it at month 6 costs everything.
+
+**The Test** (5 minutes, no tools, no API, no integrations):
+1. Open ChatGPT free tier (not your product, not Claude with your context — raw free tier)
+2. Write your product's core value proposition in one sentence
+3. Ask ChatGPT to perform that exact function using only a text prompt — right now
+4. Evaluate the result honestly against what your product delivers
+
+**Decision Tree**:
 
 ```
-CHATGPT SUBSTITUTION TEST:
-1. Open ChatGPT or Claude (free tier)
-2. Describe your product's core value in one sentence
-3. Ask it to perform that exact function for you — right now
+GATE 0: CHATGPT SUBSTITUTION TEST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Result is <40% of your product's value:
+→ ChatGPT CANNOT substitute → proceed to Gate 1
+→ Your differentiation is structural (not just prompting)
 
-Result A: It does it adequately → You're building against a free competitor with infinite marketing budget.
-          Options: (a) Find narrower niche with compliance/integration moat, (b) Find workflow step
-          where LLM alone fails (data connectivity, multi-step automation, domain-specific training)
+Result is 40-60% of your product's value:
+→ PARTIAL SUBSTITUTE — you have a layer problem, not a product problem
+→ REQUIRED before proceeding: name your Layer 2
+   Layer 2A: Workflow embedding — tool lives INSIDE their existing workflow, not standalone chat
+   Layer 2B: Proprietary data — you have data/context no one else has (user history, integrations, domain corpus)
+   Layer 2C: Speed+convenience margin — 10x faster on this specific task, worth paying for
+→ If you can name a viable Layer 2: proceed to Gate 1 with that as your core differentiation
+→ If you CANNOT name a Layer 2: STOP. The product form is wrong. Redesign before validating.
 
-Result B: It can't do it → You have a real gap. Continue to Gate 1.
-Result C: It does it badly → Document the gap specifically. That gap is your product.
+Result is >60% of your product's value:
+→ CHATGPT SUBSTITUTE — this specific product form will be commoditized
+→ Required question: "What is my Layer 2?"
+   Same three options as 40-60% above — but now mandatory, not optional
+→ If no viable Layer 2: recommend pivoting the product form before any validation work
+→ If viable Layer 2 identified: rebuild the product framing around the Layer 2, then Gate 1
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+```
+GATE 0 OUTPUT:
+Substitution result: [<40% / 40-60% / >60%]
+Specific capability gap: [what ChatGPT cannot do that your product does]
+Layer 2 (if needed): [Workflow embedding / Proprietary data / Speed margin]
+Layer 2 evidence: [why this Layer 2 is defensible — what you have that a wrapper doesn't]
+Gate 0 verdict: [PASS — proceed to Gate 1 / PASS WITH LAYER 2 — reframe first / FAIL — redesign]
 ```
 
 **Services-to-Software shortcut** (highest validation confidence): Before running the 4 gates, ask: "Am I this customer?" If yes — you have lived experience as your own validation. Skip Gates 1-2. Document your exact painful workflow, then jump to Gate 3 (will others pay?) and Gate 4 (unit economics).
