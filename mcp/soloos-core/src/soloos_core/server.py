@@ -1936,6 +1936,74 @@ def enrich_prospect(
 
 
 # ─────────────────────────────────────────────────────────────
+# TOOL 17: update_context
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def update_context(
+    file: str,
+    content: str,
+    mode: str = "overwrite",
+) -> str:
+    """
+    Write or append to a SoloOS context file. Activates cross-session memory.
+
+    Use during onboarding, assumption drift corrections, or whenever the founder
+    updates their ICP, stage, metrics, or experiments.
+
+    Args:
+        file: Which context file to update. One of:
+              "business-context" | "experiment-log" | "decision-log" |
+              "customer-voice" | "mission"
+        content: The markdown content to write (full replacement) or append.
+        mode: "overwrite" (replace entire file) or "append" (add to end).
+              Default: "overwrite". Use "append" for adding new entries to logs.
+
+    Returns: Confirmation with file path and byte count written.
+    """
+    from .log_manager import (
+        BUSINESS_CONTEXT_PATH,
+        EXPERIMENT_LOG_PATH,
+        DECISION_LOG_PATH,
+        CUSTOMER_VOICE_PATH,
+        CONTEXT_ROOT,
+    )
+
+    file_map = {
+        "business-context": BUSINESS_CONTEXT_PATH,
+        "experiment-log": EXPERIMENT_LOG_PATH,
+        "decision-log": DECISION_LOG_PATH,
+        "customer-voice": CUSTOMER_VOICE_PATH,
+        "mission": CONTEXT_ROOT / "mission.md",
+    }
+
+    if file not in file_map:
+        return json.dumps({
+            "status": "error",
+            "message": f"Unknown file '{file}'. Valid options: {list(file_map.keys())}",
+        })
+
+    target = file_map[file]
+    target.parent.mkdir(parents=True, exist_ok=True)
+
+    if mode == "append":
+        existing = target.read_text(encoding="utf-8") if target.exists() else ""
+        new_content = existing.rstrip() + "\n\n" + content
+    else:
+        new_content = content
+
+    target.write_text(new_content, encoding="utf-8")
+
+    return json.dumps({
+        "status": "success",
+        "file": str(target),
+        "mode": mode,
+        "bytes_written": len(new_content.encode("utf-8")),
+        "message": f"Context file '{file}' updated. Cross-session memory is now active for this field.",
+    }, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
 # Entry point
 # ─────────────────────────────────────────────────────────────
 

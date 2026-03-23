@@ -24,7 +24,7 @@ If the MCP is unavailable: READ `knowledge-base/personal/founder-log.md` and sca
 **Step 2 — Context File Check**
 READ `context/business-context.md`. If it contains `[Your product name]` or `[amount]` placeholders (i.e., it's a blank template):
 → Surface ONCE: "Your SoloOS context files are empty — every response today is generic advice, not calibrated to your business. 2 minutes to fix: What are you building? What's your current MRR? Who is your ICP? I'll write it to your context file now."
-→ Write the founder's answers to `context/business-context.md` immediately.
+→ After capturing the founder's answers, call `mcp__soloos-core__update_context` with `file: "business-context"` and the populated markdown content.
 → Do NOT repeat this prompt if declined in the same session.
 
 **Step 3 — Mission Alignment Check**
@@ -98,6 +98,15 @@ Multiple topics in one question → apply both, declare both.
 
 **Skills fire automatically when these patterns appear. No slash command needed.**
 Reference `skills/AUTO_TRIGGERS.md` for the full routing table.
+
+### Trigger Priority Rules (ENFORCE)
+When multiple triggers match a single message:
+1. **Max 2 triggers per response.** Primary wins. The rest are suppressed until the primary is resolved.
+2. **Priority order**: BANDWIDTH > PSYCHOLOGY > DECIDE > VALIDATE > FINANCE > PMF > everything else.
+   - BANDWIDTH/PSYCHOLOGY: Fires first because founder state determines whether any other advice is valid.
+   - DECIDE: Fires before VALIDATE/LAUNCH when a concrete decision is on the table.
+3. **State the triggers fired**: "Triggers: [PRIMARY] + [SECONDARY — deferred]"
+4. **Never run System 2 analysis on 3 simultaneous frameworks.** Pick the highest-priority one.
 
 ### Critical Auto-Triggers
 
@@ -680,9 +689,10 @@ Use `[[type:id]]` wiki-link syntax when referencing any entity that has a canoni
 At the end of any significant session (one containing a decision, new experiment, pivot, or key insight), before ending, Claude performs session synthesis:
 
 1. **Identify log-worthy events**: A decision with strategic consequence, a new experiment started, a hypothesis formed, or a significant insight about the customer/market.
-2. **Call `mcp__soloos-core__log_decision`** for any decision made today with reversibility ≤6/10. Do not skip this. Pass: `decision_type`, `summary`, `hypothesis`, `kill_signal`, and `context`.
-3. **If MCP unavailable**: Read `knowledge-base/personal/founder-log.md` to find the highest `[[FL-XXX]]` ID. Increment by 1. Write the entry manually using the canonical format below.
-4. **Write the entry** to `knowledge-base/personal/founder-log.md` using the canonical format:
+2. **Call `mcp__soloos-core__session_synthesis`** with: `decisions_made` (list of decisions, not discussions), `open_questions`, `assumptions_made`, `next_action` (one specific step). This auto-creates FL-XXX stubs with `auto_log_decisions=True`.
+3. **Call `mcp__soloos-core__log_decision`** for any decision made today with reversibility ≤6/10. Do not skip this. Pass: `decision_type`, `summary`, `hypothesis`, `kill_signal`, and `context`.
+4. **If MCP unavailable**: Read `knowledge-base/personal/founder-log.md` to find the highest `[[FL-XXX]]` ID. Increment by 1. Write the entry manually using the canonical format below.
+5. **Write the entry** to `knowledge-base/personal/founder-log.md` using the canonical format:
 ```markdown
 ---
 **[[FL-XXX]]**
@@ -703,26 +713,7 @@ At the end of any significant session (one containing a decision, new experiment
 
 ---
 
-## KILL SIGNAL CHECK (v3)
-
-At the START of every session, before doing anything else:
-
-1. Read `knowledge-base/personal/founder-log.md`.
-2. Scan for entries where `Outcome status: ⏳ Pending` AND `Outcome due` is in the past.
-3. For each overdue entry, surface it immediately:
-
-```
-⏰ KILL SIGNAL DUE: Before we start — [X] days ago you [summary of entry [[FL-XXX]]].
-You predicted: [hypothesis]
-Kill signal was: [kill signal set]
-
-What actually happened? (Update in 1-2 sentences — I'll log the outcome.)
-```
-
-4. Update the entry with the founder's response. Change `[PENDING OUTCOME]` to the actual outcome and update status to `✅ CONFIRMED`, `❌ INVALIDATED`, or `🔄 PARTIAL`.
-
-**If no overdue entries**: Skip silently. Do not mention this check ran.
-**If founder-log.md doesn't exist**: Skip silently.
+<!-- Kill Signal Check moved to SESSION START PROTOCOL Step 1 (top of file). Now calls mcp__soloos-core__check_kill_signals_tool directly. -->
 
 ---
 
