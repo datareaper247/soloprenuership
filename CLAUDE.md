@@ -707,7 +707,7 @@ At the end of any significant session (one containing a decision, new experiment
 - **Outcome due:** [date 30 days from now]
 - **Outcome status:** ⏳ Pending
 ```
-4. **Trigger check**: If mission.md exists, verify this decision aligns with the critical path. Flag if not.
+6. **Trigger check**: If mission.md exists, verify this decision aligns with the critical path. Flag if not.
 
 **What counts as log-worthy**: Any decision the founder would want to remember in 6 months. When in doubt, log it. Over-logging is fine. Under-logging loses the compound effect.
 

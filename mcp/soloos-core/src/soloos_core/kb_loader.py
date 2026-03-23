@@ -411,50 +411,95 @@ def _find_ratio(text: str, *keywords: str) -> str:
 # Semantic search (keyword-based, no external embeddings)
 # ─────────────────────────────────────────────────────────────
 
-def _tokenize(text: str) -> set[str]:
-    """Lower-case word tokens for matching."""
-    return set(re.findall(r"\b\w{3,}\b", text.lower()))
+def _tokenize(text: str) -> list[str]:
+    """Lower-case word tokens (list for frequency counting)."""
+    return re.findall(r"\b\w{3,}\b", text.lower())
+
+
+def _bm25_score(
+    query_tokens: list[str],
+    doc_tokens: list[str],
+    doc_freqs: dict[str, int],
+    corpus_size: int,
+    avgdl: float,
+    k1: float = 1.5,
+    b: float = 0.75,
+) -> float:
+    """BM25 relevance score. Better than bag-of-words: weights rare terms higher,
+    normalises by document length, caps term saturation."""
+    import math
+    score = 0.0
+    dl = len(doc_tokens)
+    tf_map: dict[str, int] = {}
+    for t in doc_tokens:
+        tf_map[t] = tf_map.get(t, 0) + 1
+
+    for term in set(query_tokens):
+        tf = tf_map.get(term, 0)
+        if tf == 0:
+            continue
+        df = doc_freqs.get(term, 0)
+        idf = math.log((corpus_size - df + 0.5) / (df + 0.5) + 1)
+        numerator = tf * (k1 + 1)
+        denominator = tf + k1 * (1 - b + b * dl / max(avgdl, 1))
+        score += idf * (numerator / denominator)
+    return score
 
 
 def search_patterns(query: str, patterns: list[Pattern], top_n: int = 5) -> list[Pattern]:
-    """Return top_n patterns most relevant to the query (keyword overlap scoring)."""
+    """Return top_n patterns most relevant to the query (BM25 scoring)."""
     query_tokens = _tokenize(query)
     if not query_tokens:
         return patterns[:top_n]
 
+    # Build corpus for IDF
+    corpus_docs = [_tokenize(f"{p.name} {p.situation} {p.pattern} {p.apply_when} {p.raw}") for p in patterns]
+    doc_freqs: dict[str, int] = {}
+    for doc in corpus_docs:
+        for term in set(doc):
+            doc_freqs[term] = doc_freqs.get(term, 0) + 1
+    avgdl = sum(len(d) for d in corpus_docs) / max(len(corpus_docs), 1)
+
     scored = []
-    for p in patterns:
-        search_text = f"{p.name} {p.situation} {p.pattern} {p.apply_when} {p.raw}"
-        p_tokens = _tokenize(search_text)
-        overlap = len(query_tokens & p_tokens)
-        # Bonus for ID match (e.g., "P07" in query)
+    for p, doc_tokens in zip(patterns, corpus_docs):
+        score = _bm25_score(query_tokens, doc_tokens, doc_freqs, len(patterns), avgdl)
+        # Bonus for exact ID match (e.g. "P07" in query)
         if p.id.lower() in query.lower():
-            overlap += 20
-        # Bonus for name match
-        if any(word in p.name.lower() for word in query_tokens if len(word) > 4):
-            overlap += 5
-        scored.append((overlap, p))
+            score += 20.0
+        # Bonus for name word match
+        if any(w in p.name.lower() for w in query_tokens if len(w) > 4):
+            score += 3.0
+        scored.append((score, p))
 
     scored.sort(key=lambda x: x[0], reverse=True)
     return [p for score, p in scored[:top_n] if score > 0]
 
 
 def search_founders(query: str, cases: list[FounderCase], top_n: int = 5) -> list[FounderCase]:
-    """Return top_n founder cases most relevant to the query."""
+    """Return top_n founder cases most relevant to the query (BM25 scoring)."""
     query_tokens = _tokenize(query)
     if not query_tokens:
         return cases[:top_n]
 
+    # Build corpus for IDF
+    corpus_docs = [
+        _tokenize(f"{c.founder} {c.product} {c.decision} {c.outcome} {' '.join(c.tags)} {c.raw}")
+        for c in cases
+    ]
+    doc_freqs: dict[str, int] = {}
+    for doc in corpus_docs:
+        for term in set(doc):
+            doc_freqs[term] = doc_freqs.get(term, 0) + 1
+    avgdl = sum(len(d) for d in corpus_docs) / max(len(corpus_docs), 1)
+
     scored = []
-    for c in cases:
-        search_text = f"{c.founder} {c.product} {c.decision} {c.outcome} {' '.join(c.tags)} {c.raw}"
-        c_tokens = _tokenize(search_text)
-        overlap = len(query_tokens & c_tokens)
+    for c, doc_tokens in zip(cases, corpus_docs):
+        score = _bm25_score(query_tokens, doc_tokens, doc_freqs, len(cases), avgdl)
         if c.founder.lower() in query.lower():
-            overlap += 15
+            score += 10.0
         if c.product.lower() in query.lower():
-            overlap += 10
-        scored.append((overlap, c))
+            score += 7.0
+        scored.append((score, c))
 
     scored.sort(key=lambda x: x[0], reverse=True)
     return [c for score, c in scored[:top_n] if score > 0]
