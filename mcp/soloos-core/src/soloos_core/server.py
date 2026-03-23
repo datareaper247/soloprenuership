@@ -2004,6 +2004,203 @@ def update_context(
 
 
 # ─────────────────────────────────────────────────────────────
+# TOOL 18: get_system_state
+# ─────────────────────────────────────────────────────────────
+
+# Causal chain map: decision_type → downstream variables that shift
+_CAUSAL_CHAINS: dict[str, list[dict]] = {
+    "pricing_increase": [
+        {"variable": "CAC", "direction": "↑", "reason": "harder to close, fewer impulse buys"},
+        {"variable": "LTV", "direction": "↑", "reason": "higher revenue per customer"},
+        {"variable": "Churn risk", "direction": "↑", "reason": "existing customers may leave"},
+        {"variable": "Support load", "direction": "↓", "reason": "fewer low-value customers"},
+        {"variable": "Runway", "direction": "↑", "reason": "higher margin per sale"},
+    ],
+    "pricing_decrease": [
+        {"variable": "CAC", "direction": "↓", "reason": "easier to close, lower barrier"},
+        {"variable": "LTV", "direction": "↓", "reason": "less revenue per customer"},
+        {"variable": "Volume", "direction": "↑ (uncertain)", "reason": "price-sensitive segment unlocked"},
+        {"variable": "Support load", "direction": "↑", "reason": "more low-value customers"},
+        {"variable": "Margin", "direction": "↓", "reason": "direct unit economics hit"},
+    ],
+    "hire_first_employee": [
+        {"variable": "Runway", "direction": "↓↓", "reason": "salary is fixed burn"},
+        {"variable": "Capacity", "direction": "↑", "reason": "more hours in the system"},
+        {"variable": "Complexity", "direction": "↑", "reason": "coordination overhead begins"},
+        {"variable": "Founder bandwidth", "direction": "↑", "reason": "delegation frees focus"},
+        {"variable": "Reversibility", "direction": "2/10", "reason": "letting someone go is costly and slow"},
+    ],
+    "launch_new_feature": [
+        {"variable": "Dev time", "direction": "↓", "reason": "time spent on unvalidated surface area"},
+        {"variable": "Retention", "direction": "↑ (if validated)", "reason": "solves real user pain"},
+        {"variable": "Support load", "direction": "↑", "reason": "new surface = new failure modes"},
+        {"variable": "Focus", "direction": "↓", "reason": "breadth vs depth tradeoff"},
+        {"variable": "ICP clarity", "direction": "↓ risk", "reason": "may attract wrong segment"},
+    ],
+    "pivot": [
+        {"variable": "Existing traction", "direction": "↓ or reset", "reason": "current users may not follow"},
+        {"variable": "Stage clock", "direction": "reset", "reason": "back to $0 MRR validation phase"},
+        {"variable": "Morale", "direction": "↓ short-term", "reason": "sunk cost psychology"},
+        {"variable": "Optionality", "direction": "↑", "reason": "new hypothesis, new surface area"},
+        {"variable": "Reversibility", "direction": "3/10", "reason": "hard to un-pivot once announced"},
+    ],
+    "raise_funding": [
+        {"variable": "Runway", "direction": "↑↑", "reason": "direct cash injection"},
+        {"variable": "Dilution", "direction": "↑", "reason": "equity given in exchange"},
+        {"variable": "Growth pressure", "direction": "↑↑", "reason": "investors expect return timeline"},
+        {"variable": "Optionality", "direction": "↓", "reason": "harder to lifestyle/exit cheaply"},
+        {"variable": "Reversibility", "direction": "2/10", "reason": "dilution is permanent"},
+    ],
+    "enter_new_market": [
+        {"variable": "CAC", "direction": "↑", "reason": "unknown distribution in new market"},
+        {"variable": "ICP clarity", "direction": "↓", "reason": "splits focus between segments"},
+        {"variable": "Complexity", "direction": "↑↑", "reason": "new language, regulation, channels"},
+        {"variable": "Upside", "direction": "↑ (long-term)", "reason": "TAM expansion"},
+        {"variable": "Reversibility", "direction": "4/10", "reason": "brand confusion is slow to fix"},
+    ],
+    "default": [
+        {"variable": "Focus", "direction": "?", "reason": "any decision reallocates attention"},
+        {"variable": "Runway", "direction": "?", "reason": "cost or revenue impact unknown"},
+        {"variable": "Reversibility", "direction": "assess", "reason": "score before committing"},
+    ],
+}
+
+_DECISION_TYPE_KEYWORDS: dict[str, list[str]] = {
+    "pricing_increase": ["raise price", "increase price", "charge more", "premium", "price higher"],
+    "pricing_decrease": ["lower price", "discount", "cheaper", "free tier", "reduce price"],
+    "hire_first_employee": ["hire", "first employee", "bring someone on", "contractor", "VA"],
+    "launch_new_feature": ["build", "add feature", "launch", "ship", "new feature"],
+    "pivot": ["pivot", "change direction", "rebrand", "new market", "new idea", "start over"],
+    "raise_funding": ["raise", "funding", "investors", "seed", "SAFE", "cap table", "dilution"],
+    "enter_new_market": ["international", "new market", "expand to", "different segment", "new country"],
+}
+
+
+def _detect_decision_type(decision: str) -> str:
+    dl = decision.lower()
+    for dtype, keywords in _DECISION_TYPE_KEYWORDS.items():
+        if any(kw in dl for kw in keywords):
+            return dtype
+    return "default"
+
+
+@mcp.tool()
+def get_system_state(
+    decision: str,
+    stage_mrr: str = "",
+    show_causal_chain: bool = True,
+) -> str:
+    """
+    Cross-domain system state snapshot BEFORE a significant decision.
+
+    This is the Systems Intelligence Layer — it pulls business context,
+    kill signal status, relevant patterns, and causal chain for the decision
+    in ONE call instead of requiring 4-5 separate tool calls.
+
+    Use BEFORE any reversibility ≤5/10 decision. Replaces the need to
+    manually chain: get_business_context + check_kill_signals_tool +
+    match_pattern + score_pmf separately.
+
+    Args:
+        decision: What the founder is considering (e.g. "raise prices from $49 to $99")
+        stage_mrr: Current MRR for stage calibration (e.g. "$3K", "pre-revenue")
+        show_causal_chain: Include downstream variable impact map (default True)
+
+    Returns:
+        Unified JSON: business_state + kill_signals + patterns + causal_chain + system_health
+    """
+    result: dict = {
+        "decision_being_evaluated": decision,
+        "timestamp": today_str(),
+    }
+
+    # ── 1. Business state ──────────────────────────────────────
+    ctx = read_business_context()
+    mrr = stage_mrr or ctx.get("mrr", "unknown")
+    result["business_state"] = {
+        "mrr": mrr,
+        "stage": ctx.get("stage", "unknown"),
+        "icp": ctx.get("icp", "not set"),
+        "biggest_challenge": ctx.get("biggest_challenge", "not set"),
+        "open_decisions": ctx.get("open_decisions", "none"),
+        "context_populated": ctx.get("status") != "not_found",
+    }
+
+    # ── 2. Kill signal health ──────────────────────────────────
+    entries = load_log()
+    alerts = check_kill_signals(entries)
+    pending = [e for e in entries if e.outcome_status == "⏳ Pending"]
+    overdue = [a for a in alerts if a.urgency == "OVERDUE"]
+    urgent = [a for a in alerts if a.urgency == "URGENT"]
+
+    result["kill_signal_health"] = {
+        "pending_count": len(pending),
+        "overdue_count": len(overdue),
+        "urgent_count": len(urgent),
+        "warning": len(overdue) > 0 or len(urgent) > 0,
+        "note": (
+            f"⚠️ {len(overdue)} OVERDUE kill signal(s). Resolve before committing to new decisions."
+            if overdue else
+            f"🟡 {len(urgent)} urgent kill signal(s) due within 7 days." if urgent else
+            "✅ No overdue kill signals."
+        ),
+        "alerts": [
+            {"id": a.entry_id, "urgency": a.urgency, "summary": a.summary,
+             "kill_signal": a.kill_signal, "days_remaining": a.days_remaining}
+            for a in alerts
+        ],
+    }
+
+    # ── 3. Pattern matches ────────────────────────────────────
+    patterns = get_patterns()
+    matched = search_patterns(decision, patterns, top_n=2) if patterns else []
+    result["relevant_patterns"] = [
+        {"id": p.id, "name": p.name, "situation": p.situation[:200],
+         "kill_signal": p.kill_signal if hasattr(p, "kill_signal") else ""}
+        for p in matched
+    ] if matched else [{"note": "No strong pattern match in PATTERN_LIBRARY.md"}]
+
+    # ── 4. Causal chain ───────────────────────────────────────
+    if show_causal_chain:
+        dtype = _detect_decision_type(decision)
+        chain = _CAUSAL_CHAINS.get(dtype, _CAUSAL_CHAINS["default"])
+        result["causal_chain"] = {
+            "decision_type_detected": dtype,
+            "downstream_effects": chain,
+            "second_order_note": (
+                "These effects compound. High-reversibility (≥7/10): proceed. "
+                "Low-reversibility (≤4/10): gather 3 data points first."
+            ),
+        }
+
+    # ── 5. System health score ────────────────────────────────
+    health_flags: list[str] = []
+    if ctx.get("status") == "not_found":
+        health_flags.append("❌ No business context — run /onboard for calibrated advice")
+    if overdue:
+        health_flags.append(f"❌ {len(overdue)} overdue kill signal(s) — resolve first")
+    if urgent:
+        health_flags.append(f"⚠️ {len(urgent)} kill signal(s) expiring within 7 days")
+    if not ctx.get("icp"):
+        health_flags.append("⚠️ ICP not set — stage-calibrated advice is generic")
+
+    health_score = max(0, 10 - (len(overdue) * 3) - (len(urgent) * 1) -
+                       (2 if ctx.get("status") == "not_found" else 0))
+
+    result["system_health"] = {
+        "score": f"{health_score}/10",
+        "flags": health_flags if health_flags else ["✅ System state looks healthy"],
+        "recommendation": (
+            "RESOLVE OVERDUE KILL SIGNALS BEFORE THIS DECISION"
+            if overdue else
+            "Proceed with decision — review causal chain above"
+        ),
+    }
+
+    return json.dumps(result, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
 # Entry point
 # ─────────────────────────────────────────────────────────────
 

@@ -99,6 +99,25 @@ Multiple topics in one question → apply both, declare both.
 **Skills fire automatically when these patterns appear. No slash command needed.**
 Reference `skills/AUTO_TRIGGERS.md` for the full routing table.
 
+### SYSTEM STATE CHECK (Pre-Decision Hook)
+
+**MANDATORY before any reversibility ≤5/10 decision**: Call `mcp__soloos-core__get_system_state` with the decision being considered.
+
+This single call replaces manually chaining: business context + kill signals + pattern match + causal chain.
+It returns a cross-domain snapshot showing what shifts downstream when this decision is made.
+
+```
+mcp__soloos-core__get_system_state(
+  decision="[what the founder is considering]",
+  stage_mrr="[inferred MRR]"
+)
+```
+
+Surface the `causal_chain.downstream_effects` to the founder BEFORE giving a recommendation.
+If `kill_signal_health.overdue_count > 0`: resolve those first — do not let new decisions stack on unresolved ones.
+
+---
+
 ### Trigger Priority Rules (ENFORCE)
 When multiple triggers match a single message:
 1. **Max 2 triggers per response.** Primary wins. The rest are suppressed until the primary is resolved.
@@ -726,6 +745,7 @@ With this file (v5):
 - **Stage is auto-detected** from conversation (not declared)
 - **Skills READ their files** — every trigger explicitly loads the skill markdown before applying frameworks
 - **MCP tools enforced** — DECIDE, FINANCE, PMF, EXIT, VALIDATE, INTEL MUST call soloos-core MCP tools before answering
+- **Systems Intelligence Layer** — `get_system_state()` pulls cross-domain snapshot (business state + kill signals + patterns + causal chain) before any ≤5/10 reversibility decision
 - **Session start is mandatory** — 4-step protocol: kill signal check → context check → mission check → assumption drift
 - **Anti-patterns flagged** in one line before every answer
 - **Every recommendation ends with a kill signal** — mandatory, measurable, time-bounded
