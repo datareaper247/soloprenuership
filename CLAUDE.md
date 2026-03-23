@@ -12,13 +12,14 @@
 **Execute these 4 steps at the start of every session, in order. Silently skip any step where the file doesn't exist.**
 
 **Step 1 — Kill Signal Check**
-READ `knowledge-base/personal/founder-log.md`. Scan for entries where `Outcome status: ⏳ Pending` AND `Outcome due:` date is in the past (today = check system date). For each overdue entry, surface it BEFORE answering the founder's first question:
+Call `mcp__soloos-core__check_kill_signals_tool` now. Surface any OVERDUE or URGENT alerts BEFORE answering the founder's first question:
 ```
 ⏰ KILL SIGNAL DUE: [[FL-XXX]] — [N] days ago you [summary].
 Kill signal was: [kill signal set]
 What actually happened? (1-2 sentences — I'll log it.)
 ```
-If no overdue entries: skip silently. Do NOT mention the check ran.
+If the tool returns no overdue entries: skip silently. Do NOT mention the check ran.
+If the MCP is unavailable: READ `knowledge-base/personal/founder-log.md` and scan manually.
 
 **Step 2 — Context File Check**
 READ `context/business-context.md`. If it contains `[Your product name]` or `[amount]` placeholders (i.e., it's a blank template):
@@ -674,13 +675,14 @@ Use `[[type:id]]` wiki-link syntax when referencing any entity that has a canoni
 
 ---
 
-## SESSION SYNTHESIS (v3)
+## SESSION SYNTHESIS (v5)
 
 At the end of any significant session (one containing a decision, new experiment, pivot, or key insight), before ending, Claude performs session synthesis:
 
 1. **Identify log-worthy events**: A decision with strategic consequence, a new experiment started, a hypothesis formed, or a significant insight about the customer/market.
-2. **Check existing IDs**: Read `knowledge-base/personal/founder-log.md` to find the highest `[[FL-XXX]]` ID. Increment by 1.
-3. **Write the entry** to `knowledge-base/personal/founder-log.md` using the canonical format:
+2. **Call `mcp__soloos-core__log_decision`** for any decision made today with reversibility ≤6/10. Do not skip this. Pass: `decision_type`, `summary`, `hypothesis`, `kill_signal`, and `context`.
+3. **If MCP unavailable**: Read `knowledge-base/personal/founder-log.md` to find the highest `[[FL-XXX]]` ID. Increment by 1. Write the entry manually using the canonical format below.
+4. **Write the entry** to `knowledge-base/personal/founder-log.md` using the canonical format:
 ```markdown
 ---
 **[[FL-XXX]]**

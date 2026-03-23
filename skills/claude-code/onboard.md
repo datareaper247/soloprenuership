@@ -102,8 +102,16 @@ Format I'll use to capture it:
   Review date: [30 days from today]
 ```
 
-This gets written to `knowledge-base/personal/founder-log.md` as entry [[FL-001]].
+After capturing the founder's answer, call `mcp__soloos-core__log_decision` with:
+- `decision_type`: "Experiment"
+- `summary`: "Onboarding complete — first kill signal set"
+- `hypothesis`: [the founder's working signal — what success looks like in 30 days]
+- `kill_signal`: [the founder's failure signal — specific threshold that triggers a change]
+- `context`: "FL-001 created via /onboard"
+
+This writes `[[FL-001]]` to `knowledge-base/personal/founder-log.md`.
 It is the first entry in your personal knowledge graph — your company's decision history starts here.
+The GitHub Action now has something to check. The kill signal system is active.
 
 ---
 
