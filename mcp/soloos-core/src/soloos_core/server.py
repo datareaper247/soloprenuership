@@ -2798,6 +2798,280 @@ def score_opportunity(
 
 
 # ─────────────────────────────────────────────────────────────
+# TOOL 22: simulate_business_change — Causal chain simulation
+# ─────────────────────────────────────────────────────────────
+
+_CHANGE_CAUSAL_MAP: dict[str, dict] = {
+    "price_increase": {
+        "label": "Price Increase",
+        "primary_impacts": [
+            {"variable": "MRR (immediate existing customers)", "direction": "neutral → positive",
+             "note": "Existing customers stay at old price until renewal or repricing campaign"},
+            {"variable": "MRR (new customers)", "direction": "positive",
+             "note": "New customers pay the new price immediately"},
+            {"variable": "Churn rate", "direction": "slight increase risk",
+             "note": "B2B SaaS: typically <5% additional churn per 20% price increase if value is clear"},
+            {"variable": "CAC", "direction": "neutral", "note": "Price doesn't affect acquisition cost"},
+            {"variable": "LTV", "direction": "positive", "note": "Higher price → higher LTV assuming same retention"},
+        ],
+        "reversibility": 4,
+        "rule": "Price increases are easier to execute than founders expect. B2B SaaS can absorb 20-30% annually with <5% churn impact if value delivered. Grandfathering kills margin — avoid it.",
+        "red_flags": ["Raising price before PMF is confirmed", "Raising price without value delivery proof"],
+        "kill_signal_template": "If churn in 30 days post-price-change exceeds baseline by >10 percentage points, revert and diagnose.",
+    },
+    "price_decrease": {
+        "label": "Price Decrease / Discount",
+        "primary_impacts": [
+            {"variable": "MRR", "direction": "negative", "note": "Immediate MRR drop on existing customers if applied retroactively"},
+            {"variable": "Churn rate", "direction": "slight decrease", "note": "Rarely prevents churn — customers churn due to value, not price"},
+            {"variable": "CAC", "direction": "may decrease", "note": "Lower price may reduce sales friction, but rarely the blocker at pre-PMF stage"},
+            {"variable": "Positioning", "direction": "degraded", "note": "Price signals value — decreasing signals less value or desperation"},
+        ],
+        "reversibility": 3,
+        "rule": "Discounting almost never solves churn. Customers who leave at $50 would have left at $20. Fix the value, not the price. One exception: enterprise sales where price is genuinely above budget ceiling.",
+        "red_flags": ["Discounting to close deals instead of improving value", "Blanket discounts vs. strategic pricing"],
+        "kill_signal_template": "If 30 days after discount, conversion rate hasn't improved by >20%, the blocker is not price.",
+    },
+    "hire_employee": {
+        "label": "First Employee / Full-Time Hire",
+        "primary_impacts": [
+            {"variable": "Burn rate", "direction": "increases by salary + benefits + overhead",
+             "note": "Estimate: $5K–12K/mo per FTE including overhead"},
+            {"variable": "Runway", "direction": "decreases significantly",
+             "note": "At $5K/mo burn: a $6K/mo hire cuts runway by ~50%"},
+            {"variable": "Founder bandwidth", "direction": "increases by 40-60% after onboarding",
+             "note": "First 30-60 days: bandwidth DECREASES due to management overhead"},
+            {"variable": "Revenue (if sales/growth hire)", "direction": "delayed positive",
+             "note": "Sales hire: 30-90 day ramp before meaningful contribution"},
+            {"variable": "Product velocity (if dev hire)", "direction": "delayed positive",
+             "note": "Dev hire: 30-60 day ramp; often faster to use contractors for specific features"},
+        ],
+        "reversibility": 2,
+        "rule": "Hire to the document. Only hire if you have a documented process the hire will execute. Hiring to figure out the process is the #1 early-stage hiring failure mode.",
+        "stage_gate": "$20K MRR minimum before full-time hire, unless role is directly revenue-generating.",
+        "red_flags": ["Hiring before role is documented", "Hiring to solve founder burnout (solve bandwidth first)"],
+        "kill_signal_template": "If hire hasn't contributed measurable output by day 60, the role definition or onboarding is the problem.",
+    },
+    "hire_va": {
+        "label": "Virtual Assistant / Contractor Hire",
+        "primary_impacts": [
+            {"variable": "Burn rate", "direction": "increases by $800–2K/mo", "note": "Typical VA cost"},
+            {"variable": "Runway", "direction": "minor decrease", "note": "Much smaller runway impact than FTE"},
+            {"variable": "Founder bandwidth", "direction": "increases by 5-10hrs/week",
+             "note": "After 2-4 week setup — document the process first"},
+            {"variable": "Ops quality", "direction": "initially neutral, then improves",
+             "note": "VA quality requires a good SOP. Without SOP, quality degrades."},
+        ],
+        "reversibility": 7,
+        "rule": "Document the task fully first. Test with a 20-hr pilot project. Measure quality against your standard before committing to ongoing.",
+        "red_flags": ["Hiring VA to figure out what to delegate"],
+        "kill_signal_template": "If 2 weeks after VA starts, founder is spending >2hrs/week correcting VA work, the SOP is wrong — not the VA.",
+    },
+    "run_paid_ads": {
+        "label": "Launch Paid Advertising",
+        "primary_impacts": [
+            {"variable": "CAC", "direction": "increases initially (learning phase)",
+             "note": "First 30-60 days: CAC 2-5x higher than target while algorithm learns"},
+            {"variable": "Burn rate", "direction": "increases by ad spend + management time",
+             "note": "Minimum viable test: $2K/mo. Below that, insufficient data."},
+            {"variable": "MRR (if PMF confirmed)", "direction": "positive after 60-90 days",
+             "note": "Paid ads amplify a working funnel. They don't fix a broken one."},
+            {"variable": "MRR (if PMF not confirmed)", "direction": "negative expected value",
+             "note": "Paid ads before PMF: you're paying to accelerate learning you should do for free first."},
+            {"variable": "Runway", "direction": "decreases by ad spend per month", "note": "Fixed cost regardless of outcome"},
+        ],
+        "reversibility": 8,
+        "rule": "Never start paid ads before knowing: (1) D30 retention, (2) LTV > 3x CAC target, (3) one organic channel is already converting. Ads amplify — they don't create signal.",
+        "stage_gate": "$5K MRR with proven retention before paid acquisition.",
+        "red_flags": ["Running ads without knowing LTV", "Running ads as the first acquisition attempt"],
+        "kill_signal_template": "If after 60 days CAC > LTV/3, turn off and fix funnel first.",
+    },
+    "pivot": {
+        "label": "Product or Market Pivot",
+        "primary_impacts": [
+            {"variable": "Existing MRR", "direction": "at risk — 30-70% may not follow",
+             "note": "Existing customers bought a specific thing. Pivots often lose them."},
+            {"variable": "Product velocity", "direction": "reset — 60-90 day dead zone",
+             "note": "Pivots require rebuilding context, codebase focus, positioning"},
+            {"variable": "CAC", "direction": "increases — new ICP, new channels to learn",
+             "note": "Every pivot resets acquisition learning"},
+            {"variable": "Founder morale", "direction": "at risk", "note": "Pivots are demoralizing without clear signal driving them"},
+            {"variable": "Pattern confidence", "direction": "reset", "note": "Accumulated learning about the old market may not transfer"},
+        ],
+        "reversibility": 2,
+        "rule": "Pivot on customer insight, not discouragement. A pivot driven by 5+ customers saying 'I wish you did X instead' is valid. A pivot driven by 'growth is slow' is avoidance.",
+        "red_flags": ["Pivoting without 3+ customers articulating the pivot direction", "Pivoting within first 60 days (too early to know)"],
+        "kill_signal_template": "If 90 days post-pivot you have fewer paying customers than pre-pivot, the pivot direction was wrong.",
+    },
+    "expand_market": {
+        "label": "Geographic or ICP Expansion",
+        "primary_impacts": [
+            {"variable": "CAC", "direction": "increases — new market learning",
+             "note": "New markets require new positioning, new channels, new social proof"},
+            {"variable": "Support load", "direction": "increases", "note": "New segments have different questions and edge cases"},
+            {"variable": "Product scope", "direction": "at risk of bloat",
+             "note": "New markets often request features that dilute the core product for existing ICP"},
+            {"variable": "Founder bandwidth", "direction": "decreases significantly",
+             "note": "Two ICPs require two GTM motions — effectively doubles the workload"},
+        ],
+        "reversibility": 4,
+        "rule": "Expand only when the home market is saturated. At <$50K MRR: most founders expand to escape competition rather than because home market is exhausted. Fix churn in home market first.",
+        "stage_gate": "$50K MRR with <3% monthly churn in home market before expansion.",
+        "red_flags": ["Expanding before home market PMF is confirmed", "Expanding to avoid doing hard sales work in home market"],
+        "kill_signal_template": "If 60 days into new market, CAC is >2x home market CAC with no sign of learning curve — pause expansion.",
+    },
+    "new_feature": {
+        "label": "Major New Feature / Product Bet",
+        "primary_impacts": [
+            {"variable": "Shipping velocity (existing roadmap)", "direction": "decreases",
+             "note": "Adding a major feature delays everything else in the queue"},
+            {"variable": "Tech debt", "direction": "may increase if rushed", "note": "Features shipped fast = debt accumulated fast"},
+            {"variable": "Churn (if feature solves known pain)", "direction": "may decrease",
+             "note": "Only if 3+ churned customers named this feature as the reason they left"},
+            {"variable": "Sales (if feature unlocks new ICP)", "direction": "delayed positive",
+             "note": "Only if 3+ prospects said 'when you have X, I'll buy'"},
+        ],
+        "reversibility": 5,
+        "rule": "Build features to solve a stated problem for 3+ customers, not to solve anticipated problems. Every feature you add must be maintained forever.",
+        "red_flags": ["Building feature based on one customer request", "Building feature because it's interesting"],
+        "kill_signal_template": "If 60 days post-ship, the feature hasn't been cited as a reason for purchase or retention by any customer, it was wrong.",
+    },
+}
+
+
+@mcp.tool()
+def simulate_business_change(
+    change_type: str,
+    description: str = "",
+    magnitude: str = "",
+    stage_mrr: str = "",
+) -> str:
+    """
+    Causal chain simulation: trace downstream effects of a proposed business change.
+
+    Given a proposed action, traces through the causal business model to project
+    impacts on MRR, runway, CAC, churn, and founder bandwidth.
+
+    Args:
+        change_type: One of: price_increase | price_decrease | hire_employee | hire_va |
+                     run_paid_ads | pivot | expand_market | new_feature
+        description: What specifically you're considering (e.g., "raise prices from $49 to $79/mo")
+        magnitude: Size/scale of change (e.g., "30% price increase", "$3K/mo ad spend", "1 VA at $1500/mo")
+        stage_mrr: Current MRR for stage calibration (e.g., "$5K")
+
+    Returns:
+        Causal impact map: projected variable shifts, reversibility score, stage gate check, kill signal
+    """
+    ctx = read_business_context()
+    mrr = stage_mrr or ctx.get("mrr", "unknown")
+    mrr_int = _parse_mrr_string(mrr) if mrr not in ("unknown", "") else 0
+    stage = ctx.get("stage", "") or _infer_stage_from_mrr(mrr_int)
+
+    # Normalize change_type
+    ct = change_type.lower().replace("-", "_").replace(" ", "_")
+
+    # Fuzzy match if exact key not found
+    if ct not in _CHANGE_CAUSAL_MAP:
+        matches = [k for k in _CHANGE_CAUSAL_MAP if any(word in ct for word in k.split("_"))]
+        if matches:
+            ct = matches[0]
+        else:
+            available = list(_CHANGE_CAUSAL_MAP.keys())
+            return json.dumps({
+                "error": f"Unknown change_type '{change_type}'. Available: {available}",
+                "tip": "Use one of the listed change types. For unlisted changes, use get_decision_intelligence_brief.",
+            })
+
+    profile = _CHANGE_CAUSAL_MAP[ct]
+    reversibility = profile["reversibility"]
+    stage_gate = profile.get("stage_gate", "")
+
+    # Stage gate check
+    stage_warning = None
+    if stage_gate and mrr_int > 0:
+        gate_mrr = _parse_mrr_string(stage_gate.split("MRR")[0].strip().split()[-1]) if "MRR" in stage_gate else 0
+        if gate_mrr > 0 and mrr_int < gate_mrr:
+            stage_warning = (
+                f"⚠️ STAGE GATE: {stage_gate} — You're at {mrr} MRR. "
+                f"This action is premature. The risk is real: {profile['rule']}"
+            )
+
+    # Red flag check
+    red_flag_alerts = []
+    if description:
+        desc_lower = description.lower()
+        for rf in profile.get("red_flags", []):
+            # Check for keyword overlap
+            rf_words = set(rf.lower().split())
+            desc_words = set(desc_lower.split())
+            if len(rf_words & desc_words) >= 2:
+                red_flag_alerts.append(f"⚠️ {rf}")
+
+    # Kill signal with magnitude substituted
+    kill_signal = profile["kill_signal_template"]
+    if magnitude:
+        kill_signal = kill_signal.replace("[magnitude]", magnitude)
+
+    # Impact narrative with magnitude context
+    impacts_with_context = []
+    for impact in profile["primary_impacts"]:
+        entry = {
+            "variable": impact["variable"],
+            "direction": impact["direction"],
+            "note": impact["note"],
+        }
+        if magnitude and any(x in impact["variable"].lower() for x in ["burn", "mrr", "cac", "runway"]):
+            entry["magnitude_context"] = f"Given '{magnitude}', monitor this variable closely."
+        impacts_with_context.append(entry)
+
+    # Reversibility interpretation
+    if reversibility <= 3:
+        rev_interpretation = "Nearly irreversible — high evidence bar required before committing"
+    elif reversibility <= 5:
+        rev_interpretation = "Partially reversible — set a clear kill signal and timeline before starting"
+    elif reversibility <= 7:
+        rev_interpretation = "Moderately reversible — can course-correct within 30-60 days"
+    else:
+        rev_interpretation = "Easily reversible — low risk, just measure and adjust"
+
+    result = {
+        "change": profile["label"],
+        "description": description or change_type,
+        "magnitude": magnitude or "not specified",
+        "stage_mrr": mrr,
+        "reversibility": f"{reversibility}/10 — {rev_interpretation}",
+        "causal_impacts": impacts_with_context,
+        "governing_rule": profile["rule"],
+        "stage_gate_check": stage_warning or "✅ Stage-appropriate",
+        "red_flags": red_flag_alerts or ["None detected from description"],
+        "kill_signal": kill_signal,
+        "next_actions": [
+            f"Run mcp__soloos-core__get_decision_intelligence_brief to get full swarm analysis on this decision",
+            f"Check your business-graph.json to see current metric baselines before simulating impact",
+            f"Set the kill signal in founder-log.md before executing: {kill_signal[:100]}...",
+        ],
+        "system_2_required": reversibility <= 5,
+    }
+
+    return json.dumps(result, indent=2)
+
+
+def _infer_stage_from_mrr(mrr_int: int) -> str:
+    if mrr_int == 0:
+        return "pre-revenue"
+    elif mrr_int < 1000:
+        return "$0-1K MRR"
+    elif mrr_int < 5000:
+        return "$1-5K MRR"
+    elif mrr_int < 20000:
+        return "$5-20K MRR"
+    elif mrr_int < 50000:
+        return "$20-50K MRR"
+    else:
+        return "$50K+ MRR"
+
+
+# ─────────────────────────────────────────────────────────────
 # Entry point
 # ─────────────────────────────────────────────────────────────
 

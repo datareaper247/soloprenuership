@@ -108,6 +108,7 @@ SoloOS does not respond to one trigger at a time. Every major decision launches 
 | Cluster | Fires When | Primary Tool |
 |---------|-----------|--------------|
 | **DECISION SWARM** | "should I", "I'm torn", reversibility ≤5/10 | `get_decision_intelligence_brief` |
+| **SIMULATE SWARM** | "what happens if I [action]", "impact of", "if I raise prices", "if I hire", "if I run ads" | `simulate_business_change` → then `get_decision_intelligence_brief` |
 | **VALIDATION SWARM** | new idea, new feature, new market | `validate_idea_gates` + `score_opportunity` |
 | **GROWTH SWARM** | "how do I grow", stuck MRR | `score_pmf` + `calculate_unit_economics` |
 | **FINANCE SWARM** | pricing, runway, hiring, fundraising | `calculate_runway` + `get_system_state` |
@@ -134,6 +135,9 @@ mcp__soloos-core__run_morning_brief()
 
 # Cross-domain pre-decision snapshot with causal chain
 mcp__soloos-core__get_system_state(decision="[X]", stage_mrr="[Y]")
+
+# Causal simulation: trace downstream effects of a specific proposed change
+mcp__soloos-core__simulate_business_change(change_type="[price_increase|hire_employee|run_paid_ads|pivot|expand_market|new_feature|hire_va|price_decrease]", description="[X]", magnitude="[Y]", stage_mrr="[Z]")
 ```
 
 #### LIVE SIGNAL QUERIES (append to every DECISION + VALIDATION swarm)
@@ -475,18 +479,22 @@ When making market claims, use available MCPs:
 
 ## CONTEXT MEMORY SYSTEM
 
-Four context files. Reference automatically when available:
+Six context files. Reference automatically when available:
 
 ```
 context/
 ├── business-context.md   # MRR, ICP, competition, OKRs, open decisions
 ├── customer-voice.md     # Exact customer quotes — words that convert
 ├── experiment-log.md     # What was tried, what worked, what didn't
-└── decision-log.md       # Strategic decisions, rationale, kill signals
+├── decision-log.md       # Strategic decisions, rationale, kill signals
+├── business-graph.json   # Causal business model: live metrics + causal edges (powers simulate_business_change)
+└── founder-profile.md    # Psychology patterns, cognitive biases, bandwidth baseline, anti-sycophancy notes
 ```
 
 **If context files exist**: Reference them before giving advice. "Based on your context, [X]..."
 **If context files are empty/missing**: Recommend `/onboard` once, then proceed without them.
+**business-graph.json populated**: Call `mcp__soloos-core__simulate_business_change` instead of reasoning abstractly about causal impacts — use the actual metrics from the graph for projections.
+**founder-profile.md populated**: Check known cognitive patterns before any reversibility ≤5/10 decision. Flag if the current decision matches a known bias pattern.
 
 **Assumption conflict detection**: When current conversation contradicts context files → flag it.
 ```
@@ -771,14 +779,17 @@ At the end of any significant session (one containing a decision, new experiment
 
 Without this file: Claude gives generic advice.
 
-With this file (v5):
+With this file (v6):
 - **Goal-oriented**: Every strategic answer evaluated against your declared exit goal via backwards induction
 - **Stage is auto-detected** from conversation (not declared)
 - **Skills READ their files** — every trigger explicitly loads the skill markdown before applying frameworks
 - **MCP tools enforced** — DECIDE, FINANCE, PMF, EXIT, VALIDATE, INTEL MUST call soloos-core MCP tools before answering
-- **Systems Intelligence Layer** — `get_system_state()` + `get_decision_intelligence_brief()` run parallel swarms before any ≤5/10 reversibility decision
-- **Parallel swarm execution** — DECISION/VALIDATION/MORNING/INTEL swarms run 4+ analysis threads simultaneously via ThreadPoolExecutor, not sequentially
+- **Parallel swarm execution** — 7 trigger clusters (DECISION/SIMULATE/VALIDATION/GROWTH/FINANCE/INTEL/MORNING) run 4-5 analysis threads simultaneously via ThreadPoolExecutor
+- **Causal simulation** — `simulate_business_change()` traces downstream effects of any proposed action (price change, hire, paid ads, pivot) through a causal business graph with stage gates and red flag detection
+- **Business Graph** — `context/business-graph.json` holds live metrics + causal edges, powering quantitative impact projections instead of qualitative guesses
+- **Founder Psychology Layer** — `context/founder-profile.md` tracks cognitive patterns, bias zones, and bandwidth baseline — Claude checks this before reversibility ≤5/10 decisions
 - **Opportunity scoring** — `score_opportunity()` scores 5 dimensions + recommends stage-gated paid API stack for the founder's specific goal
+- **API Intelligence Map** — `docs/api-intelligence-map.md` is a curated, stage-gated guide to 40+ paid services across 8 categories
 - **Live signal integration** — Reddit/HN/Jina queries appended to every swarm output for real-time market validation
 - **Session start is mandatory** — 4-step protocol: kill signal check → context check → mission check → assumption drift
 - **Anti-patterns flagged** in one line before every answer
@@ -791,9 +802,9 @@ With this file (v5):
 - **Session synthesis** auto-writes your decisions to a personal knowledge base
 - **Kill signal checks** surface overdue outcome reviews at session start
 - **EKG linking** creates a traversable graph of your company's entire decision history
-- **GitHub Action** runs daily — creates Issues for overdue kill signals automatically
+- **Autonomous morning brief** — scheduled remote agent runs daily at 8am Amsterdam: HN + Reddit signals + kill signal alerts → logged to `logs/morning-brief-YYYY-MM-DD.md`
 
 **Slash commands** (`/validate`, `/morning`, `/decide`, etc.) remain as power-user shortcuts.
 The default is: they fire when needed, without being asked.
 
-**SoloOS v5**: A goal-oriented reasoning engine that connects your decisions, actions, and outcomes into an emergent knowledge graph — turning your daily work into a personal playbook. Skills READ their files. MCP tools are enforced. Session start is mandatory. Kill signals are tracked.
+**SoloOS v6**: A causal intelligence engine that simulates the downstream consequences of your decisions, connects patterns across your decision history, and surfaces the highest-leverage action — before you ask. Skills READ their files. Swarms run in parallel. Causal chains replace intuition. Kill signals are tracked.

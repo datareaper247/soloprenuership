@@ -1,0 +1,117 @@
+{
+  "_schema_version": "1.0",
+  "_description": "SoloOS Business Graph — causal model of your business. Update when metrics change. Claude reads this for causal simulation and decision impact analysis.",
+  "_last_updated": "YYYY-MM-DD",
+  "_instructions": "Fill in the metrics.* fields with real numbers. Set null for unknowns. Claude will simulate causal impacts when you ask 'what happens if I...'",
+
+  "identity": {
+    "business_name": "",
+    "stage": "",
+    "model": "SaaS | Services | Marketplace | Ecommerce | Content",
+    "founded_date": "",
+    "primary_icp": "",
+    "value_prop_one_sentence": "",
+    "exit_goal": "lifestyle | sell | raise | portfolio"
+  },
+
+  "metrics": {
+    "mrr": null,
+    "arr": null,
+    "mom_growth_pct": null,
+    "customer_count": null,
+    "trial_or_free_users": null,
+    "churn_rate_monthly_pct": null,
+    "cac": null,
+    "ltv": null,
+    "ltv_cac_ratio": null,
+    "payback_period_months": null,
+    "arpu_monthly": null,
+    "nrr_pct": null,
+    "d30_retention_pct": null,
+    "pmf_score_pct": null,
+    "nps": null,
+    "burn_rate_monthly": null,
+    "runway_months": null,
+    "cash_on_hand": null
+  },
+
+  "acquisition": {
+    "primary_channel": "",
+    "secondary_channels": [],
+    "cac_by_channel": {},
+    "current_weekly_leads": null,
+    "lead_to_trial_rate_pct": null,
+    "trial_to_paid_rate_pct": null
+  },
+
+  "customers": {
+    "top_customer_mrr_pct": null,
+    "concentration_risk": "low | medium | high | critical",
+    "known_churn_reasons": [],
+    "icp_match_pct": null,
+    "average_contract_length_months": null
+  },
+
+  "product": {
+    "core_differentiator": "",
+    "moat_type": "none | data | workflow | network | brand | regulatory",
+    "ai_substitutable": null,
+    "feature_count": null,
+    "tech_debt_severity": "none | low | medium | high",
+    "shipping_velocity": "high | medium | low | stalled",
+    "main_integration_dependencies": []
+  },
+
+  "founder": {
+    "bandwidth_score_1_10": null,
+    "weekly_revenue_hours": null,
+    "weekly_build_hours": null,
+    "weekly_ops_hours": null,
+    "decision_velocity": "high | medium | low | stalled",
+    "is_bottleneck": null,
+    "documented_processes": null
+  },
+
+  "strategic": {
+    "target_exit_value": null,
+    "target_exit_months": null,
+    "open_decisions": [],
+    "active_experiments": [],
+    "overdue_kill_signals": []
+  },
+
+  "causal_health_flags": {
+    "momentum_trap_risk": false,
+    "customer_concentration_risk": false,
+    "founder_bottleneck": false,
+    "compounding_neglect": false,
+    "false_urgency_pattern": false,
+    "building_before_validation": false,
+    "wrong_stage_tactics": false,
+    "sunk_cost_anchoring": false
+  },
+
+  "_causal_edges": {
+    "_note": "Hard-coded causal relationships. Used by simulate_business_change() to project impacts.",
+    "edges": [
+      {"from": "churn_rate_monthly_pct", "to": "mrr", "direction": "negative", "strength": "high", "lag_days": 30},
+      {"from": "cac", "to": "payback_period_months", "direction": "positive", "strength": "high", "lag_days": 0},
+      {"from": "cac", "to": "burn_rate_monthly", "direction": "positive", "strength": "high", "lag_days": 0},
+      {"from": "ltv", "to": "ltv_cac_ratio", "direction": "positive", "strength": "direct", "lag_days": 0},
+      {"from": "burn_rate_monthly", "to": "runway_months", "direction": "negative", "strength": "direct", "lag_days": 0},
+      {"from": "founder_bandwidth_score_1_10", "to": "shipping_velocity", "direction": "positive", "strength": "high", "lag_days": 14},
+      {"from": "founder_bandwidth_score_1_10", "to": "decision_velocity", "direction": "positive", "strength": "high", "lag_days": 0},
+      {"from": "pmf_score_pct", "to": "d30_retention_pct", "direction": "positive", "strength": "high", "lag_days": 30},
+      {"from": "d30_retention_pct", "to": "nrr_pct", "direction": "positive", "strength": "high", "lag_days": 30},
+      {"from": "top_customer_mrr_pct", "to": "concentration_risk", "direction": "positive", "strength": "high", "lag_days": 0},
+      {"from": "hiring_event", "to": "burn_rate_monthly", "direction": "positive", "strength": "direct", "lag_days": 0},
+      {"from": "hiring_event", "to": "founder_bandwidth_score_1_10", "direction": "positive", "strength": "medium", "lag_days": 90},
+      {"from": "price_increase_pct", "to": "churn_rate_monthly_pct", "direction": "positive", "strength": "low_if_b2b", "lag_days": 30},
+      {"from": "price_increase_pct", "to": "mrr", "direction": "positive", "strength": "high", "lag_days": 30},
+      {"from": "paid_ads_spend", "to": "cac", "direction": "depends_on_pmf", "strength": "high", "lag_days": 14},
+      {"from": "paid_ads_spend", "to": "burn_rate_monthly", "direction": "positive", "strength": "direct", "lag_days": 0},
+      {"from": "tech_debt_severity", "to": "shipping_velocity", "direction": "negative", "strength": "medium", "lag_days": 60},
+      {"from": "moat_type", "to": "churn_rate_monthly_pct", "direction": "negative", "strength": "medium", "lag_days": 90}
+    ]
+  }
+}
