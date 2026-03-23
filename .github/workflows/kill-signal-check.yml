@@ -1,0 +1,262 @@
+name: Kill Signal Check
+
+# Parses knowledge-base/personal/founder-log.md daily for overdue kill signals.
+# Creates a GitHub Issue for each batch of overdue entries.
+# GitHub emails the repo owner automatically — zero external setup required.
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # Daily at 9am UTC
+  workflow_dispatch:      # Also triggerable manually from Actions tab
+
+jobs:
+  check-kill-signals:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Parse founder-log.md for overdue entries
+        id: parse
+        shell: python3 {0}
+        run: |
+          import re
+          import os
+          from datetime import datetime, date
+
+          LOG_PATH = 'knowledge-base/personal/founder-log.md'
+
+          def write_output(key, value):
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  # Use heredoc syntax for multiline values
+                  if '\n' in str(value):
+                      delimiter = 'EOF_SIGNAL'
+                      f.write(f'{key}<<{delimiter}\n{value}\n{delimiter}\n')
+                  else:
+                      f.write(f'{key}={value}\n')
+
+          if not os.path.exists(LOG_PATH):
+              print(f"No founder-log.md found at {LOG_PATH}. Skipping.")
+              write_output('has_overdue', 'false')
+              exit(0)
+
+          with open(LOG_PATH, 'r') as f:
+              content = f.read()
+
+          today = date.today()
+          overdue = []
+
+          # Each FL entry is separated by ---
+          # Entries have the form:
+          # **[[FL-XXX]]**
+          # - **Outcome status:** ⏳ Pending
+          # - **Outcome due:** YYYY-MM-DD
+          # - **Summary:** ...
+
+          # Split on --- boundaries but keep FL blocks together
+          raw_entries = re.split(r'\n---\n', content)
+
+          for entry in raw_entries:
+              if not re.search(r'\[\[FL-\d+\]\]', entry):
+                  continue
+
+              # Must be pending
+              is_pending = (
+                  '⏳ Pending' in entry or
+                  'PENDING OUTCOME' in entry or
+                  'Outcome status:** ⏳' in entry
+              )
+              if not is_pending:
+                  continue
+
+              # Extract FL ID
+              id_match = re.search(r'\[\[FL-(\d+)\]\]', entry)
+              if not id_match:
+                  continue
+              fl_id = f"FL-{id_match.group(1).zfill(3)}"
+
+              # Extract outcome due date
+              due_match = re.search(
+                  r'\*\*Outcome due:\*\*\s*(.+?)(?:\n|$)', entry, re.IGNORECASE
+              )
+              if not due_match:
+                  continue
+              due_str = due_match.group(1).strip()
+
+              # Parse the date (try multiple formats)
+              due_date = None
+              for fmt in ['%Y-%m-%d', '%B %d, %Y', '%b %d, %Y', '%m/%d/%Y', '%d %B %Y']:
+                  try:
+                      due_date = datetime.strptime(due_str, fmt).date()
+                      break
+                  except ValueError:
+                      continue
+
+              if due_date is None:
+                  print(f"WARNING: Could not parse date '{due_str}' for {fl_id}")
+                  continue
+
+              if due_date >= today:
+                  continue  # Not overdue yet
+
+              days_overdue = (today - due_date).days
+
+              # Extract summary
+              summary_match = re.search(r'\*\*Summary:\*\*\s*(.+?)(?:\n|$)', entry, re.IGNORECASE)
+              summary = summary_match.group(1).strip() if summary_match else 'No summary recorded'
+
+              # Extract type
+              type_match = re.search(r'\*\*Type:\*\*\s*(.+?)(?:\n|$)', entry, re.IGNORECASE)
+              entry_type = type_match.group(1).strip() if type_match else 'Unknown'
+
+              # Extract kill signal
+              ks_match = re.search(r'\*\*Kill signal set:\*\*\s*(.+?)(?:\n|$)', entry, re.IGNORECASE)
+              kill_signal = ks_match.group(1).strip() if ks_match else 'Not specified'
+
+              overdue.append({
+                  'id': fl_id,
+                  'due': due_str,
+                  'days_overdue': days_overdue,
+                  'summary': summary,
+                  'type': entry_type,
+                  'kill_signal': kill_signal,
+              })
+
+          if not overdue:
+              print("No overdue kill signals found. All clear.")
+              write_output('has_overdue', 'false')
+              exit(0)
+
+          print(f"Found {len(overdue)} overdue kill signal(s):")
+          for item in overdue:
+              print(f"  [[{item['id']}]] — {item['days_overdue']} days overdue — {item['summary'][:60]}")
+
+          # Build the issue body
+          lines = [
+              '## ⏰ Kill Signal Review Due',
+              '',
+              f"**Date**: {today.isoformat()}  ",
+              f"**Overdue entries**: {len(overdue)}",
+              '',
+              '> These experiments or decisions passed their review date without a logged outcome.',
+              '> SoloOS cannot learn from experiments that aren\'t closed. Each unresolved',
+              '> kill signal degrades the quality of future recommendations.',
+              '',
+              '---',
+              '',
+          ]
+
+          for item in overdue:
+              urgency = '🚨' if item['days_overdue'] > 14 else '⚠️'
+              lines += [
+                  f"### {urgency} [[{item['id']}]] — {item['days_overdue']} day(s) overdue",
+                  '',
+                  f"**Type**: {item['type']}  ",
+                  f"**Due**: {item['due']}  ",
+                  f"**Summary**: {item['summary']}  ",
+                  f"**Kill signal was**: {item['kill_signal']}",
+                  '',
+                  '**What actually happened?**',
+                  '_Update `knowledge-base/personal/founder-log.md` with the outcome._',
+                  '',
+                  '```',
+                  '# Change this in founder-log.md:',
+                  '- **Outcome:** [PENDING OUTCOME]',
+                  '- **Outcome status:** ⏳ Pending',
+                  '',
+                  '# To one of:',
+                  '- **Outcome:** [what actually happened — 1-2 sentences]',
+                  '- **Outcome status:** ✅ CONFIRMED  (hypothesis was right)',
+                  '# or:  ❌ INVALIDATED  (kill signal triggered — hypothesis was wrong)',
+                  '# or:  🔄 PARTIAL      (mixed result)',
+                  '```',
+                  '',
+                  '---',
+                  '',
+              ]
+
+          lines += [
+              '## How to resolve',
+              '',
+              '1. Open `knowledge-base/personal/founder-log.md`',
+              '2. Find each `[[FL-XXX]]` entry listed above',
+              '3. Replace `[PENDING OUTCOME]` with what actually happened',
+              '4. Update `Outcome status` to `✅ CONFIRMED`, `❌ INVALIDATED`, or `🔄 PARTIAL`',
+              '5. Close this issue',
+              '',
+              '**Why this matters**: The kill signal system only works if outcomes are recorded.',
+              'Unresolved experiments become dead weight in your decision history.',
+              '',
+              '---',
+              '',
+              '*Automated by [SoloOS Kill Signal Check](/.github/workflows/kill-signal-check.yml)*',
+          ]
+
+          body = '\n'.join(lines)
+
+          # Write body to a temp file (avoids shell escaping issues)
+          with open('/tmp/kill_signal_issue.md', 'w') as f:
+              f.write(body)
+
+          write_output('has_overdue', 'true')
+          write_output('count', str(len(overdue)))
+
+      - name: Check for existing open kill-signal issue (avoid duplicates)
+        id: dedup
+        if: steps.parse.outputs.has_overdue == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Look for an open issue with this title pattern from today
+          TODAY=$(date +%Y-%m-%d)
+          EXISTING=$(gh issue list \
+            --state open \
+            --search "Kill Signal Review" \
+            --json number,title \
+            --jq ".[] | select(.title | contains(\"$TODAY\")) | .number" \
+            | head -1)
+
+          if [ -n "$EXISTING" ]; then
+            echo "Open kill signal issue #$EXISTING already exists for today. Skipping."
+            echo "should_create=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "No duplicate found. Proceeding to create issue."
+            echo "should_create=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Ensure kill-signal label exists
+        if: steps.parse.outputs.has_overdue == 'true' && steps.dedup.outputs.should_create == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh label create "kill-signal" \
+            --description "Overdue kill signal review required" \
+            --color "D93F0B" \
+            2>/dev/null || echo "Label already exists."
+
+      - name: Create GitHub Issue for overdue kill signals
+        if: steps.parse.outputs.has_overdue == 'true' && steps.dedup.outputs.should_create == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          COUNT="${{ steps.parse.outputs.count }}"
+
+          gh issue create \
+            --title "⏰ Kill Signal Review: ${COUNT} overdue (${TODAY})" \
+            --body-file /tmp/kill_signal_issue.md \
+            --label "kill-signal"
+
+          echo "Issue created. GitHub will notify the repository owner by email."
+
+      - name: Summary — no overdue signals
+        if: steps.parse.outputs.has_overdue == 'false'
+        run: |
+          echo "### ✅ Kill Signal Check: All Clear" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "No overdue kill signals in \`knowledge-base/personal/founder-log.md\`." >> "$GITHUB_STEP_SUMMARY"
+          echo "$(date +%Y-%m-%d) — check passed." >> "$GITHUB_STEP_SUMMARY"
