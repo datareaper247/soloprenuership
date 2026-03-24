@@ -137,6 +137,9 @@ SoloOS does not respond to one trigger at a time. Every major decision launches 
 # Full parallel analysis of any decision (4 threads: patterns + founders + kill signals + causal)
 mcp__soloos-core__get_decision_intelligence_brief(decision="[X]", stage_mrr="[Y]")
 
+# 5-seat parallel intelligence council — market + financial + pattern + risk + opportunity
+mcp__soloos-core__council_brief(decision="[X]", stage_mrr="[Y]", context_notes="[Z]")
+
 # Score any opportunity across 5 dimensions + returns stage-gated API recommendations
 mcp__soloos-core__score_opportunity(idea="[X]", competitor_count=N, target_price=N, goal="[Y]")
 
@@ -148,6 +151,12 @@ mcp__soloos-core__get_system_state(decision="[X]", stage_mrr="[Y]")
 
 # Causal simulation: trace downstream effects of a specific proposed change
 mcp__soloos-core__simulate_business_change(change_type="[price_increase|hire_employee|run_paid_ads|pivot|expand_market|new_feature|hire_va|price_decrease]", description="[X]", magnitude="[Y]", stage_mrr="[Z]")
+
+# Live MRR from Stripe — eliminates stale business-context.md numbers
+mcp__soloos-core__get_mrr_live(stripe_api_key="[optional — reads STRIPE_API_KEY env var]")
+
+# Live cash balance & runway from Mercury bank
+mcp__soloos-core__get_runway_live(mercury_api_key="[optional — reads MERCURY_API_KEY env var]", monthly_burn=N, mrr=N)
 ```
 
 #### LIVE SIGNAL QUERIES (append to every DECISION + VALIDATION swarm)
@@ -203,7 +212,7 @@ These bundles fire as a single response unit. Announce which bundle is running:
 → Call `mcp__soloos-core__run_morning_brief` FIRST (runs parallel: kill signals + experiments + stage advice). Then READ `skills/claude-code/morning.md` and surface the brief in the morning format.
 
 **DECIDE fires when**: "should I X or Y", "I can't decide", "I'm torn between", "what would you do"
-→ LAUNCH DECISION SWARM: call `mcp__soloos-core__get_decision_intelligence_brief` (runs patterns + founders + kill signals + causal chain in parallel). Then READ `skills/claude-code/decide.md`. Surface swarm synthesis as ANALOGOUS CASES + causal effects. Apply ANTI-ADVISOR (reversibility ≤5/10) → full framework.
+→ LAUNCH DECISION SWARM: call `mcp__soloos-core__get_decision_intelligence_brief` (runs patterns + founders + kill signals + causal chain in parallel) AND `mcp__soloos-core__council_brief` (5-seat parallel council: market + financial + pattern + risk + opportunity). Then READ `skills/claude-code/decide.md`. Surface swarm synthesis as ANALOGOUS CASES + causal effects. Apply ANTI-ADVISOR (reversibility ≤5/10) → full framework.
 → MARKET INTELLIGENCE (add to every reversibility ≤5/10 DECIDE): Call `mcp__gemini-cli__ask-gemini` with: `"You are a market intelligence specialist. Founder is considering: [DECISION]. Stage: [MRR]. Search for: (1) Reddit posts about this decision type in last 90 days — quote verbatim complaints. (2) Have competitors made similar moves? Evidence? (3) Is demand accelerating or decelerating? (4) What exact words do customers use for this problem? Data only. No strategy recommendations."` Surface as MARKET SIGNAL block before the ANALOGOUS CASE block.
 
 **LAUNCH fires when**: "about to launch", "launching X next week", "ready to ship", "going live"
@@ -835,8 +844,11 @@ With this file (v6):
 - **Kill signal checks** surface overdue outcome reviews at session start
 - **EKG linking** creates a traversable graph of your company's entire decision history
 - **Autonomous morning brief** — scheduled remote agent runs daily at 8am Amsterdam: HN + Reddit signals + kill signal alerts → logged to `logs/morning-brief-YYYY-MM-DD.md`
+- **Council brief** — `council_brief()` runs a 5-seat parallel intelligence council (market signal + financial health + pattern match + risk assessment + opportunity score) on any decision via ThreadPoolExecutor; fires automatically on DECIDE trigger
+- **Live Stripe MRR** — `get_mrr_live()` pulls real-time MRR, customer count, ARPU, and plan breakdown from Stripe; eliminates stale business-context.md guesses. Set STRIPE_API_KEY env var to activate.
+- **Live Mercury runway** — `get_runway_live()` pulls real bank balance + net burn runway from Mercury; fires alert levels (GREEN/YELLOW/ORANGE/RED/CRITICAL). Set MERCURY_API_KEY env var to activate.
 
 **Slash commands** (`/validate`, `/morning`, `/decide`, etc.) remain as power-user shortcuts.
 The default is: they fire when needed, without being asked.
 
-**SoloOS v6**: A causal intelligence engine that simulates the downstream consequences of your decisions, connects patterns across your decision history, and surfaces the highest-leverage action — before you ask. Skills READ their files. Swarms run in parallel. Causal chains replace intuition. Kill signals are tracked.
+**SoloOS v6**: A causal intelligence engine that simulates the downstream consequences of your decisions, connects patterns across your decision history, and surfaces the highest-leverage action — before you ask. Skills READ their files. Swarms run in parallel. Causal chains replace intuition. Kill signals are tracked. Live Stripe + Mercury data replaces guesswork.

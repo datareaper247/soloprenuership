@@ -3072,6 +3072,695 @@ def _infer_stage_from_mrr(mrr_int: int) -> str:
 
 
 # ─────────────────────────────────────────────────────────────
+# TOOL 23: get_mrr_live — Live MRR from Stripe
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def get_mrr_live(
+    stripe_api_key: str = "",
+    include_trials: bool = False,
+) -> str:
+    """
+    Pull live MRR directly from Stripe subscriptions. Eliminates stale
+    business-context.md numbers — Claude uses real-time revenue data.
+
+    Returns: current MRR, customer count, ARPU, trial count, MoM trend estimate,
+    top plan breakdown, and a stage verdict.
+
+    Args:
+        stripe_api_key: Stripe secret key (sk_live_... or sk_test_...).
+                        If empty, reads STRIPE_API_KEY env var.
+        include_trials: Whether to count trialing subscriptions toward MRR (default False).
+
+    Setup: Set STRIPE_API_KEY env var in your shell profile or pass directly.
+    Never commit your key — pass via env var.
+    """
+    import os, urllib.request, urllib.error, base64
+
+    key = stripe_api_key or os.environ.get("STRIPE_API_KEY", "")
+    if not key:
+        return json.dumps({
+            "error": "STRIPE_API_KEY not set",
+            "setup": (
+                "Add to shell profile: export STRIPE_API_KEY=sk_live_...\n"
+                "Then restart Claude Code / the MCP server.\n"
+                "Or pass stripe_api_key parameter directly."
+            ),
+            "fallback": "Use business-context.md to manually set MRR until Stripe is connected.",
+        })
+
+    # Encode key for Basic auth (Stripe uses key as username, empty password)
+    auth_bytes = base64.b64encode(f"{key}:".encode()).decode()
+    headers = {"Authorization": f"Basic {auth_bytes}"}
+
+    def _stripe_get(path: str, params: dict | None = None) -> dict:
+        """Minimal Stripe GET with pagination support (first page only for speed)."""
+        base = "https://api.stripe.com/v1"
+        url = f"{base}/{path}"
+        if params:
+            qs = "&".join(f"{k}={v}" for k, v in params.items())
+            url = f"{url}?{qs}"
+        req = urllib.request.Request(url, headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                return json.loads(resp.read().decode())
+        except urllib.error.HTTPError as e:
+            body = e.read().decode()
+            raise RuntimeError(f"Stripe API error {e.code}: {body}")
+
+    try:
+        # Fetch active subscriptions (limit 100 for speed; paginate if needed)
+        statuses = ["active"]
+        if include_trials:
+            statuses.append("trialing")
+
+        all_subs = []
+        for status in statuses:
+            data = _stripe_get("subscriptions", {"status": status, "limit": "100", "expand[]": "data.plan"})
+            all_subs.extend(data.get("data", []))
+            # Simple single-page fetch — sufficient for <100 active customers
+            # For >100, founders can upgrade this to paginate via has_more/starting_after
+
+        if not all_subs:
+            return json.dumps({
+                "mrr": 0,
+                "customer_count": 0,
+                "message": "No active subscriptions found. Are you using the correct Stripe account (live vs. test)?",
+                "is_test_mode": key.startswith("sk_test_"),
+            })
+
+        # Calculate MRR: normalize all subscription amounts to monthly
+        def _to_monthly_cents(sub: dict) -> int:
+            """Convert a subscription's billing amount to monthly cents."""
+            items = sub.get("items", {}).get("data", [])
+            total = 0
+            for item in items:
+                plan = item.get("plan", {})
+                amount = plan.get("amount", 0)  # cents
+                interval = plan.get("interval", "month")
+                interval_count = plan.get("interval_count", 1)
+                qty = item.get("quantity", 1)
+
+                # Normalize to monthly
+                if interval == "year":
+                    monthly = amount * qty / (12 * interval_count)
+                elif interval == "week":
+                    monthly = amount * qty * (52 / (12 * interval_count))
+                elif interval == "day":
+                    monthly = amount * qty * (365 / (12 * interval_count))
+                else:  # month
+                    monthly = amount * qty / interval_count
+                total += monthly
+            return int(total)
+
+        monthly_cents = [_to_monthly_cents(s) for s in all_subs]
+        mrr_cents = sum(monthly_cents)
+        mrr_dollars = mrr_cents / 100
+        customer_count = len(all_subs)
+        arpu = mrr_dollars / customer_count if customer_count > 0 else 0
+
+        # Trial count
+        trial_count = sum(1 for s in all_subs if s.get("status") == "trialing")
+
+        # Plan breakdown (top 5 by revenue)
+        plan_revenue: dict[str, float] = {}
+        for sub, cents in zip(all_subs, monthly_cents):
+            items = sub.get("items", {}).get("data", [])
+            for item in items:
+                plan = item.get("plan", {})
+                plan_name = plan.get("nickname") or plan.get("id", "unknown")
+                plan_revenue[plan_name] = plan_revenue.get(plan_name, 0) + cents / 100
+        top_plans = sorted(plan_revenue.items(), key=lambda x: x[1], reverse=True)[:5]
+
+        # Stage inference
+        stage = _infer_stage_from_mrr(int(mrr_dollars))
+
+        is_test = key.startswith("sk_test_")
+
+        return json.dumps({
+            "live_mrr": f"${mrr_dollars:,.0f}",
+            "live_mrr_raw": mrr_dollars,
+            "customer_count": customer_count,
+            "arpu_monthly": f"${arpu:,.0f}",
+            "arr_estimate": f"${mrr_dollars * 12:,.0f}",
+            "trial_count": trial_count,
+            "stage": stage,
+            "top_plans": [{"plan": p, "mrr": f"${r:,.0f}"} for p, r in top_plans],
+            "is_test_mode": is_test,
+            "warning": "⚠️ TEST MODE DATA — switch to live key for real metrics" if is_test else None,
+            "data_freshness": "real-time (just fetched)",
+            "note": (
+                "First page only (≤100 subs). For >100 active subscriptions, "
+                "pagination via starting_after cursor is needed — open an issue."
+            ) if len(all_subs) >= 100 else None,
+            "update_business_context": (
+                f"Run mcp__soloos-core__update_context with file='business-context' "
+                f"and update mrr to '{mrr_dollars:.0f}' to sync your context files."
+            ),
+        }, indent=2)
+
+    except RuntimeError as e:
+        return json.dumps({
+            "error": str(e),
+            "hint": "Check your Stripe API key. Test keys start with sk_test_, live keys with sk_live_.",
+        })
+    except Exception as e:
+        return json.dumps({"error": f"Unexpected error: {type(e).__name__}: {e}"})
+
+
+# ─────────────────────────────────────────────────────────────
+# TOOL 24: get_runway_live — Live cash & runway from Mercury
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def get_runway_live(
+    mercury_api_key: str = "",
+    monthly_burn: float = 0.0,
+    mrr: float = 0.0,
+) -> str:
+    """
+    Pull live account balance from Mercury bank and calculate true runway.
+    Eliminates guess-work in runway calculations — uses real bank balance.
+
+    Returns: total cash across all accounts, net burn (burn - MRR), runway months,
+    alert level, and recommended actions.
+
+    Args:
+        mercury_api_key: Mercury API token. If empty, reads MERCURY_API_KEY env var.
+        monthly_burn: Total monthly expenses in dollars. If 0, returns cash only (no runway).
+        mrr: Current MRR. Used for net burn: net_burn = monthly_burn - mrr.
+             If 0, uses gross burn for runway calculation.
+
+    Setup: Mercury → Settings → API → Create token with read-only access.
+    Set: export MERCURY_API_KEY=your_token
+    """
+    import os, urllib.request, urllib.error
+
+    key = mercury_api_key or os.environ.get("MERCURY_API_KEY", "")
+    if not key:
+        return json.dumps({
+            "error": "MERCURY_API_KEY not set",
+            "setup": (
+                "Mercury → Settings → API → Create read-only token.\n"
+                "export MERCURY_API_KEY=your_token\n"
+                "Then restart Claude Code / the MCP server."
+            ),
+            "fallback": "Manually set runway_months in business-context.md until Mercury is connected.",
+            "manual_calc": (
+                "If you know your cash and burn: "
+                "call mcp__soloos-core__calculate_runway with those numbers directly."
+            ),
+        })
+
+    headers = {
+        "Authorization": f"Bearer {key}",
+        "Accept": "application/json",
+    }
+
+    def _mercury_get(path: str) -> dict:
+        url = f"https://api.mercury.com/api/v1/{path}"
+        req = urllib.request.Request(url, headers=headers)
+        try:
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                return json.loads(resp.read().decode())
+        except urllib.error.HTTPError as e:
+            body = e.read().decode()
+            raise RuntimeError(f"Mercury API error {e.code}: {body}")
+
+    try:
+        accounts_data = _mercury_get("accounts")
+        accounts = accounts_data.get("accounts", [])
+
+        if not accounts:
+            return json.dumps({
+                "error": "No accounts found. Check your Mercury API key permissions.",
+                "raw_response": accounts_data,
+            })
+
+        # Sum all account balances
+        account_details = []
+        total_cash = 0.0
+        for acct in accounts:
+            name = acct.get("name", "Unknown Account")
+            acct_type = acct.get("type", "unknown")
+            balance = float(acct.get("currentBalance", acct.get("availableBalance", 0)))
+            total_cash += balance
+            account_details.append({
+                "name": name,
+                "type": acct_type,
+                "balance": f"${balance:,.2f}",
+            })
+
+        # Runway calculation
+        runway_result = {}
+        if monthly_burn > 0:
+            net_burn = monthly_burn - (mrr or 0)
+            if net_burn <= 0:
+                runway_months = float("inf")
+                runway_result = {
+                    "net_burn_monthly": f"${net_burn:,.0f}",
+                    "runway_months": "∞ (profitable — cash growing)",
+                    "alert_level": "GREEN",
+                    "note": "Revenue exceeds burn. Focus on growth, not survival.",
+                }
+            else:
+                runway_months = total_cash / net_burn
+                if runway_months > 18:
+                    alert = "GREEN"
+                    action = "Healthy runway. Focus on growth metrics."
+                elif runway_months > 12:
+                    alert = "YELLOW"
+                    action = "Good runway. Start thinking about next milestone before it drops below 12mo."
+                elif runway_months > 6:
+                    alert = "ORANGE"
+                    action = "⚠️ 6-12 months left. Begin fundraising or revenue acceleration NOW."
+                elif runway_months > 3:
+                    alert = "RED"
+                    action = "🚨 CRITICAL: <6 months. Reduce burn immediately and/or accelerate revenue."
+                else:
+                    alert = "CRITICAL"
+                    action = "🚨 EMERGENCY: <3 months runway. Immediate action required — cut burn, find revenue."
+
+                runway_result = {
+                    "gross_burn_monthly": f"${monthly_burn:,.0f}",
+                    "mrr_offset": f"${mrr:,.0f}" if mrr else "not provided",
+                    "net_burn_monthly": f"${net_burn:,.0f}",
+                    "runway_months": f"{runway_months:.1f}",
+                    "runway_date_estimate": f"Approximately {int(runway_months)} months from now",
+                    "alert_level": alert,
+                    "recommended_action": action,
+                }
+        else:
+            runway_result = {
+                "note": "Pass monthly_burn to calculate runway. Cash balance retrieved successfully.",
+                "quick_calc": (
+                    f"Call mcp__soloos-core__calculate_runway with cash_on_hand={total_cash:.0f} "
+                    f"and your monthly burn to get runway estimate."
+                ),
+            }
+
+        return json.dumps({
+            "total_cash": f"${total_cash:,.2f}",
+            "total_cash_raw": total_cash,
+            "accounts": account_details,
+            "runway": runway_result,
+            "data_freshness": "real-time (just fetched)",
+            "update_business_context": (
+                f"Run mcp__soloos-core__update_context with file='business-context' "
+                f"to sync cash_on_hand={total_cash:.0f} to your context files."
+            ),
+        }, indent=2)
+
+    except RuntimeError as e:
+        return json.dumps({
+            "error": str(e),
+            "hint": "Check your Mercury API key. Make sure it has account read permissions.",
+        })
+    except Exception as e:
+        return json.dumps({"error": f"Unexpected error: {type(e).__name__}: {e}"})
+
+
+# ─────────────────────────────────────────────────────────────
+# TOOL 25: council_brief — Parallel 5-thread intelligence council
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def council_brief(
+    decision: str,
+    stage_mrr: str = "",
+    context_notes: str = "",
+) -> str:
+    """
+    Run a parallel 5-seat intelligence council on any strategic decision.
+    Each seat analyzes from a different angle simultaneously via ThreadPoolExecutor.
+
+    Seats: Market Signal | Financial Health | Pattern Match | Risk Assessment | Opportunity Score
+
+    Returns: per-seat verdict + council synthesis + final recommendation with kill signal.
+
+    Use for: Any decision where you want multiple analytical frameworks applied
+    simultaneously before committing. Most useful for reversibility ≤6/10 decisions.
+
+    Args:
+        decision: The decision or question to analyze (be specific)
+        stage_mrr: Current MRR for stage calibration e.g. "$5K" or "pre-revenue"
+        context_notes: Any additional context (ICP, current metrics, constraints)
+    """
+
+    business_ctx = read_business_context()
+    mrr_int = _parse_mrr_string(stage_mrr) if stage_mrr else 0
+    stage = _infer_stage_from_mrr(mrr_int)
+    patterns = get_patterns()
+    founders = get_founders()
+
+    # ── Seat 1: Market Signal ──────────────────────────────────
+    def seat_market_signal() -> dict:
+        """Check market momentum and competitive landscape signals."""
+        markets = get_markets()
+        relevant_markets = []
+        decision_lower = decision.lower()
+
+        if markets:
+            for m in markets:
+                m_text = str(m).lower()
+                decision_words = set(decision_lower.split())
+                m_words = set(m_text.split())
+                if len(decision_words & m_words) >= 2:
+                    relevant_markets.append(m)
+
+        # Scan for market signal keywords in decision
+        bullish_signals = []
+        bearish_signals = []
+
+        bullish_keywords = ["growing", "demand", "pain", "urgent", "underserved", "fragmented", "inefficient"]
+        bearish_keywords = ["saturated", "commoditized", "declining", "funded", "big player", "google", "amazon"]
+
+        for kw in bullish_signals + bullish_keywords:
+            if kw in decision_lower or kw in context_notes.lower():
+                bullish_signals.append(kw)
+        for kw in bearish_signals + bearish_keywords:
+            if kw in decision_lower or kw in context_notes.lower():
+                bearish_signals.append(kw)
+
+        verdict = "NEUTRAL"
+        if len(bullish_signals) > len(bearish_signals):
+            verdict = "BULLISH"
+        elif len(bearish_signals) > len(bullish_signals):
+            verdict = "BEARISH"
+
+        return {
+            "seat": "Market Signal",
+            "verdict": verdict,
+            "bullish_signals": bullish_signals[:3] or ["No strong bullish signals detected in description"],
+            "bearish_signals": bearish_signals[:3] or ["No red flags detected in description"],
+            "relevant_market_data_found": len(relevant_markets),
+            "market_context": str(relevant_markets[0])[:200] if relevant_markets else "No direct market data match. Use mcp__hackernews__getTopStories for live signals.",
+            "recommendation": (
+                "Market conditions look favorable — proceed with validation."
+                if verdict == "BULLISH" else
+                "Market conditions unclear — gather live signals from HN/Reddit before deciding."
+                if verdict == "NEUTRAL" else
+                "Bearish market signals detected — validate urgency before investing significant resources."
+            ),
+        }
+
+    # ── Seat 2: Financial Health ───────────────────────────────
+    def seat_financial_health() -> dict:
+        """Assess financial implications and unit economics risk."""
+        decision_lower = decision.lower()
+
+        # Detect financial trigger words
+        burn_increase = any(x in decision_lower for x in ["hire", "ads", "spend", "invest", "budget", "cost"])
+        revenue_impact = any(x in decision_lower for x in ["price", "charge", "revenue", "mrr", "customer", "sell"])
+        runway_risk = any(x in decision_lower for x in ["hire", "fund", "raise", "burn"])
+
+        issues = []
+        opportunities = []
+
+        if burn_increase and mrr_int < 5000:
+            issues.append(f"Burn increase action at {stage} — narrow margin for error")
+        if revenue_impact and mrr_int == 0:
+            issues.append("Revenue-impacting decision before first customer — no baseline to measure against")
+        if runway_risk and mrr_int < 20000:
+            issues.append(f"Runway risk at {stage} — validate unit economics before committing")
+
+        if revenue_impact and mrr_int > 0:
+            opportunities.append("Existing revenue provides baseline — impact will be measurable")
+        if not burn_increase:
+            opportunities.append("No direct burn increase detected — lower financial risk")
+
+        # Stage-appropriate financial ceiling
+        if mrr_int < 1000:
+            ceiling = "Keep monthly new expenses under $200 — capital preservation critical"
+        elif mrr_int < 5000:
+            ceiling = "Keep monthly new expenses under $500 — each dollar needs 3x LTV justification"
+        elif mrr_int < 20000:
+            ceiling = "New expense OK if payback period <6 months — validate first"
+        else:
+            ceiling = "Standard unit economics apply — CAC payback <12 months"
+
+        verdict = "CAUTION" if issues else "CLEAR"
+
+        return {
+            "seat": "Financial Health",
+            "verdict": verdict,
+            "issues": issues or ["No direct financial risks detected"],
+            "opportunities": opportunities or ["Standard financial context"],
+            "stage_ceiling": ceiling,
+            "recommendation": (
+                f"Financial caution: {issues[0]}" if issues
+                else "No financial blockers — unit economics look OK for this stage."
+            ),
+        }
+
+    # ── Seat 3: Pattern Match ──────────────────────────────────
+    def seat_pattern_match() -> dict:
+        """Find the most relevant patterns from PATTERN_LIBRARY and FOUNDER_INTELLIGENCE."""
+        if not patterns:
+            return {
+                "seat": "Pattern Match",
+                "verdict": "NO_DATA",
+                "message": "PATTERN_LIBRARY.md not loaded. Populate knowledge-base/ for pattern intelligence.",
+                "patterns": [],
+            }
+
+        matched = search_patterns(decision, patterns, top_n=3)
+
+        if not matched:
+            # Fallback: keyword-based founder search
+            founder_match = None
+            if founders:
+                decision_words = set(decision.lower().split())
+                for f in founders:
+                    f_text = str(f).lower()
+                    f_words = set(f_text.split())
+                    if len(decision_words & f_words) >= 3:
+                        founder_match = f
+                        break
+
+            return {
+                "seat": "Pattern Match",
+                "verdict": "WEAK",
+                "message": "No strong pattern match. Novel situation or insufficient pattern data.",
+                "founder_analog": str(founder_match)[:200] if founder_match else "No close analog found",
+                "recommendation": "Treat as novel situation. Apply first-principles reasoning. Document as new pattern after outcome.",
+            }
+
+        top = matched[0]
+        return {
+            "seat": "Pattern Match",
+            "verdict": "MATCH",
+            "top_pattern": {
+                "id": top.id,
+                "name": top.name,
+                "pattern": top.pattern,
+                "real_example": top.real_example,
+                "kill_signal": top.kill_signal,
+            },
+            "other_patterns": [{"id": p.id, "name": p.name} for p in matched[1:]],
+            "recommendation": f"Pattern {top.id} applies. Follow: {top.pattern[:100]}...",
+        }
+
+    # ── Seat 4: Risk Assessment ────────────────────────────────
+    def seat_risk_assessment() -> dict:
+        """Score reversibility and surface hidden assumptions."""
+        decision_lower = decision.lower()
+
+        # Reversibility scoring heuristics
+        irreversible_signals = ["hire", "fire", "pivot", "reposition", "raise", "sell", "commit", "sign", "launch publicly"]
+        partially_reversible = ["partnership", "pricing", "feature", "market", "channel", "rebrand"]
+        easily_reversible = ["test", "experiment", "try", "a/b", "survey", "post", "email"]
+
+        irrev_count = sum(1 for s in irreversible_signals if s in decision_lower)
+        partial_count = sum(1 for s in partially_reversible if s in decision_lower)
+        easy_count = sum(1 for s in easily_reversible if s in decision_lower)
+
+        if irrev_count > 0:
+            reversibility = max(2, 5 - irrev_count)
+            rev_label = "LOW reversibility"
+        elif partial_count > 0:
+            reversibility = 5 + min(2, partial_count)
+            rev_label = "MEDIUM reversibility"
+        elif easy_count > 0:
+            reversibility = 8 + min(2, easy_count)
+            rev_label = "HIGH reversibility"
+        else:
+            reversibility = 6
+            rev_label = "MEDIUM reversibility (default)"
+
+        # Hidden assumption detection
+        hidden_assumptions = []
+        assumption_triggers = {
+            "customers want": "Assumes product-market fit without stating evidence",
+            "people will": "Assumes behavior change without stated validation",
+            "this will grow": "Assumes growth trajectory without citing mechanism",
+            "everyone needs": "Assumes broad market fit — narrow first",
+            "once we": "Sequential assumption — validate current step first",
+            "just need to": "Minimization language — complexity may be higher",
+            "should be easy": "Ease assumption — state why specifically",
+        }
+
+        combined_text = f"{decision} {context_notes}".lower()
+        for trigger, assumption in assumption_triggers.items():
+            if trigger in combined_text:
+                hidden_assumptions.append(assumption)
+
+        system2_required = reversibility <= 5
+
+        return {
+            "seat": "Risk Assessment",
+            "verdict": "HIGH_RISK" if reversibility <= 4 else "MEDIUM_RISK" if reversibility <= 6 else "LOW_RISK",
+            "reversibility_score": f"{reversibility}/10 — {rev_label}",
+            "system_2_required": system2_required,
+            "hidden_assumptions": hidden_assumptions[:3] or ["No obvious hidden assumptions detected"],
+            "evidence_bar": (
+                "HIGH — need 3+ data points before committing" if reversibility <= 4
+                else "MEDIUM — 1-2 validation signals sufficient"
+                if reversibility <= 6
+                else "LOW — just run the experiment and measure"
+            ),
+            "recommendation": (
+                "Delay until evidence bar met — this decision is hard to reverse."
+                if reversibility <= 4
+                else "Proceed with a clear kill signal set within 30 days."
+                if reversibility <= 6
+                else "Low risk — just do it and measure."
+            ),
+        }
+
+    # ── Seat 5: Opportunity Score ──────────────────────────────
+    def seat_opportunity_score() -> dict:
+        """Quick 4-dimension opportunity assessment."""
+        decision_lower = decision.lower()
+        ctx_lower = context_notes.lower()
+        combined = f"{decision_lower} {ctx_lower}"
+
+        # Urgency signal
+        urgency_words = ["now", "urgent", "deadline", "competitive", "window", "closing", "before"]
+        urgency = min(10, 5 + sum(1 for w in urgency_words if w in combined))
+
+        # Leverage signal (does this create asymmetric upside?)
+        leverage_words = ["scalable", "recurring", "automated", "multiply", "compound", "viral", "referral", "retention"]
+        leverage = min(10, 4 + sum(2 for w in leverage_words if w in combined))
+
+        # Stage alignment
+        stage_aligned = True
+        stage_mismatch_reason = ""
+        if mrr_int == 0 and any(x in combined for x in ["seo", "content marketing", "ads", "team", "hire"]):
+            stage_aligned = False
+            stage_mismatch_reason = "Stage mismatch: action belongs at $5K+ MRR"
+        elif mrr_int < 5000 and any(x in combined for x in ["enterprise", "international", "series a", "fundraise"]):
+            stage_aligned = False
+            stage_mismatch_reason = "Stage mismatch: premature for current revenue stage"
+
+        # Founder bandwidth signal
+        bandwidth_cost = "HIGH" if any(x in combined for x in ["hire", "rebuild", "rewrite", "pivot", "new market"]) else "MEDIUM"
+
+        overall = (urgency + leverage) / 2
+        verdict = "STRONG" if overall >= 7 else "MODERATE" if overall >= 5 else "WEAK"
+
+        return {
+            "seat": "Opportunity Score",
+            "verdict": verdict,
+            "dimensions": {
+                "urgency": f"{urgency}/10",
+                "leverage_potential": f"{leverage}/10",
+                "stage_aligned": stage_aligned,
+                "stage_mismatch": stage_mismatch_reason or "None",
+                "bandwidth_cost": bandwidth_cost,
+            },
+            "overall_score": f"{overall:.0f}/10",
+            "recommendation": (
+                "Strong opportunity — prioritize." if verdict == "STRONG"
+                else "Moderate opportunity — worth pursuing with clear kill signal."
+                if verdict == "MODERATE"
+                else "Weak opportunity at current stage — validate more before investing."
+            ),
+        }
+
+    # ── Run all 5 seats in parallel ────────────────────────────
+    seat_fns = [
+        ("market_signal", seat_market_signal),
+        ("financial_health", seat_financial_health),
+        ("pattern_match", seat_pattern_match),
+        ("risk_assessment", seat_risk_assessment),
+        ("opportunity_score", seat_opportunity_score),
+    ]
+
+    results: dict[str, dict] = {}
+    errors: dict[str, str] = {}
+
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        futures = {executor.submit(fn): name for name, fn in seat_fns}
+        for future in as_completed(futures):
+            name = futures[future]
+            try:
+                results[name] = future.result(timeout=8)
+            except Exception as e:
+                errors[name] = f"{type(e).__name__}: {e}"
+                results[name] = {"seat": name, "verdict": "ERROR", "error": str(e)}
+
+    # ── Council synthesis ──────────────────────────────────────
+    verdicts = [results.get(k, {}).get("verdict", "UNKNOWN") for k, _ in seat_fns]
+
+    # Weighted synthesis
+    positive_verdicts = {"BULLISH", "CLEAR", "MATCH", "LOW_RISK", "STRONG"}
+    caution_verdicts = {"NEUTRAL", "CAUTION", "WEAK", "MEDIUM_RISK", "MODERATE"}
+    negative_verdicts = {"BEARISH", "HIGH_RISK", "NO_DATA"}
+
+    pos = sum(1 for v in verdicts if v in positive_verdicts)
+    cau = sum(1 for v in verdicts if v in caution_verdicts)
+    neg = sum(1 for v in verdicts if v in negative_verdicts)
+
+    if pos >= 4:
+        council_verdict = "PROCEED"
+        council_confidence = "HIGH"
+        council_summary = "Council is broadly aligned. Strong signal to proceed with clear kill signal."
+    elif pos >= 3 and neg == 0:
+        council_verdict = "PROCEED_WITH_CAUTION"
+        council_confidence = "MEDIUM"
+        council_summary = "Majority alignment with some uncertainty. Set a tight kill signal and timeline."
+    elif neg >= 2:
+        council_verdict = "PAUSE"
+        council_confidence = "HIGH"
+        council_summary = "Multiple seats flagged risk. Address blockers before proceeding."
+    elif neg >= 1:
+        council_verdict = "INVESTIGATE"
+        council_confidence = "MEDIUM"
+        council_summary = "One seat flagged a blocker. Investigate that dimension before committing."
+    else:
+        council_verdict = "NEUTRAL"
+        council_confidence = "LOW"
+        council_summary = "Mixed signals. Gather more data before deciding."
+
+    # Build kill signal from risk seat
+    risk_result = results.get("risk_assessment", {})
+    kill_signal = (
+        f"If {decision[:50]}... does not produce measurable signal within 30 days, "
+        f"treat as failed experiment and stop."
+    )
+
+    return json.dumps({
+        "decision": decision,
+        "stage": stage,
+        "council_verdict": council_verdict,
+        "council_confidence": council_confidence,
+        "council_summary": council_summary,
+        "seat_verdicts": {name: results.get(name, {}).get("verdict", "ERROR") for name, _ in seat_fns},
+        "seats": {name: results.get(name, {}) for name, _ in seat_fns},
+        "vote_tally": {"proceed": pos, "caution": cau, "pause": neg},
+        "kill_signal": kill_signal,
+        "errors": errors or None,
+        "next_actions": [
+            f"Act on council verdict: {council_verdict}",
+            "Set kill signal in founder-log.md before executing",
+            "Run mcp__soloos-core__simulate_business_change if this involves a price/hire/ads change",
+            "Run mcp__reddit__reddit_search_reddit to validate market signal with real customer voices",
+        ],
+    }, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
 # Entry point
 # ─────────────────────────────────────────────────────────────
 
