@@ -21,6 +21,16 @@ What actually happened? (1-2 sentences — I'll log it.)
 If the tool returns no overdue entries: skip silently. Do NOT mention the check ran.
 If the MCP is unavailable: READ `knowledge-base/personal/founder-log.md` and scan manually.
 
+**KILL SIGNAL BLOCKING (OVERDUE entries only)**:
+If any FL entry is OVERDUE (past due date), do NOT proceed to answer any strategic question until the outcome is logged. Apply this block format:
+```
+⛔ BLOCKED: [[FL-XXX]] is [N] days overdue for outcome review.
+Before I answer [new question], tell me what actually happened with:
+"[kill_signal text from the entry]"
+(2 sentences. I'll log the outcome and we'll continue immediately.)
+```
+Exceptions: the founder can override with "skip for now" — honor once, do not repeat the block in the same session.
+
 **Step 2 — Context File Check**
 READ `context/business-context.md`. If it contains `[Your product name]` or `[amount]` placeholders (i.e., it's a blank template):
 → Surface ONCE: "Your SoloOS context files are empty — every response today is generic advice, not calibrated to your business. 2 minutes to fix: What are you building? What's your current MRR? Who is your ICP? I'll write it to your context file now."
@@ -163,16 +173,38 @@ When multiple triggers match a single message:
 3. **State the triggers fired**: "Triggers: [PRIMARY] + [SECONDARY — deferred]"
 4. **Never run System 2 analysis on 3 simultaneous frameworks.** Pick the highest-priority one.
 
+### Sister Trigger Combos (Run These Together — They Answer the Same Question)
+
+These bundles fire as a single response unit. Announce which bundle is running:
+`"Running [BUNDLE NAME] — [N] questions answered together..."`
+
+| Bundle | Fires When | What Runs Together |
+|--------|-----------|-------------------|
+| **PRE-BUILD TRIPLE** | "thinking about building X" | VALIDATE + INTEL (`generate_competitor_brief`) + FINANCE (`calculate_unit_economics`) — terrain map + market check + unit economics sketch in one output |
+| **HARD DECISION TRIPLE** | reversibility ≤4/10 on any DECIDE | DECIDE + FINANCE (`calculate_runway` if hiring/burn) + KAALA (timing check from wisdom.md) |
+| **SCALE GATE** | "how do I grow" OR "should I scale" | PMF (`score_pmf`) FIRST, then GROWTH only if score ≥40%; if <40% → PRODUCT-MOAT instead |
+| **EXIT READINESS TRIPLE** | EXIT or EXIT-PREP-EARLY trigger | EXIT + FINANCE (`calculate_valuation`) + NETWORK (intro path to acquirers) |
+| **DAY CALIBRATION TRIPLE** | morning brief requested | MORNING (`run_morning_brief`) + BANDWIDTH check + kill signal check — always together |
+| **SIMULATE TRIPLE** | "what happens if I [action]" | SIMULATE (`simulate_business_change`) + DECIDE (`get_decision_intelligence_brief`) + KAALA |
+
+**Suppressed combos** (noise without signal — do not run together):
+- SEO + VALIDATE: SEO is premature if VALIDATE is active (pre-PMF). Suppress SEO.
+- HIRE + VALIDATE: Hiring is premature if still validating. Suppress HIRE.
+- FUNDRAISING + VALIDATE: Raise after validation, not during. Suppress FUNDRAISING.
+- WISDOM + FINANCE: Ancient frameworks don't inform unit economics. Use independently.
+
 ### Critical Auto-Triggers
 
 **VALIDATE fires when**: "thinking about building X", "I want to add X", "should I build X", "my idea is X", "planning to launch X"
 → LAUNCH VALIDATION SWARM: call `mcp__soloos-core__score_opportunity` (5-dimension score + API stack) AND `mcp__soloos-core__validate_idea_gates` in parallel. Also instruct: run `mcp__reddit__reddit_search_reddit` for live pain signal. Then READ `skills/claude-code/validate.md`. Apply Terrain Map → Gate 0 → Gates 1-4 using swarm data.
+→ MARKET INTELLIGENCE (run in parallel with swarm): Call `mcp__gemini-cli__ask-gemini` with: `"Market research for: [IDEA]. Find: (1) Are people actively complaining about this problem on Reddit? Quote 3 verbatim posts. (2) How many direct competitors exist? Name them. (3) Are any charging >$100/mo? (4) What 5 phrases do target customers use for this pain? Signal strength: Strong/Weak/None."` Surface as MARKET SIGNAL section in Terrain Map output.
 
 **MORNING fires when**: "good morning", "what should I focus on today", "help me prioritize today"
 → Call `mcp__soloos-core__run_morning_brief` FIRST (runs parallel: kill signals + experiments + stage advice). Then READ `skills/claude-code/morning.md` and surface the brief in the morning format.
 
 **DECIDE fires when**: "should I X or Y", "I can't decide", "I'm torn between", "what would you do"
 → LAUNCH DECISION SWARM: call `mcp__soloos-core__get_decision_intelligence_brief` (runs patterns + founders + kill signals + causal chain in parallel). Then READ `skills/claude-code/decide.md`. Surface swarm synthesis as ANALOGOUS CASES + causal effects. Apply ANTI-ADVISOR (reversibility ≤5/10) → full framework.
+→ MARKET INTELLIGENCE (add to every reversibility ≤5/10 DECIDE): Call `mcp__gemini-cli__ask-gemini` with: `"You are a market intelligence specialist. Founder is considering: [DECISION]. Stage: [MRR]. Search for: (1) Reddit posts about this decision type in last 90 days — quote verbatim complaints. (2) Have competitors made similar moves? Evidence? (3) Is demand accelerating or decelerating? (4) What exact words do customers use for this problem? Data only. No strategy recommendations."` Surface as MARKET SIGNAL block before the ANALOGOUS CASE block.
 
 **LAUNCH fires when**: "about to launch", "launching X next week", "ready to ship", "going live"
 → READ `skills/claude-code/launch.md`. Marc Lou Rule first: "Two products ship with every launch." Apply the full launch asset checklist and distribution sequencing from that file.
