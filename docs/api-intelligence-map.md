@@ -188,6 +188,131 @@
 
 ---
 
+### 🚨 Error Tracking & Observability
+
+*When to unlock*: When you have users hitting real bugs in production.
+
+| Tool | Free Tier | Cost | MRR Gate | Unlocks | Best For |
+|---|---|---|---|---|---|
+| **Sentry** | ✅ 5K errors/mo | $26–80/mo | $1K | Error tracking, stack traces, release tracking, performance monitoring | Default error tracking — install on day 1 |
+| **Better Uptime** | ✅ Limited | $20–80/mo | $1K | Uptime monitoring, incident pages, on-call rotation, SMS alerts | Uptime monitoring when customers start depending on you |
+| **Axiom** | ✅ 500GB ingest | $25+/mo | $5K | Log management, real-time querying, dashboards, alerts | Replacing DataDog at 1/10th the cost |
+| **Datadog** | ❌ | $15–23/host/mo | $20K | Full-stack APM, infrastructure monitoring, log management, tracing | Enterprise observability — only when you're at scale |
+| **Highlight.io** | ✅ 500 sessions/mo | $50+/mo | $5K | Session replay + error tracking in one — open source alternative | When you want PostHog-style replay + Sentry-style errors bundled |
+
+**Decision guide**:
+- Day 1: Sentry free. Non-negotiable if you have any backend code.
+- $1K+: Better Uptime ($20/mo) when a downtime event would cause churn.
+- $5K+: Axiom if logs are getting complex. Avoid DataDog until $20K+ MRR.
+
+---
+
+### 🚩 Feature Flags & Experimentation
+
+*When to unlock*: When you want to ship to a % of users without full rollout risk.
+
+| Tool | Free Tier | Cost | MRR Gate | Unlocks | Best For |
+|---|---|---|---|---|---|
+| **PostHog Feature Flags** | ✅ Included | Free (bundled) | $0 | Feature flags, A/B tests, experiments, rollout controls — already in PostHog | Use PostHog's built-in flags before paying for a dedicated tool |
+| **Unleash** | ✅ Self-hosted | $80/mo cloud | $5K | Full feature flag platform, gradual rollouts, environment-based targeting | Open source, self-hostable — no vendor lock |
+| **LaunchDarkly** | ❌ | $10/seat/mo | $20K | Enterprise feature management, targeting rules, experimentation | Enterprise sales requiring compliance around feature releases |
+| **Split.io** | ❌ | $25+/mo | $10K | Feature flags + A/B test attribution, impact analytics | When you need impact measurement tied to revenue metrics |
+
+**Decision guide**:
+- $0–5K: PostHog flags. Free, already installed.
+- $5K+: Unleash cloud if you want dedicated flag management with audit trail.
+- $20K+: LaunchDarkly only when enterprise customers require compliance around feature flags.
+
+---
+
+### 🤖 AI/LLM Infrastructure
+
+*When to unlock*: When you're building AI features and need more than direct API calls.
+
+| Tool | Free Tier | Cost | MRR Gate | Unlocks | Best For |
+|---|---|---|---|---|---|
+| **Anthropic Claude API** | ❌ | Usage-based (~$3/1M tokens Sonnet) | $0 | Claude 3.5/4 family, function calling, streaming, vision | Best reasoning — default for complex tasks, code gen, analysis |
+| **OpenAI API** | ❌ | Usage-based (~$2.50/1M tokens GPT-4o) | $0 | GPT-4o, DALL-E, Whisper, embeddings, fine-tuning | Widest ecosystem, best embeddings, whisper for audio |
+| **Helicone** | ✅ 10K req/mo | $20+/mo | $1K | LLM observability — costs, latency, cache, user tracking across models | Monitor what you're actually spending on AI per user/feature |
+| **LangSmith** | ✅ Limited | $39/mo | $5K | LangChain tracing, prompt management, eval runs, regression testing | When prompt debugging is eating dev time |
+| **Replicate** | ❌ | Usage-based | $1K | Run open-source models (Llama, Mistral, Flux) via API | Swap costly proprietary models for open-source at 1/10th cost |
+| **Together AI** | ❌ | Usage-based | $1K | Fast inference for open models — Llama, Mixtral, cheaper than OpenAI | When OpenAI costs are becoming a line item |
+| **Pinecone** | ✅ 1 index free | $70+/mo | $5K | Vector database for RAG, semantic search, embeddings | RAG architecture — recommended when context window isn't enough |
+| **Supabase pgvector** | ✅ Free tier | Free (with Supabase) | $0 | Vector search inside Postgres — eliminates Pinecone for <1M vectors | Use pgvector before paying for Pinecone |
+
+**Decision guide**:
+- Day 1: Claude API + OpenAI (pick one as primary, keep the other for fallback).
+- $1K+: Helicone to track AI costs per user before they surprise you.
+- $5K+: Replicate/Together AI when AI inference costs are >5% of your MRR.
+- Only add Pinecone when pgvector hits performance ceiling (>1M vectors or complex filters).
+
+---
+
+### 🔧 Developer Infrastructure
+
+*When to unlock*: These are force multipliers — worth it early if you're solo.*
+
+| Tool | Free Tier | Cost | MRR Gate | Unlocks | Best For |
+|---|---|---|---|---|---|
+| **Vercel** | ✅ Hobby plan | $20/mo Pro | $0 | Edge deployment, preview URLs, serverless functions, analytics | Default hosting for Next.js — deploy in 30s |
+| **Supabase** | ✅ 500MB DB | $25/mo Pro | $0 | Postgres + auth + storage + realtime + edge functions in one | Replace 5 services with 1 — the solo founder stack |
+| **Railway** | ✅ $5 credit | $20+/mo | $0 | Simple container deployment, databases, cron jobs | Backend services that don't fit serverless |
+| **PlanetScale** | ❌ (hobby killed) | $29/mo | $1K | Managed MySQL, branching, non-blocking schema changes | When Supabase Postgres isn't enough for MySQL needs |
+| **Cloudflare** | ✅ Free plan | $20/mo Pro | $0 | CDN, DDoS protection, DNS, WAF, Workers (serverless edge) | Every production app should be behind Cloudflare — free tier is excellent |
+| **Doppler** | ✅ Free team | $12/mo | $0 | Secrets management, env var sync across environments | Replace .env files with proper secrets management |
+| **GitHub Actions** | ✅ 2K min/mo | $4/mo | $0 | CI/CD pipelines, automated testing, deployment automation | Default CI/CD — free tier is sufficient for most solo founders |
+
+**Decision guide**:
+- Day 1: Vercel + Supabase + Cloudflare. All have strong free tiers.
+- $1K+: Doppler ($12/mo) when managing env vars across staging/prod is painful.
+- $5K+: Railway for workloads that don't fit serverless.
+
+---
+
+## Waste Audit: Tools You're Probably Overpaying For
+
+> Run this audit quarterly. Most founders have $200–600/mo in tools delivering <$50/mo value.
+
+| Tool You're Paying For | Cheaper / Free Alternative | Typical Savings |
+|---|---|---|
+| DataDog | Axiom + Better Uptime | $300-500/mo |
+| Segment | PostHog (has source SDK + event routing) | $100-500/mo |
+| Amplitude | PostHog or Mixpanel free tier | $61-500/mo |
+| Intercom | Crisp ($25/mo) before $5K MRR | $50-350/mo |
+| HubSpot paid | HubSpot free CRM | $45-200/mo |
+| Zapier | n8n self-hosted | $20-500/mo |
+| Pinecone | Supabase pgvector | $70+/mo |
+| Notion AI | Claude API + standard Notion | $16/mo/seat |
+| Multiple video tools | Cloudflare Stream ($5/1K min) | $50-200/mo |
+| Heroku | Railway or Render | $7-50/mo |
+
+**Waste audit rule**: If you haven't logged into a tool in 30 days, it's waste. If you can't name the metric it moves, it's waste. Cancel it now.
+
+---
+
+## Opinionated Defaults (What SoloOS Recommends by Default)
+
+These are not optional — they're the minimum viable infrastructure stack. Install them before your first user.
+
+### Non-Negotiable Stack ($0/mo total)
+1. **PostHog** — analytics + session replay + feature flags. One install, replaces 3 tools.
+2. **Sentry** — error tracking. Install before first user or you'll debug blind.
+3. **Mercury** — business banking. No fees, API access, built-in runway dashboard.
+4. **Cloudflare** — CDN + DNS + DDoS. Every production domain should go through Cloudflare.
+5. **Resend** — transactional email. Better deliverability than AWS SES, cleaner API than SendGrid.
+
+### When You Hit $1K MRR (add these)
+6. **Crisp** (free tier) — live chat + inbox. Customers will contact you.
+7. **Better Uptime** ($20/mo) — uptime monitoring. Downtime becomes a churn event at this stage.
+8. **Helicone** — if you're using any LLM API. Know your per-user AI cost before it surprises you.
+
+### When You Hit $5K MRR (add these)
+9. **Apollo.io paid** ($49/mo) — if outbound is working. Not before.
+10. **Stripe Sigma** — free with Stripe. SQL on your revenue data. Turns billing into analytics.
+11. **Ramp** (free) — expense management. One view of all business spend.
+
+---
+
 ## API Stack Decision Matrix
 
 Use this when deciding which APIs to pay for:
@@ -233,15 +358,25 @@ Use this when deciding which APIs to pay for:
 
 ## MCP Tool Integration
 
-These tools have data accessible via SoloOS MCP:
+SoloOS tools that interact with this map:
 
 ```
-mcp__soloos-core__score_opportunity   → recommends specific API stack for your goal
+mcp__soloos-core__score_opportunity   → recommends specific API stack for your goal + stage
 mcp__soloos-core__calculate_unit_economics → flags when CAC/LTV justify paid tools
 mcp__soloos-core__get_business_context → surfaces what's already in your stack
+mcp__soloos-core__get_mrr_live        → pulls real-time MRR from Stripe (needs STRIPE_API_KEY)
+mcp__soloos-core__get_runway_live     → pulls live cash + runway from Mercury (needs MERCURY_API_KEY)
 ```
 
 Run `mcp__soloos-core__score_opportunity` with your `goal` parameter to get a personalized API recommendation filtered by your current MRR stage.
+
+**Activating live data tools**:
+```bash
+# Add to ~/.zshrc or ~/.bash_profile:
+export STRIPE_API_KEY=sk_live_...   # Stripe dashboard → Developers → API keys
+export MERCURY_API_KEY=...          # Mercury → Settings → API → Create read-only token
+```
+Then restart Claude Code. `get_mrr_live` and `get_runway_live` will use real-time data.
 
 ---
 
