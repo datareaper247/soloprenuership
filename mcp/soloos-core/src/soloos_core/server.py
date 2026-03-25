@@ -37,6 +37,7 @@ from .tools.memory import (
     knowledge_base_stats,
     log_decision,
     check_kill_signals_tool,
+    reject_if_overdue,
 )
 from .tools.decisions import (
     calculate_ev,
@@ -53,6 +54,13 @@ from .tools.financial import (
     get_mercury_runway as _fn_mercury_runway,
 )
 from .tools.agents import run_council_brief, ask_role_agent
+from .tools.intelligence import (
+    run_morning_intelligence,
+    mine_pain_points as _fn_mine_pain,
+    read_url_content,
+    get_competitor_intel,
+)
+from .tools.decisions import _CAUSAL_CHAINS as _DECISION_CAUSAL_CHAINS
 
 
 # ─────────────────────────────────────────────────────────────
@@ -83,6 +91,7 @@ mcp.tool()(update_context)
 mcp.tool()(knowledge_base_stats)
 mcp.tool()(log_decision)
 mcp.tool()(check_kill_signals_tool)
+mcp.tool()(reject_if_overdue)
 
 
 # ─────────────────────────────────────────────────────────────
@@ -336,63 +345,8 @@ def _detect_decision_type(decision: str) -> str:
     return "default"
 
 
-# Causal chain map: decision_type → downstream variables
-_CAUSAL_CHAINS: dict[str, list[dict]] = {
-    "pricing_increase": [
-        {"variable": "CAC", "direction": "↑", "reason": "harder to close, fewer impulse buys"},
-        {"variable": "LTV", "direction": "↑", "reason": "higher revenue per customer"},
-        {"variable": "Churn risk", "direction": "↑", "reason": "existing customers may leave"},
-        {"variable": "Support load", "direction": "↓", "reason": "fewer low-value customers"},
-        {"variable": "Runway", "direction": "↑", "reason": "higher margin per sale"},
-    ],
-    "pricing_decrease": [
-        {"variable": "CAC", "direction": "↓", "reason": "easier to close, lower barrier"},
-        {"variable": "LTV", "direction": "↓", "reason": "less revenue per customer"},
-        {"variable": "Volume", "direction": "↑ (uncertain)", "reason": "price-sensitive segment unlocked"},
-        {"variable": "Support load", "direction": "↑", "reason": "more low-value customers"},
-        {"variable": "Margin", "direction": "↓", "reason": "direct unit economics hit"},
-    ],
-    "hire_first_employee": [
-        {"variable": "Runway", "direction": "↓↓", "reason": "salary is fixed burn"},
-        {"variable": "Capacity", "direction": "↑", "reason": "more hours in the system"},
-        {"variable": "Complexity", "direction": "↑", "reason": "coordination overhead begins"},
-        {"variable": "Founder bandwidth", "direction": "↑", "reason": "delegation frees focus"},
-        {"variable": "Reversibility", "direction": "2/10", "reason": "letting someone go is costly and slow"},
-    ],
-    "launch_new_feature": [
-        {"variable": "Dev time", "direction": "↓", "reason": "time spent on unvalidated surface area"},
-        {"variable": "Retention", "direction": "↑ (if validated)", "reason": "solves real user pain"},
-        {"variable": "Support load", "direction": "↑", "reason": "new surface = new failure modes"},
-        {"variable": "Focus", "direction": "↓", "reason": "breadth vs depth tradeoff"},
-        {"variable": "ICP clarity", "direction": "↓ risk", "reason": "may attract wrong segment"},
-    ],
-    "pivot": [
-        {"variable": "Existing traction", "direction": "↓ or reset", "reason": "current users may not follow"},
-        {"variable": "Stage clock", "direction": "reset", "reason": "back to $0 MRR validation phase"},
-        {"variable": "Morale", "direction": "↓ short-term", "reason": "sunk cost psychology"},
-        {"variable": "Optionality", "direction": "↑", "reason": "new hypothesis, new surface area"},
-        {"variable": "Reversibility", "direction": "3/10", "reason": "hard to un-pivot once announced"},
-    ],
-    "raise_funding": [
-        {"variable": "Runway", "direction": "↑↑", "reason": "direct cash injection"},
-        {"variable": "Dilution", "direction": "↑", "reason": "equity given in exchange"},
-        {"variable": "Growth pressure", "direction": "↑↑", "reason": "investors expect return timeline"},
-        {"variable": "Optionality", "direction": "↓", "reason": "harder to lifestyle/exit cheaply"},
-        {"variable": "Reversibility", "direction": "2/10", "reason": "dilution is permanent"},
-    ],
-    "enter_new_market": [
-        {"variable": "CAC", "direction": "↑", "reason": "unknown distribution in new market"},
-        {"variable": "ICP clarity", "direction": "↓", "reason": "splits focus between segments"},
-        {"variable": "Complexity", "direction": "↑↑", "reason": "new language, regulation, channels"},
-        {"variable": "Upside", "direction": "↑ (long-term)", "reason": "TAM expansion"},
-        {"variable": "Reversibility", "direction": "4/10", "reason": "brand confusion is slow to fix"},
-    ],
-    "default": [
-        {"variable": "Focus", "direction": "?", "reason": "any decision reallocates attention"},
-        {"variable": "Runway", "direction": "?", "reason": "cost or revenue impact unknown"},
-        {"variable": "Reversibility", "direction": "assess", "reason": "score before committing"},
-    ],
-}
+# Causal chain map — single source of truth lives in tools/decisions.py
+_CAUSAL_CHAINS = _DECISION_CAUSAL_CHAINS
 
 
 # ─────────────────────────────────────────────────────────────
@@ -1461,6 +1415,67 @@ def score_opportunity(
             f"Set a 30-day kill signal: {kill_signal}",
         ],
     }, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# INLINE TOOL: get_market_signals
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def get_market_signals(
+    founder_stage: str = "",
+    focus_topics: Optional[list[str]] = None,
+) -> str:
+    """
+    Live market intelligence swarm: HN top stories + Reddit founder signals + pain point mining.
+
+    Fetches real-time data using public APIs (no auth required). Designed to work
+    in both local Claude Code sessions and remote CCR morning triggers.
+
+    Use when: morning brief, competitor context needed, market validation, or
+    "what's happening in [space]?" questions.
+
+    Args:
+        founder_stage: Current MRR for relevance filtering (e.g. "$3K", "pre-revenue")
+        focus_topics: Topics to bias toward (default: saas, startup, founder, indie hacker)
+    """
+    result = run_morning_intelligence(
+        founder_stage=founder_stage,
+        focus_topics=focus_topics,
+    )
+    return json.dumps(result, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# INLINE TOOL: read_web_content
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def read_web_content(
+    url: str,
+    extract_competitor_intel: bool = True,
+    max_chars: int = 3000,
+) -> str:
+    """
+    Extract clean text from any URL using Jina AI reader (free, no auth).
+
+    Best for: competitor pricing pages, blog posts, landing pages, changelog pages.
+    Returns: clean text + pricing signals + feature signals (if competitor_intel=True).
+
+    Args:
+        url: The URL to read (must start with http/https)
+        extract_competitor_intel: Also extract pricing/feature signals (default True)
+        max_chars: Max characters to return from clean text (default 3000)
+    """
+    content = read_url_content(url, max_chars=max_chars)
+    result: dict = {"url": url, "content": content}
+
+    if extract_competitor_intel:
+        intel = get_competitor_intel(url)
+        result["pricing_signals"] = intel.get("pricing_signals", [])
+        result["feature_signals"] = intel.get("feature_signals", [])
+
+    return json.dumps(result, indent=2)
 
 
 # ─────────────────────────────────────────────────────────────
