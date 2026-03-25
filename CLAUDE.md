@@ -182,3 +182,43 @@ KILL SIGNAL: [measurable, 30-day window]
 **V10 System Intelligence**
 - `mcp__soloos-core__analyze_self` — [V10] analyze tool usage patterns, latency, cost + 3 improvement proposals
 - `mcp__soloos-core__manage_cache` — [V10] manage disk cache (stats/clear/clear_llm/clear_http)
+
+---
+
+## MULTI-PROTOCOL ACCESS (V10)
+
+SoloOS V10 is compatible with any AI system. Same 33 tools, multiple transports.
+
+### Quick Start
+
+```bash
+# Claude Code / Cursor / Windsurf (MCP stdio — default)
+soloos-mcp
+
+# REST + MCP gateway (ChatGPT, LangChain, OpenAI SDK, n8n, any HTTP)
+pip install "soloos-core[http]"
+soloos-api --port 8765 --api-key my-secret-key
+
+# Check which transports are running
+curl http://localhost:8765/
+```
+
+### Client Setup
+
+| Client | Config |
+|--------|--------|
+| **Claude Code** | `claude mcp add soloos-core -- soloos-mcp` |
+| **Claude Desktop (stdio)** | Add `soloos-mcp` to `claude_desktop_config.json` |
+| **Claude Desktop (HTTP)** | `"url": "http://localhost:8765/mcp"` in config |
+| **Cursor / Windsurf** | Same as Claude Code |
+| **ChatGPT Actions** | Import `http://localhost:8765/openapi.json` in GPT builder |
+| **n8n** | MCP SSE node → `http://localhost:8765/sse` |
+| **LangChain** | `GET /tools?format=langchain` → StructuredTool |
+| **OpenAI SDK** | `GET /tools?format=openai` → function calling array |
+| **Anthropic SDK** | `GET /tools?format=anthropic` → tools array |
+| **Gemini SDK** | `GET /tools?format=gemini` → function declarations |
+
+### Connection Guide (auto-generated)
+```bash
+curl http://localhost:8765/connect
+```

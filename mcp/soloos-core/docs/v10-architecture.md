@@ -808,7 +808,155 @@ This file is the original monolithic server before the V7 modular refactor. It i
 
 ---
 
-## 13. What We Are NOT Building (and Why)
+## 13. Multi-Protocol Gateway — Universal AI Compatibility
+
+> **Design goal:** The same 33 tools accessible from any AI system, without changing a single line of tool code.
+
+### 13.1 Transport Compatibility Matrix
+
+| Client | Protocol | Entry Point | Auth |
+|--------|----------|-------------|------|
+| Claude Code | MCP stdio | `soloos-mcp` | none (local) |
+| Claude Desktop | MCP stdio | `soloos-mcp` | none (local) |
+| Cursor / Windsurf | MCP stdio | `soloos-mcp` | none (local) |
+| n8n / Zapier | MCP SSE | `GET /sse` | API key header |
+| Claude Desktop (HTTP mode) | MCP Streamable HTTP | `GET /mcp` | API key header |
+| ChatGPT / GPTs | OpenAPI Actions | `GET /openapi.json` | API key header |
+| LangChain / LlamaIndex | REST + JSON Schema | `GET /tools?format=langchain` | API key header |
+| OpenAI SDK | Function calling | `GET /tools?format=openai` | API key header |
+| Anthropic SDK | Tool use | `GET /tools?format=anthropic` | API key header |
+| Gemini SDK | Function declarations | `GET /tools?format=gemini` | API key header |
+| Any HTTP client | REST | `POST /tools/{name}` | API key header |
+
+### 13.2 Gateway Architecture
+
+```
+┌──────────────────────────────────────────────────────────────────┐
+│                     AI CLIENTS                                   │
+│  Claude Code   ChatGPT   LangChain   n8n   OpenAI SDK   Gemini  │
+└────┬────────────────┬──────────┬──────┬──────────┬───────┬──────┘
+     │                │          │      │          │       │
+     │ MCP stdio      │ OpenAPI  │ REST │ MCP SSE  │ REST  │ REST
+     │                │          │      │          │       │
+┌────▼────────────────▼──────────▼──────▼──────────▼───────▼──────┐
+│                   SoloOS Gateway (http_bridge.py)                │
+│                                                                  │
+│  ┌──────────────┐  ┌────────────────┐  ┌──────────────────────┐ │
+│  │  /mcp        │  │  /sse          │  │  REST Endpoints       │ │
+│  │  Streamable  │  │  MCP SSE       │  │  GET  /tools          │ │
+│  │  HTTP (MCP)  │  │  (legacy)      │  │  POST /tools/{name}   │ │
+│  └──────┬───────┘  └───────┬────────┘  │  GET  /schemas        │ │
+│         │                  │           │  GET  /.well-known/   │ │
+│         └──────────────────┘           │       ai-plugin.json  │ │
+│                  │                     │  GET  /connect        │ │
+│                  ▼                     └──────────┬────────────┘ │
+│         ┌────────────────┐                        │              │
+│         │  FastMCP.call_tool()                    │              │
+│         │  (one call, any transport)              │              │
+│         └────────────────┘                        │              │
+│                  │                     ┌──────────▼────────────┐ │
+│                  │                     │  schema_gen.py        │ │
+│                  │                     │  MCP → OpenAI/Ant/    │ │
+│                  │                     │  Gemini/LangChain     │ │
+│                  │                     └───────────────────────┘ │
+└──────────────────┼───────────────────────────────────────────────┘
+                   │
+         ┌─────────▼──────────┐
+         │  FastMCP (server.py)│  ← same 33 tools, unchanged
+         │  + Cache + Observ. │
+         └────────────────────┘
+```
+
+### 13.3 Schema Conversion
+
+MCP `tool.inputSchema` is already JSON Schema. The difference between all major LLMs is only the **wrapper object**. `schema_gen.py` converts once from FastMCP's `Tool` objects:
+
+```python
+# One source schema (MCP Tool object)
+tool.inputSchema = {"type": "object", "properties": {"decision": {"type": "string"}}}
+
+# OpenAI / Groq / Mistral / Together / Ollama:
+{"type": "function", "function": {"name": ..., "parameters": {...}}}
+
+# Anthropic Claude API:
+{"name": ..., "input_schema": {...}}
+
+# Google Gemini:
+{"name": ..., "parameters": {...}}
+
+# LangChain / LlamaIndex:
+{"name": ..., "description": ..., "parameters": {"title": ..., ...}}
+```
+
+### 13.4 ChatGPT Actions Setup
+
+SoloOS exposes a ChatGPT Actions manifest at `/.well-known/ai-plugin.json`. To connect to ChatGPT:
+
+1. Run `soloos-api --host 0.0.0.0 --port 8765`
+2. Expose via ngrok: `ngrok http 8765`
+3. In ChatGPT: Create GPT → Actions → Import from URL → `https://<ngrok-url>/openapi.json`
+4. Set API key header: `X-SoloOS-API-Key: <your-key>`
+
+### 13.5 Claude Desktop HTTP Mode
+
+```json
+// ~/Library/Application Support/Claude/claude_desktop_config.json
+{
+  "mcpServers": {
+    "soloos-http": {
+      "url": "http://localhost:8765/mcp"
+    }
+  }
+}
+```
+
+### 13.6 Running the Gateway
+
+```bash
+# Install with HTTP extras
+pip install "soloos-core[http]"
+
+# Start REST/MCP gateway (all protocols on one port)
+soloos-api --port 8765 --api-key my-secret-key
+
+# Or: only stdio MCP (Claude Code, Cursor, Windsurf)
+soloos-mcp
+
+# Or: SSE transport (n8n)
+soloos-mcp --transport sse
+
+# Check connection guide for your AI client
+curl http://localhost:8765/connect
+```
+
+### 13.7 LangChain Integration Example
+
+```python
+import httpx
+
+# Fetch tools in LangChain format
+resp = httpx.get("http://localhost:8765/tools?format=langchain",
+                 headers={"X-SoloOS-API-Key": "my-key"})
+tools_schema = resp.json()["tools"]
+
+# Call a tool
+result = httpx.post("http://localhost:8765/tools/council_brief",
+                    json={"decision": "Should I raise prices?", "stage_mrr": "$8K MRR"},
+                    headers={"X-SoloOS-API-Key": "my-key"})
+print(result.json()["result"])
+```
+
+### 13.8 Design Principles
+
+1. **One codebase, zero duplication.** All tool logic lives in `tools/*.py`. The gateway is a thin transport adapter.
+2. **Schema generation is stateless.** `schema_gen.py` is a pure function — input MCP Tool, output dict. No side effects.
+3. **MCP-first, REST-secondary.** stdio MCP is the primary interface. REST exists for clients that can't speak MCP.
+4. **Fail-open auth.** If `SOLOOS_API_KEY` is unset, all requests are allowed (local dev). Set it when exposed publicly.
+5. **ChatGPT Actions are first-class.** The `/.well-known/ai-plugin.json` manifest is always present, even without ChatGPT configuration.
+
+---
+
+## 14. What We Are NOT Building (and Why)
 
 **Vector search (ChromaDB, FAISS):** For 40-150 patterns, vector search adds ~200ms latency and a deployment dependency for marginal quality gain over tag-indexed lookup. Revisit at 500+ KB items.
 

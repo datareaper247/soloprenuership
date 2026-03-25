@@ -1618,5 +1618,34 @@ def manage_cache(
 # Entry point
 # ─────────────────────────────────────────────────────────────
 
+def main() -> None:
+    """
+    CLI entry point for soloos-mcp script.
+
+    Supports --transport flag to select MCP transport:
+      stdio             — default, for Claude Code / Cursor / Windsurf (MCP clients)
+      sse               — legacy SSE transport (n8n, older clients)
+      streamable-http   — new MCP Streamable HTTP spec
+
+    For REST/OpenAPI access (ChatGPT, LangChain, any HTTP client):
+      Use 'soloos-api' command instead (gateway/http_bridge.py)
+    """
+    import sys
+
+    transport = "stdio"
+    for i, arg in enumerate(sys.argv[1:]):
+        if arg in ("--transport", "-t") and i + 1 < len(sys.argv) - 1:
+            transport = sys.argv[i + 2]
+        elif arg.startswith("--transport="):
+            transport = arg.split("=", 1)[1]
+
+    valid = {"stdio", "sse", "streamable-http"}
+    if transport not in valid:
+        print(f"Unknown transport '{transport}'. Valid: {', '.join(valid)}", file=sys.stderr)
+        sys.exit(1)
+
+    mcp.run(transport=transport)
+
+
 if __name__ == "__main__":
-    mcp.run()
+    main()

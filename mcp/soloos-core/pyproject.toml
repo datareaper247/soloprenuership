@@ -25,6 +25,12 @@ dependencies = [
     "python-frontmatter>=1.1.0",
 ]
 
+[project.optional-dependencies]
+http = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+]
+
 [dependency-groups]
 dev = [
     "pytest>=8.0.0",
@@ -34,6 +40,7 @@ dev = [
 
 [project.scripts]
 soloos-mcp = "soloos_core.server:main"
+soloos-api = "soloos_core.gateway.http_bridge:main"
 soloos = "soloos_core.cli:main"
 
 [tool.hatch.build.targets.wheel]
