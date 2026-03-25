@@ -576,3 +576,84 @@ def check_kill_signals_tool() -> str:
 
     except Exception as e:
         return json.dumps({"status": "error", "error": str(e), "alerts": []}, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# Tool: reject_if_overdue
+# ─────────────────────────────────────────────────────────────
+
+def reject_if_overdue(
+    proposed_action: str,
+    override: bool = False,
+) -> str:
+    """
+    Gate check — returns BLOCKED if any kill signal is OVERDUE, PROCEED otherwise.
+
+    Call BEFORE any strategic recommendation when reversibility ≤5/10.
+    The caller (Claude) should respect the BLOCKED status and surface overdue
+    entries to the founder before proceeding.
+
+    This is the enforcement layer for the kill signal blocking rule. Unlike
+    check_kill_signals_tool (which lists alerts), this returns a binary verdict
+    that is easy to act on.
+
+    Args:
+        proposed_action: What the founder wants to do (for context in BLOCKED message)
+        override: Set True if founder explicitly says "skip for now" (honor once per session)
+
+    Returns:
+        {"verdict": "PROCEED" | "BLOCKED", "overdue_count": N, "block_message": "..."}
+    """
+    try:
+        from ..log_manager import load_log, check_kill_signals
+
+        if override:
+            return json.dumps({
+                "verdict": "PROCEED",
+                "override_active": True,
+                "message": "Override accepted. Kill signal review deferred. Proceeding with: " + proposed_action,
+            }, indent=2)
+
+        entries = load_log()
+        alerts = check_kill_signals(entries)
+        overdue = [a for a in alerts if a.urgency == "OVERDUE"]
+
+        if not overdue:
+            return json.dumps({
+                "verdict": "PROCEED",
+                "overdue_count": 0,
+                "message": f"No overdue kill signals. Proceeding with: {proposed_action}",
+            }, indent=2)
+
+        block_lines = []
+        for a in overdue:
+            block_lines.append(
+                f"[[{a.entry_id}]] — {abs(a.days_remaining)} days overdue\n"
+                f"  Decision: {a.summary}\n"
+                f"  Kill signal was: \"{a.kill_signal}\"\n"
+                f"  → What actually happened? (2 sentences)"
+            )
+
+        return json.dumps({
+            "verdict": "BLOCKED",
+            "overdue_count": len(overdue),
+            "proposed_action": proposed_action,
+            "block_message": (
+                f"⛔ BLOCKED: {len(overdue)} kill signal(s) are OVERDUE before you proceed with '{proposed_action}'.\n\n"
+                + "\n\n".join(block_lines)
+                + "\n\nLog outcomes above, then retry. Or pass override=True to skip once."
+            ),
+            "overdue_entries": [
+                {"id": a.entry_id, "summary": a.summary,
+                 "kill_signal": a.kill_signal, "days_overdue": abs(a.days_remaining)}
+                for a in overdue
+            ],
+        }, indent=2)
+
+    except Exception as e:
+        # Fail open — don't block if enforcement itself errors
+        return json.dumps({
+            "verdict": "PROCEED",
+            "error": str(e),
+            "note": "Kill signal check failed — proceeding without gate.",
+        }, indent=2)
