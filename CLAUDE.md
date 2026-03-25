@@ -1,4 +1,4 @@
-# SoloOS v7 — Founder Intelligence Co-pilot
+# SoloOS V10 — Founder Intelligence Co-pilot
 
 > Thin protocol. Real tools. Every recommendation ends with a kill signal.
 > Skills fire from routing table. No state tracking required.
@@ -134,7 +134,7 @@ KILL SIGNAL: [measurable, 30-day window]
 
 ---
 
-## MCP TOOLS (31 available)
+## MCP TOOLS (33 available)
 
 **Context + Memory**
 - `mcp__soloos-core__check_kill_signals_tool` — OVERDUE kill signal check (session start)
@@ -178,3 +178,7 @@ KILL SIGNAL: [measurable, 30-day window]
 - `mcp__soloos-core__reject_if_overdue` — gate check: BLOCKED if kill signals overdue, PROCEED otherwise
 - `mcp__soloos-core__ask_agent` — specialist agent (CEO, CFO, CMO, CTO, etc.)
 - `mcp__soloos-core__enrich_prospect` — prospect research + outreach templates
+
+**V10 System Intelligence**
+- `mcp__soloos-core__analyze_self` — [V10] analyze tool usage patterns, latency, cost + 3 improvement proposals
+- `mcp__soloos-core__manage_cache` — [V10] manage disk cache (stats/clear/clear_llm/clear_http)

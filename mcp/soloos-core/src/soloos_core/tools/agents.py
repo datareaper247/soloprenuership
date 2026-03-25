@@ -19,6 +19,8 @@ from concurrent.futures import ThreadPoolExecutor, as_completed, TimeoutError as
 from pathlib import Path
 from typing import Optional
 
+from ..data.cache import cached, TTL_LLM
+
 
 # ─────────────────────────────────────────────────────────────
 # Agent system prompt loader
@@ -175,6 +177,10 @@ _COUNCIL_SEATS = [
 # Council brief — 5 real AI agents in parallel
 # ─────────────────────────────────────────────────────────────
 
+@cached(
+    TTL_LLM,
+    key_fn=lambda decision, stage_mrr="", **_: f"council:{hash(decision[:200])}:{stage_mrr}"
+)
 def run_council_brief(
     decision: str,
     stage_mrr: str = "",

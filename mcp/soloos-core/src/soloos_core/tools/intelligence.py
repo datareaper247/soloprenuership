@@ -21,6 +21,8 @@ import urllib.error
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Optional
 
+from ..data.cache import cached, TTL_HTTP
+
 
 # ─────────────────────────────────────────────────────────────
 # Shared HTTP helper
@@ -69,6 +71,7 @@ _FOUNDER_KEYWORDS = {
 }
 
 
+@cached(TTL_HTTP)
 def get_hn_top_stories(limit: int = 30, filter_founder_relevant: bool = True) -> list[dict]:
     """
     Fetch top Hacker News stories. Filters for startup/founder relevance.
@@ -139,6 +142,7 @@ def get_hn_top_stories(limit: int = 30, filter_founder_relevant: bool = True) ->
     return results[:limit]
 
 
+@cached(TTL_HTTP)
 def search_hn(query: str, limit: int = 10) -> list[dict]:
     """
     Search HN via Algolia HN Search API (official, free, no auth).
@@ -170,6 +174,7 @@ def search_hn(query: str, limit: int = 10) -> list[dict]:
 # Reddit — Public JSON API (no auth for basic reads)
 # ─────────────────────────────────────────────────────────────
 
+@cached(TTL_HTTP)
 def get_subreddit_posts(
     subreddit: str,
     sort: str = "hot",
@@ -218,6 +223,7 @@ def get_subreddit_posts(
     return posts
 
 
+@cached(TTL_HTTP)
 def search_reddit(query: str, subreddit: str = "", limit: int = 15) -> list[dict]:
     """
     Search Reddit using public search API.
@@ -343,6 +349,7 @@ def mine_pain_points(subreddit: str, topic: str, limit: int = 20) -> dict:
 # Jina AI Reader — Free web content extraction
 # ─────────────────────────────────────────────────────────────
 
+@cached(TTL_HTTP * 4)  # 4h for URL content — pages don't change minute-to-minute
 def read_url_content(url: str, max_chars: int = 3000) -> str:
     """
     Extract clean text from any URL using Jina AI reader.
@@ -368,6 +375,7 @@ def read_url_content(url: str, max_chars: int = 3000) -> str:
     return content[:max_chars].strip()
 
 
+@cached(TTL_HTTP * 4)  # 4h for competitor intel
 def get_competitor_intel(competitor_url: str) -> dict:
     """
     Extract pricing, features, and positioning from a competitor page.

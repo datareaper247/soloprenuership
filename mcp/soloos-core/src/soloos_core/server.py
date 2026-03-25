@@ -1,9 +1,9 @@
 """
-SoloOS Core MCP Server — v7 Modular Architecture
+SoloOS Core MCP Server — V10 Architecture
 
-Thin router (~700 lines). Business logic lives in tools/*.py.
-This file: imports, registers, wrappers, and 9 inline tools
-that have dependencies on kb_loader/log_manager not yet extracted.
+Thin router. Business logic lives in tools/*.py, data/*.py, core/*.py.
+V10 additions: multi-tier caching, structlog observability, analyze_self,
+Pydantic-validated data layer, tag-indexed KB.
 
 Run: python -m soloos_core.server
 Or:  uvx --from soloos-core soloos-mcp
@@ -61,6 +61,10 @@ from .tools.intelligence import (
     get_competitor_intel,
 )
 from .tools.decisions import _CAUSAL_CHAINS as _DECISION_CAUSAL_CHAINS
+
+# ── V10: Data + Observability layers ────────────────────────────
+from .data.cache import get_cache_stats, clear_all_cache, clear_cache_by_prefix
+from .core.observability import get_log_stats
 
 
 # ─────────────────────────────────────────────────────────────
@@ -1476,6 +1480,138 @@ def read_web_content(
         result["feature_signals"] = intel.get("feature_signals", [])
 
     return json.dumps(result, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# V10: System intelligence tools
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def analyze_self(period_days: int = 30) -> str:
+    """
+    [V10] Analyze SoloOS's own usage patterns and identify improvements.
+
+    Reads tool_calls.jsonl for the last N days and returns:
+    - Slowest tools (highest avg latency)
+    - Most-called tools (usage patterns)
+    - Highest error rate tools
+    - Cache hit rates
+    - Top 3 improvement proposals
+
+    This is the Reflexive Metasystem capability — the system analyzes itself.
+
+    Args:
+        period_days: Lookback window in days (default 30)
+    """
+    stats = get_log_stats(period_hours=period_days * 24)
+    tools_data = stats.get("tools", {})
+
+    if not tools_data:
+        return json.dumps({
+            "status": "no_data",
+            "message": f"No tool call logs found in the last {period_days} days.",
+            "log_location": "~/.soloos/logs/tool_calls.jsonl",
+            "hint": "Logs are written automatically after you use tools. Come back in a session or two.",
+        }, indent=2)
+
+    # Rank by different dimensions
+    by_calls = sorted(tools_data.items(), key=lambda x: -x[1]["calls"])
+    by_latency = sorted(tools_data.items(), key=lambda x: -x[1]["avg_ms"])
+    by_errors = sorted(tools_data.items(), key=lambda x: -x[1]["error_rate"])
+
+    # Generate improvement proposals
+    proposals = []
+
+    slowest = by_latency[0] if by_latency else None
+    if slowest and slowest[1]["avg_ms"] > 5000:
+        proposals.append({
+            "priority": "HIGH",
+            "issue": f"'{slowest[0]}' averages {slowest[1]['avg_ms']}ms — above 5s threshold",
+            "proposal": "Add TTL_LLM cache (24h) to reduce repeated calls. Check if council seats can be parallelized further.",
+        })
+
+    highest_error = by_errors[0] if by_errors else None
+    if highest_error and highest_error[1]["error_rate"] > 0.1:
+        proposals.append({
+            "priority": "HIGH",
+            "issue": f"'{highest_error[0]}' has {highest_error[1]['error_rate']*100:.0f}% error rate",
+            "proposal": "Add explicit error handling + fallback. Check if external API changed.",
+        })
+
+    most_called = by_calls[0] if by_calls else None
+    if most_called and most_called[1]["calls"] > 10:
+        proposals.append({
+            "priority": "MEDIUM",
+            "issue": f"'{most_called[0]}' called {most_called[1]['calls']}x in {period_days} days — high frequency",
+            "proposal": "Ensure this tool has caching. Consider if it can return richer context to reduce follow-up calls.",
+        })
+
+    if not proposals:
+        proposals.append({
+            "priority": "LOW",
+            "issue": "No critical performance issues detected",
+            "proposal": "System is performing within normal parameters. Focus on new capabilities.",
+        })
+
+    result = {
+        "period_days": period_days,
+        "total_calls": stats.get("total_calls", 0),
+        "total_errors": stats.get("total_errors", 0),
+        "top_tools_by_usage": [
+            {"tool": name, **data} for name, data in by_calls[:5]
+        ],
+        "slowest_tools": [
+            {"tool": name, **data} for name, data in by_latency[:3]
+        ],
+        "improvement_proposals": proposals,
+        "cache_stats": get_cache_stats(),
+    }
+    return json.dumps(result, indent=2)
+
+
+@mcp.tool()
+def manage_cache(
+    action: str,
+    prefix: str = "",
+) -> str:
+    """
+    [V10] Manage the SoloOS disk cache.
+
+    Actions:
+      stats    — Show cache size, item count, hit rates
+      clear    — Clear entire cache (forces fresh data on next calls)
+      clear_llm — Clear only LLM/council responses (force fresh council)
+      clear_http — Clear only HTTP/market signal responses (force fresh signals)
+
+    Args:
+        action: "stats" | "clear" | "clear_llm" | "clear_http"
+        prefix: For custom prefix clearing (advanced use)
+    """
+    if action == "stats":
+        return json.dumps(get_cache_stats(), indent=2)
+
+    elif action == "clear":
+        count = clear_all_cache()
+        return json.dumps({"cleared": count, "message": f"Cleared {count} cache entries."}, indent=2)
+
+    elif action == "clear_llm":
+        # LLM keys contain function names from agents.py
+        count = clear_cache_by_prefix("soloos_core.tools.agents")
+        return json.dumps({"cleared": count, "message": f"Cleared {count} LLM cache entries. Next council call will be fresh."}, indent=2)
+
+    elif action == "clear_http":
+        count = clear_cache_by_prefix("soloos_core.tools.intelligence")
+        return json.dumps({"cleared": count, "message": f"Cleared {count} HTTP cache entries. Next market signal call will be fresh."}, indent=2)
+
+    elif action == "clear_prefix" and prefix:
+        count = clear_cache_by_prefix(prefix)
+        return json.dumps({"cleared": count, "prefix": prefix}, indent=2)
+
+    else:
+        return json.dumps({
+            "error": f"Unknown action '{action}'",
+            "valid_actions": ["stats", "clear", "clear_llm", "clear_http"],
+        }, indent=2)
 
 
 # ─────────────────────────────────────────────────────────────
