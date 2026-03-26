@@ -1,0 +1,95 @@
+version: "3.8"
+
+# SoloOS V10 — GrowthBook Self-Hosted A/B Testing
+#
+# Usage:
+#   docker compose -f docker/growthbook-compose.yml up -d
+#
+# After starting:
+#   1. Open http://localhost:3100
+#   2. Create your account (first user becomes admin)
+#   3. Go to Settings > API Keys > Create SDK Connection Key
+#   4. Set env vars:
+#        GROWTHBOOK_API_HOST=http://localhost:3100
+#        GROWTHBOOK_CLIENT_KEY=sdk-<your-key>
+#
+# Stop:
+#   docker compose -f docker/growthbook-compose.yml down
+#
+# Stop + remove data:
+#   docker compose -f docker/growthbook-compose.yml down -v
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: soloos-growthbook-mongo
+    restart: unless-stopped
+    volumes:
+      - growthbook_mongo_data:/data/db
+    networks:
+      - growthbook_net
+    # Not exposed to host — internal only
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.runCommand({ ping: 1 })"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  growthbook:
+    image: growthbook/growthbook:latest
+    container_name: soloos-growthbook
+    restart: unless-stopped
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - "3100:3100"   # Main app + API
+      - "3101:3101"   # SDK endpoints (feature flags, experiment assignments)
+    environment:
+      # MongoDB connection (internal Docker network)
+      MONGODB_URI: "mongodb://mongo:27017/growthbook"
+
+      # Application URL — change this if deploying remotely
+      APP_ORIGIN: "http://localhost:3100"
+
+      # API URL — used for SDK client connections
+      API_HOST: "http://localhost:3100"
+
+      # Email (optional — enables invites + password reset)
+      # EMAIL_ENABLED: "true"
+      # EMAIL_SMTP_HOST: "smtp.example.com"
+      # EMAIL_SMTP_PORT: "587"
+      # EMAIL_SMTP_USER: ""
+      # EMAIL_SMTP_PASSWORD: ""
+      # EMAIL_FROM: "noreply@example.com"
+
+      # Secret for JWT signing — change this in production
+      JWT_SECRET: "${GROWTHBOOK_JWT_SECRET:-soloos-dev-secret-change-in-prod}"
+
+      # Disable telemetry (optional)
+      DISABLE_TELEMETRY: "true"
+
+      # Node environment
+      NODE_ENV: "production"
+    volumes:
+      - growthbook_uploads:/usr/local/src/app/packages/back-end/uploads
+    networks:
+      - growthbook_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3100/api/v1/healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  growthbook_mongo_data:
+    name: soloos_growthbook_mongo
+  growthbook_uploads:
+    name: soloos_growthbook_uploads
+
+networks:
+  growthbook_net:
+    name: soloos_growthbook
+    driver: bridge

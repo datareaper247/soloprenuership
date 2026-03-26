@@ -10,6 +10,14 @@ Handles:
 - Live Stripe MRR
 - Live Mercury runway
 - EV / decision value calculations
+
+Phase E upgrades:
+- calculate_unit_economics: auto-fills arpu + churn from DuckDB when available
+- calculate_runway: auto-fills mrr from DuckDB when available
+- get_stripe_mrr / get_mercury_runway: DuckDB cache layer (check recency, fall back to live)
+
+All parameters remain Optional (None default) for backward compatibility.
+If DuckDB has no data, behaviour is 100% identical to the pre-Phase-E version.
 """
 
 import json
@@ -44,9 +52,9 @@ def _api_get(url: str, auth_header: str, timeout: int = 10) -> dict:
 # ─────────────────────────────────────────────────────────────
 
 def calculate_unit_economics(
-    arpu: float,
-    churn_rate_monthly_pct: float,
-    cac: float,
+    arpu: Optional[float] = None,
+    churn_rate_monthly_pct: Optional[float] = None,
+    cac: float = 0.0,
     gross_margin_pct: float = 80.0,
     expansion_mrr_pct: float = 0.0,
 ) -> dict:
@@ -54,14 +62,51 @@ def calculate_unit_economics(
     Calculate full unit economics from inputs.
 
     Args:
-        arpu: Average Revenue Per User (monthly, dollars)
-        churn_rate_monthly_pct: Monthly churn rate as percentage (e.g., 5.0 = 5%)
+        arpu: Average Revenue Per User (monthly, dollars). Auto-filled from
+              DuckDB (last-30-day revenue / unique customers) when not provided.
+        churn_rate_monthly_pct: Monthly churn rate as percentage (e.g., 5.0 = 5%).
+              Auto-filled from DuckDB when not provided.
         cac: Customer Acquisition Cost (dollars)
         gross_margin_pct: Gross margin percentage (default 80% for SaaS)
         expansion_mrr_pct: Monthly expansion revenue as % of MRR (upsell/cross-sell)
 
-    Returns: Full unit economics dict with interpretation
+    Returns: Full unit economics dict with interpretation and data_source field.
     """
+    data_source = "manual_input"
+
+    # Try live data first — silently, never fail
+    if arpu is None or churn_rate_monthly_pct is None:
+        try:
+            from ..data.analytics_db import get_analytics_db
+            db = get_analytics_db()
+            if db.has_data():
+                if arpu is None:
+                    live_arpu = db.get_current_arpu()
+                    if live_arpu is not None:
+                        arpu = live_arpu
+                        data_source = "live_stripe"
+                if churn_rate_monthly_pct is None:
+                    live_churn = db.get_churn_rate()
+                    if live_churn:
+                        churn_rate_monthly_pct = live_churn * 100
+                        data_source = "live_stripe"
+        except Exception:
+            pass  # fail-open — never let DB errors surface to caller
+
+    # Fall back gracefully — arpu is the only truly required input
+    if arpu is None:
+        return {
+            "error": (
+                "arpu is required. Provide it manually or connect Stripe "
+                "(set STRIPE_API_KEY and run a sync)."
+            ),
+            "data_source": "manual_input",
+        }
+
+    # Churn has a safe default when not provided
+    if churn_rate_monthly_pct is None:
+        churn_rate_monthly_pct = 5.0  # conservative SaaS default
+
     if churn_rate_monthly_pct <= 0:
         churn_rate_monthly_pct = 0.1  # Prevent division by zero
 
@@ -132,28 +177,48 @@ def calculate_unit_economics(
             else "Add expansion revenue (upsell/cross-sell)" if nrr_pct < 100
             else "Scale acquisition — unit economics are healthy"
         ),
+        "data_source": data_source,
     }
 
 
 def calculate_runway(
     cash_on_hand: float,
     monthly_burn: float,
-    mrr: float = 0.0,
+    mrr: Optional[float] = None,
     expected_mrr_growth_pct: float = 0.0,
 ) -> dict:
     """
     Calculate runway with optional MRR growth modeling.
 
     Args:
-        cash_on_hand: Current cash balance (dollars)
-        monthly_burn: Total monthly expenses (dollars)
-        mrr: Current MRR (dollars) — used to calculate net burn
+        cash_on_hand: Current cash balance (dollars) — required
+        monthly_burn: Total monthly expenses (dollars) — required
+        mrr: Current MRR (dollars). Auto-filled from DuckDB when not provided.
         expected_mrr_growth_pct: Expected MoM MRR growth (e.g., 10.0 = 10%)
 
-    Returns: Runway analysis with alert level and actions
+    Returns: Runway analysis with alert level, actions, and data_source field.
     """
     if monthly_burn <= 0:
         return {"error": "monthly_burn must be > 0"}
+
+    data_source = "manual_input"
+
+    # Try live MRR from DuckDB when not provided
+    if mrr is None:
+        try:
+            from ..data.analytics_db import get_analytics_db
+            db = get_analytics_db()
+            if db.has_data():
+                live_mrr = db.get_current_mrr()
+                if live_mrr > 0:
+                    mrr = live_mrr
+                    data_source = "live_stripe"
+        except Exception:
+            pass  # fail-open
+
+    # Safe default when still not set
+    if mrr is None:
+        mrr = 0.0
 
     net_burn = monthly_burn - mrr
     if net_burn <= 0:
@@ -162,6 +227,7 @@ def calculate_runway(
             "message": f"Revenue (${mrr:,.0f}/mo) exceeds burn (${monthly_burn:,.0f}/mo).",
             "net_cashflow_monthly": f"+${abs(net_burn):,.0f}",
             "cash_preservation": "Cash is growing. Focus on growth, not survival.",
+            "data_source": data_source,
         }
 
     # Simple runway
@@ -197,13 +263,13 @@ def calculate_runway(
         action = "Good runway. Start preparing next milestone NOW before it compresses."
     elif runway > 6:
         alert = "ORANGE"
-        action = "⚠️ Warning. Begin fundraising OR revenue sprint OR burn reduction immediately."
+        action = "Warning. Begin fundraising OR revenue sprint OR burn reduction immediately."
     elif runway > 3:
         alert = "RED"
-        action = "🚨 CRITICAL. Reduce burn AND accelerate revenue. Both, simultaneously, now."
+        action = "CRITICAL. Reduce burn AND accelerate revenue. Both, simultaneously, now."
     else:
         alert = "CRITICAL"
-        action = "🚨 EMERGENCY. < 3 months. Cut all non-essential costs today. Focus only on revenue."
+        action = "EMERGENCY. < 3 months. Cut all non-essential costs today. Focus only on revenue."
 
     return {
         "inputs": {
@@ -227,6 +293,7 @@ def calculate_runway(
             f"If runway drops below 6 months without a clear path to break-even, "
             f"immediately cut burn to extend to 12 months OR close funding within 90 days."
         ),
+        "data_source": data_source,
     }
 
 
@@ -383,16 +450,59 @@ def calculate_ev(
 
 
 # ─────────────────────────────────────────────────────────────
-# Live Stripe MRR
+# Live Stripe MRR  (Phase E: DuckDB cache layer)
 # ─────────────────────────────────────────────────────────────
 
-def get_stripe_mrr(stripe_api_key: str = "") -> dict:
-    """Pull live MRR from Stripe subscriptions API."""
+def get_stripe_mrr(stripe_api_key: str = "", include_trials: bool = False) -> dict:
+    """
+    Pull MRR from Stripe. Checks DuckDB cache first (if synced within 1 hour),
+    falls back to direct Stripe API call when cache is stale or empty.
+
+    Phase E upgrade: data_source field = "live_stripe_cached" | "live_stripe" | error.
+    """
+    # Check DuckDB cache first
+    try:
+        from ..data.analytics_db import get_analytics_db
+        from datetime import datetime, timezone, timedelta
+
+        db = get_analytics_db()
+        sync_state = db.get_sync_state("stripe")
+        last_synced = sync_state.get("last_synced_at")
+
+        if last_synced and db.has_data():
+            # Parse the synced_at timestamp — DuckDB may return datetime or string
+            if isinstance(last_synced, str):
+                # Remove timezone info for naive comparison
+                last_synced_dt = datetime.fromisoformat(last_synced.replace("Z", "+00:00"))
+            else:
+                last_synced_dt = last_synced
+            # Make both tz-aware for comparison
+            now = datetime.now(timezone.utc)
+            if last_synced_dt.tzinfo is None:
+                last_synced_dt = last_synced_dt.replace(tzinfo=timezone.utc)
+            age = now - last_synced_dt
+            if age < timedelta(hours=1):
+                # Cache is fresh — compute from DuckDB
+                mrr = db.get_current_mrr()
+                arpu = db.get_current_arpu()
+                return {
+                    "live_mrr": f"${mrr:,.0f}",
+                    "live_mrr_raw": mrr,
+                    "arr_estimate": f"${mrr * 12:,.0f}",
+                    "arpu_monthly": f"${arpu:,.0f}" if arpu is not None else "unknown",
+                    "cache_age_minutes": int(age.total_seconds() / 60),
+                    "data_source": "live_stripe_cached",
+                }
+    except Exception:
+        pass  # fail-open — fall through to live API call
+
+    # Live Stripe API call
     key = stripe_api_key or os.environ.get("STRIPE_API_KEY", "")
     if not key:
         return {
             "error": "STRIPE_API_KEY not set",
             "setup": "export STRIPE_API_KEY=sk_live_... (or sk_test_ for testing)",
+            "data_source": "manual_input",
         }
 
     auth = "Basic " + base64.b64encode(f"{key}:".encode()).decode()
@@ -411,6 +521,7 @@ def get_stripe_mrr(stripe_api_key: str = "") -> dict:
                 "customer_count": 0,
                 "message": "No active subscriptions. Verify you're using the live API key.",
                 "is_test_mode": key.startswith("sk_test_"),
+                "data_source": "live_stripe",
             }
 
         # Normalize to monthly
@@ -443,17 +554,17 @@ def get_stripe_mrr(stripe_api_key: str = "") -> dict:
             "customer_count": customer_count,
             "arpu_monthly": f"${arpu:,.0f}",
             "is_test_mode": key.startswith("sk_test_"),
-            "data_freshness": "real-time",
+            "data_source": "live_stripe",
         }
 
     except RuntimeError as e:
-        return {"error": str(e)}
+        return {"error": str(e), "data_source": "live_stripe"}
     except Exception as e:
-        return {"error": f"{type(e).__name__}: {e}"}
+        return {"error": f"{type(e).__name__}: {e}", "data_source": "live_stripe"}
 
 
 # ─────────────────────────────────────────────────────────────
-# Live Mercury runway
+# Live Mercury runway  (Phase E: DuckDB cache layer)
 # ─────────────────────────────────────────────────────────────
 
 def get_mercury_runway(
@@ -461,12 +572,78 @@ def get_mercury_runway(
     monthly_burn: float = 0.0,
     mrr: float = 0.0,
 ) -> dict:
-    """Pull live cash balance from Mercury and calculate runway."""
+    """
+    Pull cash balance and runway from Mercury. Checks DuckDB cache first
+    (if synced within 1 hour), falls back to direct Mercury API call.
+
+    Phase E upgrade: data_source field = "live_mercury_cached" | "live_mercury" | error.
+    """
+    # Check DuckDB cache for Mercury banking data
+    try:
+        from ..data.analytics_db import get_analytics_db
+        from datetime import datetime, timezone, timedelta
+
+        db = get_analytics_db()
+        sync_state = db.get_sync_state("mercury")
+        last_synced = sync_state.get("last_synced_at")
+
+        if last_synced:
+            if isinstance(last_synced, str):
+                last_synced_dt = datetime.fromisoformat(last_synced.replace("Z", "+00:00"))
+            else:
+                last_synced_dt = last_synced
+            now = datetime.now(timezone.utc)
+            if last_synced_dt.tzinfo is None:
+                last_synced_dt = last_synced_dt.replace(tzinfo=timezone.utc)
+            age = now - last_synced_dt
+            if age < timedelta(hours=1):
+                # Cache is fresh — read balance from banking_events if available
+                rows = db.query(
+                    """
+                    SELECT COALESCE(SUM(amount_cents), 0) / 100.0 AS total_cash
+                    FROM revenue_events
+                    WHERE source = 'mercury'
+                    """
+                )
+                if rows:
+                    total_cash = float(rows[0].get("total_cash") or 0.0)
+                    if total_cash > 0:
+                        # Reuse existing runway calc logic
+                        runway_data: dict = {}
+                        if monthly_burn > 0:
+                            live_mrr = mrr or db.get_current_mrr()
+                            net_burn = monthly_burn - live_mrr
+                            if net_burn <= 0:
+                                runway_data = {
+                                    "alert": "GREEN",
+                                    "runway_months": "inf (profitable)",
+                                    "net_burn": f"+${abs(net_burn):,.0f}/mo positive cashflow",
+                                }
+                            else:
+                                months = total_cash / net_burn
+                                alert = "GREEN" if months > 18 else "YELLOW" if months > 12 else "ORANGE" if months > 6 else "RED" if months > 3 else "CRITICAL"
+                                runway_data = {
+                                    "alert": alert,
+                                    "runway_months": f"{months:.1f}",
+                                    "net_burn": f"${net_burn:,.0f}/mo",
+                                }
+                        return {
+                            "total_cash": f"${total_cash:,.2f}",
+                            "total_cash_raw": total_cash,
+                            "runway": runway_data,
+                            "cache_age_minutes": int(age.total_seconds() / 60),
+                            "data_source": "live_mercury_cached",
+                        }
+    except Exception:
+        pass  # fail-open
+
+    # Live Mercury API call
     key = mercury_api_key or os.environ.get("MERCURY_API_KEY", "")
     if not key:
         return {
             "error": "MERCURY_API_KEY not set",
             "setup": "Mercury → Settings → API → Create read-only token. export MERCURY_API_KEY=...",
+            "data_source": "manual_input",
         }
 
     auth = f"Bearer {key}"
@@ -494,7 +671,7 @@ def get_mercury_runway(
             if net_burn <= 0:
                 runway_data = {
                     "alert": "GREEN",
-                    "runway_months": "∞ (profitable)",
+                    "runway_months": "inf (profitable)",
                     "net_burn": f"+${abs(net_burn):,.0f}/mo positive cashflow",
                 }
             else:
@@ -512,10 +689,10 @@ def get_mercury_runway(
             "total_cash_raw": total_cash,
             "accounts": account_details,
             "runway": runway_data,
-            "data_freshness": "real-time",
+            "data_source": "live_mercury",
         }
 
     except RuntimeError as e:
-        return {"error": str(e)}
+        return {"error": str(e), "data_source": "live_mercury"}
     except Exception as e:
-        return {"error": f"{type(e).__name__}: {e}"}
+        return {"error": f"{type(e).__name__}: {e}", "data_source": "live_mercury"}

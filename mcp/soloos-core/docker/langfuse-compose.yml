@@ -1,0 +1,89 @@
+version: "3.8"
+
+# SoloOS V10 — Langfuse Self-Hosted Observability
+#
+# Usage:
+#   docker compose -f docker/langfuse-compose.yml up -d
+#
+# After starting:
+#   1. Open http://localhost:3000
+#   2. Create your account
+#   3. Create a new project → Settings → API Keys
+#   4. Copy Public Key and Secret Key
+#   5. Set env vars:
+#        LANGFUSE_PUBLIC_KEY=pk-lf-...
+#        LANGFUSE_SECRET_KEY=sk-lf-...
+#        LANGFUSE_HOST=http://localhost:3000  (optional if using default)
+#
+# Stop:
+#   docker compose -f docker/langfuse-compose.yml down
+#
+# Stop + remove data:
+#   docker compose -f docker/langfuse-compose.yml down -v
+
+services:
+  langfuse-db:
+    image: postgres:15-alpine
+    container_name: soloos-langfuse-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: "${LANGFUSE_DB_USER:-langfuse}"
+      POSTGRES_PASSWORD: "${LANGFUSE_DB_PASSWORD:-langfuse_dev_pass}"
+      POSTGRES_DB: "${LANGFUSE_DB_NAME:-langfuse}"
+    volumes:
+      - langfuse_pg_data:/var/lib/postgresql/data
+    networks:
+      - langfuse_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U langfuse"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  langfuse-server:
+    image: langfuse/langfuse:latest
+    container_name: soloos-langfuse
+    restart: unless-stopped
+    depends_on:
+      langfuse-db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      # Database
+      DATABASE_URL: "postgresql://${LANGFUSE_DB_USER:-langfuse}:${LANGFUSE_DB_PASSWORD:-langfuse_dev_pass}@langfuse-db:5432/${LANGFUSE_DB_NAME:-langfuse}"
+
+      # App secrets — change these in production
+      NEXTAUTH_SECRET: "${LANGFUSE_NEXTAUTH_SECRET:-soloos-dev-nextauth-secret}"
+      SALT: "${LANGFUSE_SALT:-soloos-dev-salt-change-in-prod}"
+
+      # App URL — must match where you access Langfuse
+      NEXTAUTH_URL: "${LANGFUSE_HOST:-http://localhost:3000}"
+      LANGFUSE_CSP_ENFORCE_HTTPS: "false"
+
+      # Enable telemetry opt-out (optional)
+      TELEMETRY_ENABLED: "false"
+
+      # Enable sign-up for first user (disable after initial setup for security)
+      LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES: "true"
+
+      # Node environment
+      NODE_ENV: "production"
+    networks:
+      - langfuse_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/public/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  langfuse_pg_data:
+    name: soloos_langfuse_postgres
+
+networks:
+  langfuse_net:
+    name: soloos_langfuse
+    driver: bridge

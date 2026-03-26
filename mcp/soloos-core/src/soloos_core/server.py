@@ -65,6 +65,14 @@ from .tools.decisions import _CAUSAL_CHAINS as _DECISION_CAUSAL_CHAINS
 # ── V10: Data + Observability layers ────────────────────────────
 from .data.cache import get_cache_stats, clear_all_cache, clear_cache_by_prefix
 from .core.observability import get_log_stats
+from .core.scheduler import (
+    scheduler_status as _sched_status,
+    scheduler_run_now as _sched_run_now,
+    scheduler_configure as _sched_configure,
+)
+from .data.connectors.registry import get_registry as _get_connector_registry
+from .data.growthbook_client import get_growthbook_client as _get_growthbook_client
+from .core.observability import rate_tool_call as _rate_tool_call
 
 
 # ─────────────────────────────────────────────────────────────
@@ -115,8 +123,8 @@ mcp.tool()(get_decision_intelligence_brief)
 
 @mcp.tool()
 def calculate_unit_economics(
-    arpu: float,
-    churn_rate_monthly_pct: float,
+    arpu: Optional[float] = None,
+    churn_rate_monthly_pct: Optional[float] = None,
     cac: float = 0.0,
     gross_margin_pct: float = 85.0,
     expansion_mrr_pct: float = 0.0,
@@ -125,9 +133,13 @@ def calculate_unit_economics(
     Calculate LTV, LTV:CAC, payback period, and net revenue retention.
     Returns full unit economics dashboard for a SaaS business.
 
+    Zero-input when Stripe data is connected: arpu and churn are auto-filled
+    from DuckDB (last-30-day charges / customer count). Provide manually
+    when no Stripe sync is configured.
+
     Args:
-        arpu: Average Revenue Per User per month ($)
-        churn_rate_monthly_pct: Monthly churn rate as percentage (e.g. 5.0 = 5%)
+        arpu: Average Revenue Per User per month ($). Auto-filled from Stripe if omitted.
+        churn_rate_monthly_pct: Monthly churn rate as % (e.g. 5.0). Auto-filled from Stripe if omitted.
         cac: Customer Acquisition Cost ($, optional)
         gross_margin_pct: Gross margin percentage (default 85% for SaaS)
         expansion_mrr_pct: Monthly expansion MRR as % of base (e.g. 2.0 = 2%)
@@ -145,16 +157,19 @@ def calculate_unit_economics(
 def calculate_runway(
     cash_on_hand: float,
     monthly_burn: float,
-    mrr: float = 0.0,
+    mrr: Optional[float] = None,
     expected_mrr_growth_pct: float = 0.0,
 ) -> str:
     """
     Calculate true runway with MRR trajectory, break-even, and month-by-month projection.
 
+    MRR is auto-filled from Stripe/DuckDB when omitted and data is connected.
+    cash_on_hand and monthly_burn are always required (Mercury Phase C data).
+
     Args:
         cash_on_hand: Current bank balance ($)
         monthly_burn: Monthly operating expenses ($)
-        mrr: Current Monthly Recurring Revenue ($, default 0)
+        mrr: Current MRR ($). Auto-filled from Stripe/DuckDB if omitted.
         expected_mrr_growth_pct: Expected MRR growth per month % (e.g. 10.0 = 10%)
     """
     return json.dumps(_fn_runway(
@@ -202,10 +217,12 @@ def get_mrr_live(
     include_trials: bool = False,
 ) -> str:
     """
-    Pull live MRR directly from Stripe subscriptions. Eliminates stale
-    business-context.md numbers — Claude uses real-time revenue data.
+    Pull live MRR from Stripe. Checks DuckDB cache first (valid for 1 hour after
+    last sync). Falls back to direct Stripe API when cache is stale or missing.
 
-    Returns: current MRR, customer count, ARPU, trial count, plan breakdown.
+    Response includes data_source: "live_stripe_cached" | "live_stripe".
+
+    Returns: current MRR, ARPU (from cache or live), and cache freshness metadata.
 
     Args:
         stripe_api_key: Stripe secret key (reads STRIPE_API_KEY env var if empty)
@@ -224,13 +241,16 @@ def get_runway_live(
     mrr: float = 0.0,
 ) -> str:
     """
-    Pull live cash balance and runway from Mercury bank.
-    Returns GREEN/YELLOW/ORANGE/RED/CRITICAL runway alert.
+    Pull live cash balance and runway from Mercury bank. Checks DuckDB cache first
+    (valid for 1 hour after last Mercury sync). Falls back to direct API when stale.
+
+    Response includes data_source: "live_mercury_cached" | "live_mercury".
+    MRR is auto-filled from Stripe/DuckDB when mrr=0 and data is connected.
 
     Args:
         mercury_api_key: Mercury API key (reads MERCURY_API_KEY env var if empty)
         monthly_burn: Monthly operating expenses for runway calculation ($)
-        mrr: Current MRR to calculate net burn ($)
+        mrr: Current MRR to calculate net burn ($, auto-filled from DuckDB if 0)
     """
     return json.dumps(_fn_mercury_runway(
         mercury_api_key=mercury_api_key,
@@ -1613,6 +1633,279 @@ def manage_cache(
             "valid_actions": ["stats", "clear", "clear_llm", "clear_http"],
         }, indent=2)
 
+
+# ─────────────────────────────────────────────────────────────
+# Scheduler tools — Phase F
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def scheduler_status() -> str:
+    """
+    List all background scheduler jobs, their next run times, and configured
+    delivery channels (Slack, ntfy, email).
+
+    Returns JSON with: scheduler_enabled, timezone, jobs list (name, cron,
+    enabled, next_run, status), delivery_channels_configured, apscheduler_available.
+
+    Use this to verify the scheduler is running and jobs are scheduled correctly.
+    """
+    return json.dumps(_sched_status(), indent=2)
+
+
+@mcp.tool()
+def scheduler_run_now(
+    job_name: str,
+) -> str:
+    """
+    Trigger a scheduled job immediately without waiting for its cron schedule.
+
+    Available job names:
+      morning_brief_job     — run morning brief and deliver it
+      kill_signal_check_job — check kill signals and alert if overdue
+      data_sync_job         — sync data from connected integrations
+      weekly_review_job     — run extended weekly review
+
+    Args:
+        job_name: Name of the job to run immediately
+    """
+    return json.dumps(_sched_run_now(job_name), indent=2)
+
+
+@mcp.tool()
+def scheduler_configure(
+    job_name: str,
+    enabled: bool,
+    cron: str = "",
+) -> str:
+    """
+    Enable or disable a scheduled job and optionally update its cron schedule.
+    Changes are written to ~/.soloos/scheduler-config.yaml immediately.
+    Restart the MCP server for changes to take effect.
+
+    Args:
+        job_name: Job to configure (e.g. "morning_brief", "kill_signal_check")
+        enabled: True to enable the job, False to disable it
+        cron: Optional cron expression (e.g. "0 8 * * *" for 08:00 daily).
+              Leave empty to keep the existing schedule.
+    """
+    return json.dumps(_sched_configure(job_name=job_name, enabled=enabled, cron=cron), indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# Connector tools — Phase C/D
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def connector_status() -> str:
+    """
+    List all data connectors (Stripe, Mercury, PostHog), which are configured,
+    their last sync time, last cursor, and the DuckDB tables they write to.
+
+    Use this to diagnose data freshness and check which integrations are active.
+    Returns a list of connector status dicts — one per connector.
+    """
+    registry = _get_connector_registry()
+    return json.dumps({
+        "connectors": registry.status(),
+        "configured_count": sum(1 for c in registry.status() if c["configured"]),
+        "total_count": len(registry.all_connectors()),
+    }, indent=2, default=str)
+
+
+@mcp.tool()
+def connector_sync(
+    source: str = "all",
+) -> str:
+    """
+    Trigger a data sync for one or all configured connectors.
+    Reads the last cursor from sync_state for incremental sync.
+    Returns sync results per connector: rows_synced, duration_ms, error.
+
+    Args:
+        source: Connector to sync — "stripe", "mercury", "posthog", or "all" (default)
+
+    Use when: MRR/banking data feels stale, or after connecting a new integration.
+    """
+    registry = _get_connector_registry()
+
+    if source == "all":
+        results = registry.sync_all()
+    else:
+        # Find and sync a specific connector
+        matched = [c for c in registry.configured_connectors() if c.source_name == source]
+        if not matched:
+            # Check if it exists but is not configured
+            all_sources = [c.source_name for c in registry.all_connectors()]
+            if source in all_sources:
+                return json.dumps({
+                    "error": f"Connector '{source}' exists but is not configured. Check env vars and SDK.",
+                    "source": source,
+                }, indent=2)
+            return json.dumps({
+                "error": f"Unknown connector '{source}'. Available: {all_sources}",
+            }, indent=2)
+
+        from soloos_core.data.analytics_db import get_analytics_db
+        db = get_analytics_db()
+        connector = matched[0]
+        state = db.get_sync_state(source) or {}
+        last_cursor = state.get("last_cursor")
+        results = [connector._timed_sync(since_cursor=last_cursor)]
+
+    return json.dumps({
+        "synced": [r.to_dict() for r in results],
+        "total_rows_synced": sum(r.rows_synced for r in results),
+        "errors": [r.error for r in results if not r.ok],
+    }, indent=2, default=str)
+
+
+
+
+# ─────────────────────────────────────────────────────────────
+# Phase G: A/B Testing tools — GrowthBook
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def create_ab_experiment(
+    name: str,
+    hypothesis: str,
+    metric: str,
+    variants: list[str],
+    traffic_split: list[float] | None = None,
+) -> str:
+    """
+    Create an A/B experiment in GrowthBook for a founder decision.
+
+    Best for: pricing page copy, CTA text, onboarding flow variants,
+    email subject lines, or any 2-way test where you need statistical
+    confidence before shipping.
+
+    Requires GrowthBook self-hosted (docker/growthbook-compose.yml) and:
+      GROWTHBOOK_API_HOST=http://localhost:3100
+      GROWTHBOOK_CLIENT_KEY=sdk-<key>
+
+    Fail-open: if GrowthBook is not configured, returns setup instructions.
+
+    Args:
+        name: Experiment name (e.g. "Pricing CTA — Trial vs Free")
+        hypothesis: What you expect (e.g. "Changing CTA to 'Start Free' increases trial signups by 15%")
+        metric: Primary metric to optimise (e.g. "signup_conversion", "trial_to_paid", "mrr_per_user")
+        variants: List of variant labels — first is treated as control
+                  (e.g. ["control", "variant_a"])
+        traffic_split: Weight per variant (must sum to 1.0). Default: equal split.
+    """
+    client = _get_growthbook_client()
+    result = client.create_experiment(
+        name=name,
+        hypothesis=hypothesis,
+        metric=metric,
+        variants=variants,
+        traffic_split=traffic_split,
+    )
+    return json.dumps(result, indent=2)
+
+
+@mcp.tool()
+def get_experiment_results(
+    experiment_id: str,
+) -> str:
+    """
+    Fetch results for a running or completed A/B experiment from GrowthBook.
+
+    Returns: per-variant conversion rates, relative uplift, p-value, winner,
+    and a plain-language statistical recommendation (ship / run longer / inconclusive).
+
+    Requires GrowthBook self-hosted with GROWTHBOOK_API_HOST and GROWTHBOOK_CLIENT_KEY.
+    Fail-open: returns a not-configured message if GrowthBook is unreachable.
+
+    Args:
+        experiment_id: The experiment ID returned by create_ab_experiment()
+    """
+    client = _get_growthbook_client()
+    result = client.get_experiment_results(experiment_id=experiment_id)
+    return json.dumps(result, indent=2)
+
+
+@mcp.tool()
+def list_experiments(
+    status: str = "all",
+) -> str:
+    """
+    List all A/B experiments from GrowthBook with their status and metrics.
+
+    Returns a table of experiments: id, name, status (running/completed/stopped),
+    hypothesis, primary metric, and variant count.
+
+    Fail-open: returns empty list with a setup guide if GrowthBook is not configured.
+
+    Args:
+        status: Filter by status — "running", "completed", "stopped", or "all" (default)
+    """
+    client = _get_growthbook_client()
+
+    if not client.is_configured():
+        return json.dumps({
+            "configured": False,
+            "experiments": [],
+            "message": (
+                "GrowthBook not configured. "
+                "Run: docker compose -f docker/growthbook-compose.yml up -d "
+                "then set GROWTHBOOK_API_HOST and GROWTHBOOK_CLIENT_KEY."
+            ),
+            "setup_guide": "docs/setup/growthbook-setup.md",
+        }, indent=2)
+
+    experiments = client.list_experiments(status=status)
+    return json.dumps({
+        "status_filter": status,
+        "count": len(experiments),
+        "experiments": experiments,
+    }, indent=2)
+
+
+# ─────────────────────────────────────────────────────────────
+# Phase H: Observability — rate_recommendation
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def rate_recommendation(
+    call_id: str,
+    score: int,
+    reason: str = "",
+) -> str:
+    """
+    Rate a previous tool recommendation to improve future quality.
+
+    Logs to Langfuse (if configured) for LLM quality tracking, and writes
+    to the SQLite feedback table for local persistence.
+
+    Use when: a council recommendation, pattern match, or strategic advice
+    was helpful or unhelpful — this feedback improves the system over time.
+
+    Langfuse self-hosted: docker compose -f docker/langfuse-compose.yml up -d
+    Set: LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, LANGFUSE_HOST
+
+    Fail-open: if Langfuse is not configured, writes to SQLite only.
+    Fail-open: if neither is available, returns acknowledgement anyway.
+
+    Args:
+        call_id: The 8-char hex call_id from the tool log (visible in tool_calls.jsonl)
+        score: Rating 1-5 (1 = very unhelpful, 3 = neutral, 5 = excellent / spot-on)
+        reason: Optional explanation (e.g. "Council was too cautious given our traction")
+    """
+    stored = _rate_tool_call(call_id=call_id, score=score, reason=reason)
+    return json.dumps({
+        "call_id": call_id,
+        "score": max(1, min(5, int(score))),
+        "reason": reason or "",
+        "stored": stored,
+        "message": (
+            "Feedback recorded — thank you. This helps calibrate future recommendations."
+            if stored else
+            "Feedback acknowledged (no persistent storage configured — "
+            "set up Langfuse or ensure context_db is writable)."
+        ),
+    }, indent=2)
 
 # ─────────────────────────────────────────────────────────────
 # Entry point

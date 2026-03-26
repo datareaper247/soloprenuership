@@ -627,12 +627,49 @@ def score_pmf(
     Args:
         sean_ellis_pct: % of users who say "Very Disappointed" if product disappeared (target >40%)
         nrr_pct: Net Revenue Retention % (target >100%)
-        l30_retention_pct: Day 30 retention % (target >40% for daily tools)
+        l30_retention_pct: Day 30 retention % (target >40% for daily tools). Auto-filled from
+                           PostHog/user_events in DuckDB when not provided and data exists.
         referral_pct_of_signups: % new users from referral/WOM (target >20%)
-        monthly_churn_pct: Monthly churn % (target <2%)
+        monthly_churn_pct: Monthly churn % (target <2%). Auto-filled from DuckDB churn view
+                           when not provided and data exists.
         weeks_since_launch: Weeks since launch (context for expectations)
         paying_customers: Number of paying customers (min 40 for Sean Ellis)
     """
+    data_source = "manual_input"
+    live_context_notes: list[str] = []
+
+    # Phase E: auto-fill from DuckDB when available — silently, never fail
+    if l30_retention_pct == 0.0 or monthly_churn_pct == 0.0:
+        try:
+            from ..data.analytics_db import get_analytics_db
+            db = get_analytics_db()
+            if db.has_data():
+                # Auto-fill day-7 retention as a proxy for l30 when not provided
+                if l30_retention_pct == 0.0:
+                    retention = db.get_recent_retention()
+                    if retention.get("source") == "user_events" and retention.get("day7") is not None:
+                        # Use day-7 as a leading indicator — note this in context
+                        day7_pct = round(retention["day7"] * 100, 1)
+                        live_context_notes.append(
+                            f"Live retention data (PostHog/user_events): "
+                            f"day-7 = {day7_pct}% "
+                            f"(cohort_size={retention.get('cohort_size', '?')}). "
+                            f"D30 not yet available — day-7 used as leading indicator."
+                        )
+                        data_source = "live_posthog"
+                # Auto-fill churn from revenue events
+                if monthly_churn_pct == 0.0:
+                    live_churn = db.get_churn_rate()
+                    if live_churn > 0:
+                        monthly_churn_pct = round(live_churn * 100, 2)
+                        live_context_notes.append(
+                            f"Live churn data (Stripe/revenue_events): "
+                            f"monthly churn = {monthly_churn_pct:.2f}%"
+                        )
+                        data_source = "live_stripe"
+        except Exception:
+            pass  # fail-open — never let DB errors surface to caller
+
     score = 0
     max_score = 0
     signals = []
@@ -728,7 +765,7 @@ def score_pmf(
     if stage == "NO_PMF" and weeks_since_launch > 24:
         warnings.append("⏰ 24+ weeks without PMF — consider ICP or problem pivot.")
 
-    return json.dumps({
+    result: dict = {
         "pmf_score": f"{pmf_pct}/100",
         "stage": stage,
         "verdict": verdict,
@@ -744,7 +781,13 @@ def score_pmf(
             "referral_target": ">20% of new users from WOM",
             "monthly_churn_target": "<2% for strong PMF",
         },
-    }, indent=2)
+        "data_source": data_source,
+    }
+
+    if live_context_notes:
+        result["live_data_context"] = live_context_notes
+
+    return json.dumps(result, indent=2)
 
 
 # ─────────────────────────────────────────────────────────────

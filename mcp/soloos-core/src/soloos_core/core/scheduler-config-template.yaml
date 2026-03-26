@@ -1,0 +1,73 @@
+# SoloOS Scheduler Configuration
+# ─────────────────────────────────────────────────────────────
+# This file was copied from the SoloOS template on first run.
+# Location: ~/.soloos/scheduler-config.yaml
+#
+# HOW TO ENABLE:
+#   1. Set `enabled: true` below
+#   2. Enable individual jobs under `jobs:`
+#   3. Configure at least one delivery channel under `delivery:`
+#   4. Restart the SoloOS MCP server
+#
+# DELIVERY: set env vars instead of hardcoding secrets here.
+#   export SOLOOS_SLACK_WEBHOOK="https://hooks.slack.com/services/..."
+#   export SOLOOS_NTFY_TOPIC="my-soloos-alerts"
+#   export SOLOOS_EMAIL_TO="you@example.com"
+# ─────────────────────────────────────────────────────────────
+
+# Master switch — set to true to activate the scheduler
+enabled: false
+
+# Timezone for all job schedules (IANA format)
+timezone: "America/New_York"
+
+# ─────────────────────────────────────────────────────────────
+# Delivery channels
+# Env vars take priority over values set here.
+#   SOLOOS_SLACK_WEBHOOK, SOLOOS_NTFY_TOPIC,
+#   SOLOOS_EMAIL_TO, SOLOOS_EMAIL_SMTP_HOST,
+#   SOLOOS_EMAIL_SMTP_PORT, SOLOOS_EMAIL_USER, SOLOOS_EMAIL_PASS
+# ─────────────────────────────────────────────────────────────
+delivery:
+  slack_webhook_url: ""       # Slack incoming webhook URL
+  ntfy_topic: ""              # ntfy.sh topic, e.g. "my-soloos-alerts"
+  email_to: ""                # Recipient email address
+  email_smtp_host: ""         # SMTP server hostname
+  email_smtp_port: 587        # SMTP port (587 = STARTTLS, 465 = SSL)
+  email_user: ""              # SMTP login username
+  email_pass: ""              # SMTP login password (use env var instead)
+
+# ─────────────────────────────────────────────────────────────
+# Jobs
+# cron format: "minute hour day-of-month month day-of-week"
+# Examples:
+#   "0 7 * * *"   — every day at 07:00
+#   "0 9 * * 1"   — every Monday at 09:00
+#   "0 * * * *"   — every hour on the hour
+#   "0 8 1 * *"   — first day of each month at 08:00
+# ─────────────────────────────────────────────────────────────
+jobs:
+  # Morning brief: kill signals + experiments + today's focus
+  morning_brief:
+    enabled: false
+    cron: "0 7 * * *"         # 07:00 daily
+
+  # Kill signal check: alerts if any signals are OVERDUE
+  kill_signal_check:
+    enabled: false
+    cron: "0 9 * * *"         # 09:00 daily
+
+  # Data sync: pulls latest from Stripe, Mercury, PostHog (if connectors configured)
+  data_sync:
+    enabled: false
+    cron: "0 * * * *"         # every hour on the hour
+
+  # Weekly review: extended morning brief delivered on Mondays
+  weekly_review:
+    enabled: false
+    cron: "0 9 * * 1"         # Monday 09:00
+
+  # Monthly investor draft: placeholder for investor update reminders
+  monthly_investor_draft:
+    enabled: false
+    cron: "0 8 1 * *"         # 1st of each month at 08:00

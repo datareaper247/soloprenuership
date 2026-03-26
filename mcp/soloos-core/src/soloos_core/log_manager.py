@@ -2,17 +2,24 @@
 Log Manager — Read/write founder-log.md, context files, and kill signal tracking.
 
 All file operations are atomic (write to temp, then rename).
+
+Phase B addition: after every markdown write, a silent dual-write to SQLite is
+attempted via context_db. If SQLite fails for any reason a warning is logged and
+execution continues — the markdown write is always the source of truth.
 """
 
 import re
 import os
 import json
+import logging
 from pathlib import Path
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field, asdict
 from typing import Optional
 
 from .kb_loader import _find_kb_root
+
+logger = logging.getLogger(__name__)
 
 KB_ROOT = _find_kb_root()
 CONTEXT_ROOT = KB_ROOT.parent / "context"
@@ -157,6 +164,37 @@ def append_log_entry(entry: FounderLogEntry) -> None:
         text += "\n\n" + new_entry_md
 
     _atomic_write(FOUNDER_LOG_PATH, text)
+
+    # ── Phase B: silent SQLite dual-write ─────────────────────
+    _sqlite_write_entry(entry)
+
+
+def _sqlite_write_entry(entry: FounderLogEntry) -> None:
+    """
+    Silently mirror a FounderLogEntry to SQLite after the markdown write.
+
+    Never raises. If SQLite is unavailable or write fails, logs a warning
+    and returns. The markdown file is always the source of truth.
+    """
+    try:
+        from .data.context_db import get_context_db
+        db = get_context_db()
+        if not db.is_available():
+            return
+        outcome_val = None if entry.outcome in ("", "PENDING OUTCOME") else entry.outcome
+        db.upsert_decision(
+            id=entry.id,
+            date=entry.date,
+            situation=entry.context,
+            decision=entry.summary,
+            kill_signal=entry.kill_signal or None,
+            kill_signal_date=entry.kill_signal_due or None,
+            outcome=outcome_val,
+            outcome_date=entry.outcome_due or None,
+            tags=entry.type or None,
+        )
+    except Exception as exc:
+        logger.warning("log_manager: SQLite dual-write failed (non-fatal) — %s", exc)
 
 
 def _default_founder_log_header() -> str:

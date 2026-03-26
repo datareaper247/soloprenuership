@@ -23,12 +23,31 @@ dependencies = [
     "diskcache>=5.6.0",
     "structlog>=24.0.0",
     "python-frontmatter>=1.1.0",
+    # Phase A: DuckDB analytics store
+    "duckdb>=0.10.0",
+    # Phase F: background scheduler
+    "apscheduler>=3.10.0",
 ]
 
 [project.optional-dependencies]
 http = [
     "fastapi>=0.115.0",
     "uvicorn[standard]>=0.32.0",
+]
+connectors = [
+    "stripe>=7.0.0",
+    "httpx>=0.27.0",
+    "posthog>=3.0.0",
+]
+ab-testing = [
+    "growthbook>=1.0.0",
+]
+observability = [
+    "langfuse>=2.0.0",
+]
+dashboard = [
+    "streamlit>=1.35.0",
+    "plotly>=5.0.0",
 ]
 
 [dependency-groups]
