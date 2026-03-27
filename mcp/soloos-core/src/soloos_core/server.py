@@ -1908,6 +1908,256 @@ def rate_recommendation(
     }, indent=2)
 
 # ─────────────────────────────────────────────────────────────
+# Autonomous AI tools (NS-0 + Next-1 + Next-2)
+# ─────────────────────────────────────────────────────────────
+
+@mcp.tool()
+def action_registry_status() -> str:
+    """
+    Get the current status of the autonomous action registry.
+    Returns: permissions summary, kill switch state, daily usage, pending approvals.
+    """
+    from .core.action_registry import get_action_registry
+    return json.dumps(get_action_registry().get_permissions_summary(), indent=2)
+
+
+@mcp.tool()
+def approve_action(request_id: str) -> str:
+    """
+    Approve a queued autonomous action (Tier 4+ or when autonomous_mode=false).
+
+    Args:
+        request_id: The request_id from list_pending_approvals
+    """
+    from .core.action_registry import get_action_registry
+    result = get_action_registry().approve(request_id)
+    return json.dumps({"status": result.status, "error": result.error, "result": result.result}, indent=2)
+
+
+@mcp.tool()
+def reject_action(request_id: str, reason: str = "") -> str:
+    """
+    Reject a queued autonomous action.
+
+    Args:
+        request_id: The request_id from list_pending_approvals
+        reason: Optional reason for rejection
+    """
+    from .core.action_registry import get_action_registry
+    get_action_registry().reject(request_id, reason=reason)
+    return json.dumps({"status": "rejected", "request_id": request_id})
+
+
+@mcp.tool()
+def list_pending_approvals() -> str:
+    """
+    List all Tier 4+ actions awaiting human approval.
+    Returns list of pending actions with their request IDs.
+    """
+    from .core.action_registry import get_action_registry
+    return json.dumps(get_action_registry().get_pending_approvals(), indent=2)
+
+
+@mcp.tool()
+def get_audit_log_tool(hours: int = 24) -> str:
+    """
+    Get recent autonomous actions taken by the AI founder system.
+
+    Args:
+        hours: How many hours back to look (default 24)
+    """
+    from .core.audit_log import get_audit_log
+    stats = get_audit_log().get_stats(hours=hours)
+    recent = get_audit_log().query({"status": "executed"})[-20:]  # last 20 executed
+    return json.dumps({"stats": stats, "recent_actions": recent}, indent=2, default=str)
+
+
+@mcp.tool()
+def set_autonomous_mode(enabled: bool) -> str:
+    """
+    Toggle autonomous mode. When disabled, all Tier 2+ actions queue for approval.
+    This is the software kill switch (separate from the env var kill switch).
+
+    Args:
+        enabled: True = autonomous execution, False = all actions queue for approval
+    """
+    config_path = __import__("pathlib").Path.home() / ".soloos" / "permissions.yaml"
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+
+    try:
+        import yaml  # type: ignore[import]
+        existing = {}
+        if config_path.exists():
+            with config_path.open() as f:
+                existing = yaml.safe_load(f) or {}
+        existing["autonomous_mode"] = enabled
+        with config_path.open("w") as f:
+            yaml.dump(existing, f)
+        return json.dumps({"autonomous_mode": enabled, "config_path": str(config_path)})
+    except ImportError:
+        # Fallback: write minimal YAML manually
+        content = f"autonomous_mode: {'true' if enabled else 'false'}\n"
+        if config_path.exists():
+            lines = config_path.read_text().splitlines()
+            lines = [l for l in lines if not l.startswith("autonomous_mode:")]
+            lines.append(content.strip())
+            config_path.write_text("\n".join(lines) + "\n")
+        else:
+            config_path.write_text(content)
+        return json.dumps({"autonomous_mode": enabled, "config_path": str(config_path)})
+
+
+@mcp.tool()
+def take_action(
+    action_type: str,
+    params: str,
+    reasoning: str,
+) -> str:
+    """
+    Execute an autonomous action via the ActionRegistry with full safety gating.
+    All actions are permission-checked, kill-switch-gated, and audit-logged.
+
+    Args:
+        action_type: Action name (send_email, deploy, post_social, reply_support, manage_dns)
+        params: JSON string of action parameters
+        reasoning: Why this action is being taken (used in audit log)
+    """
+    import json as _json
+    from .core.action_registry import get_action_registry, ActionRequest
+    from .actions.email_action import EmailAction
+    from .actions.deploy_action import DeployAction
+    from .actions.social_action import SocialAction
+    from .actions.support_action import SupportAction
+    from .actions.dns_action import DnsAction
+    from .core.action_registry import ActionDefinition, Tier
+
+    registry = get_action_registry()
+
+    # Register actions if not already registered
+    _action_map = {
+        "send_email": (EmailAction(), Tier.COMMUNICATE, True, 50),
+        "deploy": (DeployAction(), Tier.DEPLOY, False, None),
+        "post_social": (SocialAction(), Tier.COMMUNICATE, True, 3),
+        "reply_support": (SupportAction(), Tier.COMMUNICATE, True, 100),
+        "manage_dns": (DnsAction(), Tier.DEPLOY, False, None),
+    }
+
+    if action_type not in registry._actions:
+        if action_type in _action_map:
+            action_obj, tier, reversible, daily_limit = _action_map[action_type]
+            registry.register_action(
+                ActionDefinition(action_type, tier, action_type, reversible, daily_limit),
+                action_obj.execute,
+            )
+
+    try:
+        params_dict = _json.loads(params) if isinstance(params, str) else params
+    except Exception:
+        return json.dumps({"error": f"Invalid params JSON: {params}"})
+
+    result = registry.execute(ActionRequest(
+        action=action_type,
+        params=params_dict,
+        reasoning=reasoning,
+        agent_id="mcp_caller",
+    ))
+    return json.dumps({
+        "status": result.status,
+        "result": result.result,
+        "error": result.error,
+        "request_id": result.request_id,
+        "audit_id": result.audit_id,
+    }, indent=2)
+
+
+@mcp.tool()
+def list_available_actions() -> str:
+    """
+    List all registered autonomous actions with their configuration status.
+    Shows tier, daily limits, and whether each action is configured (API keys present).
+    """
+    from .core.action_registry import get_action_registry, Tier
+    from .actions.email_action import EmailAction
+    from .actions.deploy_action import DeployAction
+    from .actions.social_action import SocialAction
+    from .actions.support_action import SupportAction
+    from .actions.dns_action import DnsAction
+
+    actions_info = [
+        {"name": "send_email", "tier": "COMMUNICATE", "tier_num": 2, "daily_limit": 50, "configured": EmailAction().is_configured()},
+        {"name": "deploy", "tier": "DEPLOY", "tier_num": 4, "daily_limit": None, "configured": DeployAction().is_configured()},
+        {"name": "post_social", "tier": "COMMUNICATE", "tier_num": 2, "daily_limit": 3, "configured": SocialAction().is_configured()},
+        {"name": "reply_support", "tier": "COMMUNICATE", "tier_num": 2, "daily_limit": 100, "configured": SupportAction().is_configured()},
+        {"name": "manage_dns", "tier": "DEPLOY", "tier_num": 4, "daily_limit": None, "configured": DnsAction().is_configured()},
+    ]
+    return json.dumps(actions_info, indent=2)
+
+
+@mcp.tool()
+def get_task_queue_status() -> str:
+    """
+    Get current status of the autonomous task queue.
+    Shows pending, running, done, and failed task counts.
+    """
+    from .agent.task_queue import get_task_queue
+    queue = get_task_queue()
+    return json.dumps({
+        "stats": queue.stats(),
+        "pending": queue.list_pending()[:10],
+    }, indent=2, default=str)
+
+
+@mcp.tool()
+def enqueue_task(
+    task_type: str,
+    payload: str = "{}",
+    priority: int = 5,
+    agent_id: str = "founder",
+) -> str:
+    """
+    Manually enqueue a task for autonomous processing.
+
+    Args:
+        task_type: Task type (morning_brief, respond_support, review_pr, etc.)
+        payload: JSON string of task parameters
+        priority: 1=critical, 10=low (default 5)
+        agent_id: Which agent should handle it (founder, marketing, engineering, customer_success)
+    """
+    import json as _json
+    from .agent.task_queue import get_task_queue
+
+    try:
+        payload_dict = _json.loads(payload) if isinstance(payload, str) else payload
+    except Exception:
+        payload_dict = {"raw": payload}
+
+    task_id = get_task_queue().enqueue(task_type, payload_dict, priority=priority, agent_id=agent_id)
+    return json.dumps({"task_id": task_id, "task_type": task_type, "priority": priority})
+
+
+@mcp.tool()
+def run_founder_loop_once() -> str:
+    """
+    Run one iteration of the autonomous founder loop.
+    Processes the highest-priority task from the queue.
+    Kill switch is enforced — if active, this returns 'blocked'.
+    """
+    from .agent.founder_loop import get_founder_loop
+    result = get_founder_loop().run_once()
+    return json.dumps(result, indent=2, default=str)
+
+
+@mcp.tool()
+def get_world_model_snapshot() -> str:
+    """
+    Get the current world model — the AI's understanding of the business state.
+    Includes metrics, goals, experiments, and agent state.
+    """
+    from .agent.world_model import get_world_model
+    return json.dumps(get_world_model().get(), indent=2, default=str)
+
+
+# ─────────────────────────────────────────────────────────────
 # Entry point
 # ─────────────────────────────────────────────────────────────
 
