@@ -16,9 +16,10 @@ from __future__ import annotations
 
 import json
 import logging
+import threading
 from datetime import datetime, timezone
 
-from ..core.action_registry import is_kill_switch_active
+from ..core.action_registry import is_kill_switch_active, get_action_registry
 from ..core.audit_log import get_audit_log
 from .task_queue import get_task_queue
 from .world_model import get_world_model
@@ -63,10 +64,12 @@ class FounderLoop:
         })
 
         try:
+            # Build actual tool list from registered ActionRegistry actions (Tier 0-3 only)
+            available_tools = get_action_registry().get_tools_for_executor()
             result = executor.run(
                 task=task,
                 world_model=world_model,
-                available_tools=[],
+                available_tools=available_tools,
             )
 
             if task_id != "generated":
@@ -184,10 +187,13 @@ class FounderLoop:
 
 
 _loop: FounderLoop | None = None
+_loop_lock = threading.Lock()
 
 
 def get_founder_loop() -> FounderLoop:
     global _loop
     if _loop is None:
-        _loop = FounderLoop()
+        with _loop_lock:
+            if _loop is None:
+                _loop = FounderLoop()
     return _loop

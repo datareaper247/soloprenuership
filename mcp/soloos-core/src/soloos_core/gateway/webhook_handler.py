@@ -9,10 +9,14 @@ Endpoints (added to existing FastAPI app in http_bridge.py):
     POST /webhooks/generic     — generic event → any task type
 
 Each webhook:
-1. Validates signature (or logs warning if no secret configured)
+1. Validates signature — REJECTS with 403 if no secret is configured (fail-closed).
+   Receiving webhooks from unverified sources is a prompt-injection attack surface.
 2. Parses event type
 3. Enqueues appropriate task in TaskQueue
 4. Returns 200 immediately (async processing)
+
+SECURITY: All signature verification is fail-closed — if the relevant env var is not
+set, the endpoint returns 403. Do NOT change this to a warning + pass-through.
 """
 
 from __future__ import annotations
@@ -31,14 +35,20 @@ logger = logging.getLogger(__name__)
 
 
 def _verify_stripe_signature(body: bytes, signature_header: str) -> bool:
+    """Verify Stripe webhook signature. Returns False if secret not configured (fail-closed)."""
     secret = os.environ.get("STRIPE_WEBHOOK_SECRET")
     if not secret:
-        logger.warning("STRIPE_WEBHOOK_SECRET not set — skipping signature verification")
-        return True
+        logger.error(
+            "STRIPE_WEBHOOK_SECRET not set — rejecting Stripe webhook. "
+            "Set STRIPE_WEBHOOK_SECRET to enable Stripe webhooks."
+        )
+        return False
     try:
         parts = dict(item.split("=", 1) for item in signature_header.split(","))
         timestamp = parts.get("t", "")
         sig_v1 = parts.get("v1", "")
+        if not timestamp or not sig_v1:
+            return False
         signed_payload = f"{timestamp}.{body.decode()}"
         expected = hmac.new(secret.encode(), signed_payload.encode(), hashlib.sha256).hexdigest()
         return hmac.compare_digest(expected, sig_v1)
@@ -47,10 +57,63 @@ def _verify_stripe_signature(body: bytes, signature_header: str) -> bool:
 
 
 def _verify_github_signature(body: bytes, signature_header: str) -> bool:
+    """Verify GitHub webhook signature. Returns False if secret not configured (fail-closed)."""
     secret = os.environ.get("GITHUB_WEBHOOK_SECRET")
     if not secret:
-        logger.warning("GITHUB_WEBHOOK_SECRET not set — skipping signature verification")
-        return True
+        logger.error(
+            "GITHUB_WEBHOOK_SECRET not set — rejecting GitHub webhook. "
+            "Set GITHUB_WEBHOOK_SECRET to enable GitHub webhooks."
+        )
+        return False
+    try:
+        expected = "sha256=" + hmac.new(secret.encode(), body, hashlib.sha256).hexdigest()
+        return hmac.compare_digest(expected, signature_header)
+    except Exception:
+        return False
+
+
+def _verify_intercom_signature(body: bytes, signature_header: str) -> bool:
+    """Verify Intercom webhook signature. Returns False if secret not configured (fail-closed)."""
+    secret = os.environ.get("INTERCOM_WEBHOOK_SECRET")
+    if not secret:
+        logger.error(
+            "INTERCOM_WEBHOOK_SECRET not set — rejecting Intercom webhook. "
+            "Set INTERCOM_WEBHOOK_SECRET to enable Intercom webhooks."
+        )
+        return False
+    try:
+        # Intercom uses HMAC-SHA1 with the raw body
+        expected = "sha1=" + hmac.new(secret.encode(), body, hashlib.sha1).hexdigest()
+        return hmac.compare_digest(expected, signature_header)
+    except Exception:
+        return False
+
+
+def _verify_crisp_signature(body: bytes, signature_header: str) -> bool:
+    """Verify Crisp webhook signature. Returns False if secret not configured (fail-closed)."""
+    secret = os.environ.get("CRISP_WEBHOOK_SECRET")
+    if not secret:
+        logger.error(
+            "CRISP_WEBHOOK_SECRET not set — rejecting Crisp webhook. "
+            "Set CRISP_WEBHOOK_SECRET to enable Crisp webhooks."
+        )
+        return False
+    try:
+        expected = hmac.new(secret.encode(), body, hashlib.sha256).hexdigest()
+        return hmac.compare_digest(expected, signature_header)
+    except Exception:
+        return False
+
+
+def _verify_generic_signature(body: bytes, signature_header: str) -> bool:
+    """Verify generic webhook signature. Returns False if secret not configured (fail-closed)."""
+    secret = os.environ.get("GENERIC_WEBHOOK_SECRET")
+    if not secret:
+        logger.error(
+            "GENERIC_WEBHOOK_SECRET not set — rejecting generic webhook. "
+            "Set GENERIC_WEBHOOK_SECRET to enable the generic webhook endpoint."
+        )
+        return False
     try:
         expected = "sha256=" + hmac.new(secret.encode(), body, hashlib.sha256).hexdigest()
         return hmac.compare_digest(expected, signature_header)
@@ -76,7 +139,7 @@ def register_webhooks(app) -> None:
         body = await request.body()
         sig = request.headers.get("stripe-signature", "")
         if not _verify_stripe_signature(body, sig):
-            raise HTTPException(status_code=400, detail="Invalid signature")
+            raise HTTPException(status_code=403, detail="Invalid or missing signature")
 
         try:
             payload = json.loads(body)
@@ -93,7 +156,7 @@ def register_webhooks(app) -> None:
         body = await request.body()
         sig = request.headers.get("x-hub-signature-256", "")
         if not _verify_github_signature(body, sig):
-            raise HTTPException(status_code=400, detail="Invalid signature")
+            raise HTTPException(status_code=403, detail="Invalid or missing signature")
 
         try:
             payload = json.loads(body)
@@ -109,6 +172,10 @@ def register_webhooks(app) -> None:
     @app.post("/webhooks/intercom")
     async def intercom_webhook(request: Request):
         body = await request.body()
+        sig = request.headers.get("x-hub-signature", "")
+        if not _verify_intercom_signature(body, sig):
+            raise HTTPException(status_code=403, detail="Invalid or missing signature")
+
         try:
             payload = json.loads(body)
         except json.JSONDecodeError:
@@ -122,6 +189,10 @@ def register_webhooks(app) -> None:
     @app.post("/webhooks/crisp")
     async def crisp_webhook(request: Request):
         body = await request.body()
+        sig = request.headers.get("x-crisp-hmac-sha256", "")
+        if not _verify_crisp_signature(body, sig):
+            raise HTTPException(status_code=403, detail="Invalid or missing signature")
+
         try:
             payload = json.loads(body)
         except json.JSONDecodeError:
@@ -135,6 +206,10 @@ def register_webhooks(app) -> None:
     @app.post("/webhooks/generic")
     async def generic_webhook(request: Request):
         body = await request.body()
+        sig = request.headers.get("x-webhook-signature", "")
+        if not _verify_generic_signature(body, sig):
+            raise HTTPException(status_code=403, detail="Invalid or missing signature")
+
         try:
             payload = json.loads(body)
         except json.JSONDecodeError:

@@ -1,6 +1,7 @@
 """Tests for ActionRegistry — permission gating and kill switch."""
 
 import os
+import tempfile
 import pytest
 from unittest.mock import patch
 from pathlib import Path
@@ -19,8 +20,11 @@ from soloos_core.core.audit_log import AuditLog
 # ─── Helpers ─────────────────────────────────────────────────────────────────
 
 def _make_registry(dry_run=False, autonomous=True) -> ActionRegistry:
-    """Fresh registry with in-memory audit log and no config file."""
-    reg = ActionRegistry()
+    """Fresh registry with in-memory audit log and isolated temp SQLite store."""
+    # Use a unique temp file per call so daily usage doesn't bleed across tests
+    tmp = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
+    tmp.close()
+    reg = ActionRegistry(store_db_path=tmp.name)
     reg._audit_log = AuditLog(path=Path("/tmp/test_audit.jsonl"))
     reg._config._loaded = True
     reg._config._data = {

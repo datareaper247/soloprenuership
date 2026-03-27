@@ -18,6 +18,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+import threading
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -216,10 +217,13 @@ When done, summarize what was accomplished."""
 
 
 _executor: AgentExecutor | None = None
+_executor_lock = threading.Lock()
 
 
 def get_executor() -> AgentExecutor:
     global _executor
     if _executor is None:
-        _executor = AgentExecutor()
+        with _executor_lock:
+            if _executor is None:
+                _executor = AgentExecutor()
     return _executor

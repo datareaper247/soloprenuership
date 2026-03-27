@@ -22,7 +22,12 @@ class SupportAction(BaseAction):
 
     def is_configured(self) -> bool:
         has_intercom = bool(os.environ.get("INTERCOM_TOKEN"))
-        has_crisp = bool(os.environ.get("CRISP_WEBSITE_ID") and os.environ.get("CRISP_TOKEN"))
+        # Crisp requires CRISP_WEBSITE_ID, CRISP_IDENTIFIER (plugin identifier), and CRISP_TOKEN
+        has_crisp = bool(
+            os.environ.get("CRISP_WEBSITE_ID")
+            and os.environ.get("CRISP_IDENTIFIER")
+            and os.environ.get("CRISP_TOKEN")
+        )
         return has_intercom or has_crisp
 
     def validate_params(self, params: dict) -> str | None:
@@ -80,11 +85,14 @@ class SupportAction(BaseAction):
     def _reply_crisp(self, httpx, params: dict) -> ActionOutcome:
         import base64
         website_id = os.environ["CRISP_WEBSITE_ID"]
+        # Crisp Basic Auth format: base64(identifier:token)
+        # CRISP_IDENTIFIER is the plugin identifier from the Crisp developer dashboard
+        identifier = os.environ["CRISP_IDENTIFIER"]
         token = os.environ["CRISP_TOKEN"]
         session_id = params["conversation_id"]
         message = params["message"]
 
-        creds = base64.b64encode(token.encode()).decode()
+        creds = base64.b64encode(f"{identifier}:{token}".encode()).decode()
         resp = httpx.post(
             f"https://api.crisp.chat/v1/website/{website_id}/conversation/{session_id}/message",
             headers={
