@@ -31,6 +31,19 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     pass
 
+try:
+    from fastapi import Request, HTTPException
+    from fastapi.responses import JSONResponse
+    _FASTAPI_OK = True
+except ImportError:
+    _FASTAPI_OK = False
+    Request = None  # type: ignore[assignment,misc]
+    HTTPException = None  # type: ignore[assignment]
+    JSONResponse = None  # type: ignore[assignment]
+
+from ..agent.task_queue import get_task_queue
+from ..agent.founder_loop import get_founder_loop
+
 logger = logging.getLogger(__name__)
 
 
@@ -124,15 +137,9 @@ def _verify_generic_signature(body: bytes, signature_header: str) -> bool:
 def register_webhooks(app) -> None:
     """Register webhook routes on the FastAPI app. Called from http_bridge.build_app()."""
 
-    try:
-        from fastapi import Request, HTTPException
-        from fastapi.responses import JSONResponse
-    except ImportError:
+    if not _FASTAPI_OK:
         logger.warning("FastAPI not available — webhooks not registered")
         return
-
-    from ..agent.task_queue import get_task_queue
-    from ..agent.founder_loop import get_founder_loop
 
     @app.post("/webhooks/stripe")
     async def stripe_webhook(request: Request):

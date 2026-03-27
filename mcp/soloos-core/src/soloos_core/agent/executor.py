@@ -151,7 +151,7 @@ class AgentExecutor:
 
                 # Trim history: keep system context (first msg) + most recent pairs
                 if len(messages) > _MAX_MESSAGE_HISTORY:
-                    messages = messages[:1] + messages[-(  _MAX_MESSAGE_HISTORY - 1):]
+                    messages = messages[:1] + messages[-(_MAX_MESSAGE_HISTORY - 1):]
 
         return {
             "result": "Max iterations reached",
