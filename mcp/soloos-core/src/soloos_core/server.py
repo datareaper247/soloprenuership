@@ -2161,6 +2161,37 @@ def get_world_model_snapshot() -> str:
 # Entry point
 # ─────────────────────────────────────────────────────────────
 
+def _warn_missing_optional_deps() -> None:
+    """
+    Emit a one-time advisory to stderr for optional deps that the user has
+    configured (env var set) but whose package is not installed.
+    Only warns — never blocks startup.
+    """
+    import importlib
+    import os
+
+    _OPTIONAL_DEPS: list[tuple[str, str, str]] = [
+        # (env_var_that_signals_intent, python_package, install_hint)
+        ("STRIPE_API_KEY",         "stripe",       "pip install 'soloos-core[connectors]'"),
+        ("MERCURY_API_TOKEN",      "httpx",        "pip install httpx"),
+        ("POSTHOG_API_KEY",        "posthog",      "pip install posthog"),
+        ("RESEND_API_KEY",         "resend",       "pip install resend"),
+        ("SLACK_BOT_TOKEN",        "slack_sdk",    "pip install slack-sdk"),
+    ]
+
+    for env_var, package, hint in _OPTIONAL_DEPS:
+        if not os.environ.get(env_var):
+            continue
+        try:
+            importlib.import_module(package)
+        except ImportError:
+            print(
+                f"[SoloOS] WARNING: {env_var} is set but '{package}' is not installed. "
+                f"Run: {hint}",
+                file=sys.stderr,
+            )
+
+
 def main() -> None:
     """
     CLI entry point for soloos-mcp script.
@@ -2187,6 +2218,7 @@ def main() -> None:
         print(f"Unknown transport '{transport}'. Valid: {', '.join(valid)}", file=sys.stderr)
         sys.exit(1)
 
+    _warn_missing_optional_deps()
     mcp.run(transport=transport)
 
 

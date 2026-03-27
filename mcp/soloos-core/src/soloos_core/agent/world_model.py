@@ -95,6 +95,9 @@ class WorldModel:
             logger.warning("WorldModel.refresh sqlite pull failed: %s", exc)
             model["data_sources_ok"]["sqlite"] = False
 
+        # Auto-sync Stripe if configured and stale (>1 hour since last sync)
+        self._maybe_sync_stripe()
+
         # Pull from analytics DB (DuckDB) if available
         try:
             result = self._pull_from_analytics()
@@ -141,6 +144,48 @@ class WorldModel:
                 pass
 
         return updates
+
+    def _maybe_sync_stripe(self) -> None:
+        """
+        Trigger an incremental Stripe sync if:
+          - STRIPE_API_KEY is set and stripe SDK is installed
+          - Last sync was more than 1 hour ago (or never ran)
+        Runs silently — errors are logged at DEBUG level only.
+        """
+        import os
+        if not os.environ.get("STRIPE_API_KEY"):
+            return
+        try:
+            from datetime import timedelta
+            from soloos_core.data.analytics_db import get_analytics_db
+            from soloos_core.data.connectors.stripe_connector import StripeConnector
+
+            connector = StripeConnector()
+            if not connector.is_configured():
+                return
+
+            db = get_analytics_db()
+            state = db.get_sync_state("stripe")
+            last_synced_at = state.get("last_synced_at")
+
+            if last_synced_at:
+                # Parse the timestamp returned by DuckDB (already a datetime or ISO string)
+                if isinstance(last_synced_at, str):
+                    from datetime import datetime as _dt
+                    last_synced_at = _dt.fromisoformat(last_synced_at.replace(" ", "T"))
+                age = datetime.now(timezone.utc) - last_synced_at.replace(tzinfo=timezone.utc)
+                if age < timedelta(hours=1):
+                    logger.debug("WorldModel: Stripe sync skipped — synced %.0f min ago", age.total_seconds() / 60)
+                    return
+
+            cursor = state.get("last_cursor")
+            result = connector.sync(since_cursor=cursor)
+            if result.error:
+                logger.debug("WorldModel: Stripe auto-sync failed — %s", result.error)
+            else:
+                logger.info("WorldModel: Stripe auto-sync — %d rows", result.rows_synced)
+        except Exception as exc:
+            logger.debug("WorldModel._maybe_sync_stripe: %s", exc)
 
     def _pull_from_analytics(self) -> dict:
         """Pull MRR and key metrics from analytics DuckDB if available."""

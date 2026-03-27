@@ -656,14 +656,22 @@ class ActionRegistry:
 
     @staticmethod
     def _redact_pii(action: str, params: dict) -> dict:
-        """Redact PII fields for email/support actions."""
-        if action in ("send_email", "reply_support"):
-            redacted = dict(params)
-            for f in ("to", "body", "email", "message"):
-                if f in redacted:
-                    redacted[f] = "[REDACTED]"
-            return redacted
-        return params
+        """Redact PII / sensitive fields from audit logs for all action types."""
+        _PII_FIELDS: dict[str, set[str]] = {
+            "send_email": {"to", "body", "email", "message", "subject"},
+            "reply_support": {"to", "body", "email", "message", "customer_id"},
+            "post_social": {"body", "content", "message", "caption"},
+            "deploy_staging": {"env_vars", "secrets", "api_key"},
+            "deploy_production": {"env_vars", "secrets", "api_key"},
+        }
+        fields = _PII_FIELDS.get(action)
+        if not fields:
+            return params
+        redacted = dict(params)
+        for f in fields:
+            if f in redacted:
+                redacted[f] = "[REDACTED]"
+        return redacted
 
 
 _registry: ActionRegistry | None = None
