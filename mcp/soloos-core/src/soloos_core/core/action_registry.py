@@ -676,4 +676,69 @@ def get_action_registry() -> ActionRegistry:
         with _registry_lock:
             if _registry is None:
                 _registry = ActionRegistry()
+                _register_default_actions(_registry)
     return _registry
+
+
+def _register_default_actions(registry: "ActionRegistry") -> None:
+    """
+    Register all built-in action types with their tier definitions.
+    Called once on first get_action_registry() call.
+    Each action is only registered if its class can be imported (fail-open).
+    """
+    _defs = [
+        # (action_name, tier, description, reversible, daily_limit)
+        ("send_email",     Tier.COMMUNICATE, "Send email via Resend",              True,  200),
+        ("deploy_staging", Tier.BUILD,       "Deploy to staging environment",      True,  None),
+        ("deploy_production", Tier.DEPLOY,   "Deploy to production environment",   False, None),
+        ("post_social",    Tier.COMMUNICATE, "Post to social media",               False, 10),
+        ("reply_support",  Tier.COMMUNICATE, "Reply to a support ticket via Crisp", True, 500),
+        ("update_dns",     Tier.BUILD,       "Update DNS record",                  False, None),
+    ]
+
+    try:
+        from ..actions.email_action import EmailAction
+        from ..actions.deploy_action import DeployAction
+        from ..actions.social_action import SocialAction
+        from ..actions.support_action import SupportAction
+        from ..actions.dns_action import DnsAction
+
+        _action_instances: dict[str, Any] = {
+            "send_email":          EmailAction(),
+            "deploy_staging":      DeployAction(),
+            "deploy_production":   DeployAction(),
+            "post_social":         SocialAction(),
+            "reply_support":       SupportAction(),
+            "update_dns":          DnsAction(),
+        }
+    except Exception as exc:
+        logger.warning("_register_default_actions: failed to import action classes: %s", exc)
+        return
+
+    for action_name, tier, description, reversible, daily_limit in _defs:
+        instance = _action_instances.get(action_name)
+        if instance is None:
+            continue
+        action_def = ActionDefinition(
+            name=action_name,
+            tier=tier,
+            description=description,
+            reversible=reversible,
+            daily_limit=daily_limit,
+        )
+        # Bind the specific action name so deploy_staging and deploy_production
+        # both route through DeployAction but with target pre-set in params.
+        def _make_handler(inst, name):
+            def handler(params: dict):
+                if name in ("deploy_staging", "deploy_production"):
+                    params = dict(params)
+                    params.setdefault("target", "staging" if name == "deploy_staging" else "production")
+                return inst.execute(params)
+            return handler
+
+        registry.register_action(action_def, _make_handler(instance, action_name))
+
+    logger.debug(
+        "_register_default_actions: registered %d actions",
+        len(registry._actions),
+    )

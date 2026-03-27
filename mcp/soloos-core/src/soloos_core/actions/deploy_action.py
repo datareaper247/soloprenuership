@@ -110,14 +110,17 @@ class DeployAction(BaseAction):
         resp = httpx.post(
             "https://backboard.railway.app/graphql/v2",
             headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
-            json={"query": f"""
-                mutation {{
-                    serviceInstanceDeploy(input: {{
-                        projectId: "{project_id}",
-                        environmentName: "{target}"
-                    }})
-                }}
-            """},
+            json={
+                "query": """
+                    mutation Deploy($projectId: String!, $environmentName: String!) {
+                        serviceInstanceDeploy(input: {
+                            projectId: $projectId,
+                            environmentName: $environmentName
+                        })
+                    }
+                """,
+                "variables": {"projectId": project_id, "environmentName": target},
+            },
             timeout=30,
         )
         if resp.status_code >= 400:

@@ -27,6 +27,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 _MAX_ITERATIONS = 10
+_MAX_MESSAGE_HISTORY = 20  # prevent unbounded memory growth in long agentic loops
 
 
 class AgentState:
@@ -147,6 +148,10 @@ class AgentExecutor:
 
                 messages.append({"role": "assistant", "content": response.content})
                 messages.append({"role": "user", "content": tool_results})
+
+                # Trim history: keep system context (first msg) + most recent pairs
+                if len(messages) > _MAX_MESSAGE_HISTORY:
+                    messages = messages[:1] + messages[-(  _MAX_MESSAGE_HISTORY - 1):]
 
         return {
             "result": "Max iterations reached",

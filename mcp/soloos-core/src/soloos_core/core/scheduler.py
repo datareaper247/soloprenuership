@@ -534,6 +534,34 @@ class SoloOSScheduler:
             except Exception as exc:
                 logger.warning("scheduler: failed to register job '%s': %s", job_id, exc)
 
+    def _auto_enable_delivery_jobs(self) -> None:
+        """
+        If a delivery channel is configured (env var or config file) but
+        kill_signal_check is disabled, silently enable it.
+        This gives zero-config value: set SOLOOS_SLACK_WEBHOOK → get daily alerts.
+        """
+        has_delivery = bool(
+            os.environ.get("SOLOOS_SLACK_WEBHOOK")
+            or os.environ.get("SOLOOS_NTFY_TOPIC")
+            or os.environ.get("SOLOOS_EMAIL_TO")
+            or self._config.get("delivery", {}).get("slack_webhook_url")
+            or self._config.get("delivery", {}).get("ntfy_topic")
+            or self._config.get("delivery", {}).get("email_to")
+        )
+        if not has_delivery:
+            return
+
+        jobs_cfg = self._config.setdefault("jobs", {})
+        kill_cfg = jobs_cfg.setdefault("kill_signal_check", {})
+        if not kill_cfg.get("enabled", False):
+            kill_cfg["enabled"] = True
+            kill_cfg.setdefault("cron", "0 9 * * *")
+            # Also ensure global scheduler is enabled
+            self._config["enabled"] = True
+            logger.info(
+                "scheduler: delivery channel detected — auto-enabled kill_signal_check_job (daily 09:00)"
+            )
+
     def start(self) -> None:
         """Start the background scheduler (non-blocking). Idempotent."""
         with self._lock:
@@ -541,6 +569,7 @@ class SoloOSScheduler:
                 return
             try:
                 self._scheduler = self._build_scheduler()
+                self._auto_enable_delivery_jobs()
                 self._register_jobs()
                 self._scheduler.start()
                 self._started = True

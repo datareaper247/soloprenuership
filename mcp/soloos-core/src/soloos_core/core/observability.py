@@ -41,10 +41,11 @@ from pathlib import Path
 
 _log = None
 _log_available = False
+_log_file_handle = None  # kept alive to prevent GC and allow future close
 
 
 def _get_logger():
-    global _log, _log_available
+    global _log, _log_available, _log_file_handle
     if _log is not None:
         return _log, _log_available
 
@@ -55,14 +56,14 @@ def _get_logger():
         log_dir.mkdir(parents=True, exist_ok=True)
         log_file = log_dir / "tool_calls.jsonl"
 
+        # Store handle at module level so it is not GC'd and can be closed on shutdown
+        _log_file_handle = log_file.open("a", encoding="utf-8")
         structlog.configure(
             processors=[
                 structlog.processors.TimeStamper(fmt="iso"),
                 structlog.processors.JSONRenderer(),
             ],
-            logger_factory=structlog.WriteLoggerFactory(
-                file=log_file.open("a", encoding="utf-8")
-            ),
+            logger_factory=structlog.WriteLoggerFactory(file=_log_file_handle),
         )
         _log = structlog.get_logger()
         _log_available = True
@@ -74,6 +75,18 @@ def _get_logger():
         _log_available = False
 
     return _log, _log_available
+
+
+def close_log_file() -> None:
+    """Close the log file handle gracefully (call on process shutdown)."""
+    global _log_file_handle
+    if _log_file_handle is not None:
+        try:
+            _log_file_handle.flush()
+            _log_file_handle.close()
+        except Exception:
+            pass
+        _log_file_handle = None
 
 
 class _NoOpLogger:

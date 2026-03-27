@@ -85,18 +85,24 @@ class WorldModel:
         model["goals"] = dict(_EMPTY_MODEL["goals"])
         model["agent_state"] = dict(_EMPTY_MODEL["agent_state"])
         model["refreshed_at"] = _now()
+        model["data_sources_ok"] = {}  # health flag: tracks which sources succeeded
 
         # Pull metrics from context DB if available
         try:
             model.update(self._pull_from_sqlite())
+            model["data_sources_ok"]["sqlite"] = True
         except Exception as exc:
             logger.warning("WorldModel.refresh sqlite pull failed: %s", exc)
+            model["data_sources_ok"]["sqlite"] = False
 
         # Pull from analytics DB (DuckDB) if available
         try:
-            model.update(self._pull_from_analytics())
-        except Exception:
-            pass  # Optional — not all installs have DuckDB data
+            result = self._pull_from_analytics()
+            model.update(result)
+            model["data_sources_ok"]["duckdb"] = True
+        except Exception as exc:
+            logger.debug("WorldModel.refresh duckdb pull skipped: %s", exc)
+            model["data_sources_ok"]["duckdb"] = False
 
         self._cache = model
         self._persist(model)

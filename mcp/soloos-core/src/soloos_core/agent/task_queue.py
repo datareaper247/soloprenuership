@@ -91,39 +91,59 @@ class TaskQueue:
         return task_id
 
     def dequeue(self, agent_id: str | None = None) -> dict | None:
-        """Get highest-priority pending task (lowest priority number = highest urgency)."""
+        """
+        Get highest-priority pending task (lowest priority number = highest urgency).
+
+        Uses BEGIN IMMEDIATE to prevent two concurrent workers from claiming the
+        same task between the SELECT and UPDATE (TOCTOU race condition).
+        """
+        conn = self._conn()
         try:
-            with self._conn() as conn:
-                if agent_id:
-                    row = conn.execute(
-                        """SELECT * FROM agent_tasks
-                           WHERE status='pending' AND agent_id=?
-                           ORDER BY priority ASC, created_at ASC LIMIT 1""",
-                        (agent_id,),
-                    ).fetchone()
-                else:
-                    row = conn.execute(
-                        """SELECT * FROM agent_tasks
-                           WHERE status='pending'
-                           ORDER BY priority ASC, created_at ASC LIMIT 1"""
-                    ).fetchone()
+            conn.execute("BEGIN IMMEDIATE")
+            if agent_id:
+                row = conn.execute(
+                    """SELECT * FROM agent_tasks
+                       WHERE status='pending' AND agent_id=?
+                       ORDER BY priority ASC, created_at ASC LIMIT 1""",
+                    (agent_id,),
+                ).fetchone()
+            else:
+                row = conn.execute(
+                    """SELECT * FROM agent_tasks
+                       WHERE status='pending'
+                       ORDER BY priority ASC, created_at ASC LIMIT 1"""
+                ).fetchone()
 
-                if row is None:
-                    return None
+            if row is None:
+                conn.rollback()
+                return None
 
-                task_id = row["id"]
-                started = _now()
-                conn.execute(
-                    "UPDATE agent_tasks SET status='running', started_at=? WHERE id=?",
-                    (started, task_id),
-                )
-                d = self._row_to_dict(row)
-                d["status"] = "running"
-                d["started_at"] = started
-                return d
+            task_id = row["id"]
+            started = _now()
+            updated = conn.execute(
+                "UPDATE agent_tasks SET status='running', started_at=? WHERE id=? AND status='pending'",
+                (started, task_id),
+            ).rowcount
+
+            if updated == 0:
+                # Race: another worker claimed it between our SELECT and UPDATE
+                conn.rollback()
+                return None
+
+            conn.commit()
+            d = self._row_to_dict(row)
+            d["status"] = "running"
+            d["started_at"] = started
+            return d
         except Exception as exc:
+            try:
+                conn.rollback()
+            except Exception:
+                pass
             logger.warning("TaskQueue.dequeue failed: %s", exc)
             return None
+        finally:
+            conn.close()
 
     def complete(self, task_id: str, result: dict) -> None:
         try:
