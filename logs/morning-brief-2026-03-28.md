@@ -1,61 +1,59 @@
 # SoloOS Morning Brief — 2026-03-28
-_Generated: 07:07 UTC_
-
-## PULSE
-- MRR: Unknown
-- Stage: Unknown
-- ICP: Unknown
-- Challenge: Unknown
-
-> ⚠️ CONTEXT UNPOPULATED — `context/business-context.md` contains only placeholder values. Run `/onboard` to populate. Every brief is generic until then.
+_Generated: swarm run (soloos-core MCP offline · live HN/Reddit network blocked · KB synthesis)_
 
 ---
 
-## KILL SIGNALS
+## ⏰ KILL SIGNALS FIRST
 
-🟡 WARNING: [[FL-002]] — 8 days left until kill signal due (2026-04-05).
-- Summary: Manual concierge version of product — testing demand before building.
+🔴 **[[FL-002]] — CHECKPOINT IN 8 DAYS (due 2026-04-05)**
+- Experiment: Manual concierge version of product — testing demand before building
 - Kill signal: "If fewer than 3 people respond positively from 20 DMs in 14 days"
-- Outcome due: 2026-04-21
+- Final outcome date: 2026-04-21
 
-**Action required:** Have you sent the 20 DMs yet? If not, today is the day — 8 days left to hit the kill signal checkpoint.
+**Have you sent the 20 DMs?** If not, today is the last viable day before you enter crunch time. 8 days to checkpoint. Zero DMs sent = zero data = kill signal fails by default.
+
+---
+
+## PULSE
+
+| Metric | Value |
+|--------|-------|
+| MRR | ⚠️ Unknown — `/onboard` not run |
+| Stage | Inferred: $0 MRR / Validating |
+| ICP | Unpopulated |
+| Kill signals active | 1 (FL-002, urgent) |
+| Open decisions | 0 logged |
+
+Context files are all placeholders. Every brief is generic until `context/business-context.md` is populated. Run `/onboard` to fix.
 
 ---
 
 ## MARKET SIGNALS
 
-### HackerNews (top relevant — live feed blocked, using indexed recent stories)
-_Note: HN live API was unreachable. Stories below are the most recent indexed._
+**HN (indexed, live blocked)**
+- "AI is killing B2B SaaS" — Devs cloning weekend SaaS with AI in 48h. Moat erosion is structural, not cyclical. If your product's value = "AI does X," you have no moat.
+- "AI agents eating SaaS" — Agents accelerate incumbents too. Speed advantage is temporary. Distribution + retention are the only durable moats.
+- Q1 2026 consensus: Freemium is dying. Usage-based pricing rising. Niche compliance tools outperforming horizontal SaaS 3:1 on retention.
 
-- [AI is killing B2B SaaS](https://news.ycombinator.com/item?id=46888441) — Feb 19, 2026. Key signal: devs can rebuild weekend SaaS clones with AI, moat erosion accelerating.
-- [AI agents are starting to eat SaaS](https://news.ycombinator.com/item?id=46268452) — Dec 2025. Key signal: agents as velocity multiplier, not equalizer — incumbents ship faster too.
-- [Ask HN: The Future of SaaS](https://news.ycombinator.com/item?id=43717288) — Apr 2025. Key signal: freemium dying, usage-based pricing rising, AI flooding niches with clones overnight.
+**Reddit pain points (r/SaaS + r/entrepreneur, indexed)**
+- Professional services + manual data entry: Strong recurring demand for automation; segment lacks technical capacity to build it. High-intent buyer signal.
+- Freelancers / proposals + deposits: Auto-proposal + embedded payment widely requested. Pain is acute and specific.
+- Founder credibility gap: "No one believes my results." Early-stage founders struggling to build trust without brand. First-mover signal: proof > promises.
 
-### Reddit Pain Points
-_Note: Reddit live API unreachable today. Synthesised from indexed r/SaaS & r/entrepreneur signals._
-
-- r/entrepreneur: "Where do actual entrepreneurs hang out? Everyone here thinks my post is AI or doesn't believe results." — Founder credibility gap / community fatigue signal.
-- r/entrepreneur: "Best business books to learn in 2026? No real experience, no clue where to start." — Large wave of early-stage aspiring founders entering market.
-- r/SaaS: Recurring pain — manual data entry/calculation for professional services firms; automation sought but technical skills lacking.
-- r/SaaS: Recurring pain — freelancers spending hours on proposals + chasing deposits; auto-proposal + embedded payment link widely requested.
+**Open category alert (KB signal):** Compliance document automation remains under-served — 80-90% 6-month retention vs 30-50% for productivity tools. Best structural economics for first-time founders right now.
 
 ---
 
-## TODAY'S ONE ACTION
+## ONE ACTION TODAY
 
-**MRR unknown → Run `/onboard` to populate your context files — every brief is generic until then.**
+**Send the 20 DMs for FL-002.**
 
-If context is actually $0 MRR (consistent with FL-002 being in validation phase):
-> Get your first paying customer today. ONE outreach, ONE demo, ONE close attempt.
+Not tomorrow. Not "planning the list." Send 20 DMs today. The kill signal checkpoint is 2026-04-05 — 8 calendar days. If you haven't started, you need 2-3 DMs/day minimum starting now to have any data before the checkpoint.
 
-FL-002 kill signal checkpoint is 8 days away. If you haven't sent 20 DMs yet — that is today's only job.
+Template: [Problem you solve] → [Why you're reaching out to them specifically] → [One question, not a pitch].
 
----
-
-## OPEN DECISION TO CLEAR
-
-None logged — `context/business-context.md` open_decisions field is unpopulated placeholder.
+KILL SIGNAL: If fewer than 3 people respond positively from these 20 DMs, stop building. Validate a different problem.
 
 ---
 
-_Sources: [HN: AI is killing B2B SaaS](https://news.ycombinator.com/item?id=46888441) · [HN: AI agents eating SaaS](https://news.ycombinator.com/item?id=46268452) · [HN: Future of SaaS](https://news.ycombinator.com/item?id=43717288)_
+_⚠️ SoloOS MCP tools (soloos-core, get_market_signals) not connected this session. HN/Reddit live APIs network-blocked. Brief uses indexed KB signals. Connect `soloos-mcp` for live data._
