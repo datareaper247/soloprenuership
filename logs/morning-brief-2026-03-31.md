@@ -1,17 +1,18 @@
 # SoloOS Morning Brief — 2026-03-31
-_Generated: 07:00 UTC_
+_Generated: 07:16 UTC (updated run)_
 
 ---
 
 ## ⚠️ KILL SIGNAL — PRIORITY ONE
 
-🔴 **FL-002 — GovProcure Validation — 5 DAYS LEFT**
-- **Due**: 2026-04-05
-- **Kill criteria**: <3% email reply rate from 60+ sends AND <5 total waitlist signups AND Google Ads CTR <2%
-- **Status**: Pipeline was being built as of 2026-03-27. Is it live?
-- **Single question**: Have you sent email batch #1 from Instantly.ai yet? If no — that's today's only job.
+🟠 **URGENT: [[FL-002]] — GovProcure Validation — 5 DAYS LEFT**
+- **Kill signal due**: 2026-04-05
+- **Kill criteria**: Fewer than 3 people respond positively from 20 DMs in 14 days
+- **Outcome due**: 2026-04-21
+- **Status**: ⏳ Pending
+- **Single question**: Have you sent the 20 DMs yet? If no — that is today's only job.
 
-> Every day the pipeline sits unlaunched is a day of your 10-day signal window burned. 5 days remain. If nothing is live by EOD today, the kill signal expires without data — which is the worst outcome.
+> 5 days remain on your kill signal window. Every day without sends burns signal time. Launch the outreach today.
 
 ---
 
@@ -20,61 +21,39 @@ _Generated: 07:00 UTC_
 | Metric | Status |
 |---|---|
 | MRR | $0 — pre-revenue |
-| Stage | Validating |
-| Primary bet | GovProcure AI — SAM.gov monitoring for SMB contractors |
-| Secondary | TapTap iOS — pre-launch, blocked on META P0s |
-| Parked | SnoozeTales, ScamAlert, FSMA 204 |
+| Stage | Validating (manual concierge first) |
+| Primary bet | Manual concierge version — validate demand before building |
+| Context file | ⚠️ UNPOPULATED — `context/business-context.md` has placeholder values |
 
 ---
 
 ## MARKET SIGNALS
 
-### HackerNews (week of Mar 24–31)
+### HackerNews
+- ⚠️ Network unavailable in this session — check https://news.ycombinator.com manually
 
-**1. "AI is eating B2B SaaS" — two competing HN threads**
-Both "AI agents are eating SaaS" and "AI is killing B2B SaaS" trended this week. The consensus: agents accelerate incumbent velocity but also compress legacy tool moats. **GovWin IQ ($1–3K/mo, annual contracts, no AI-native search) is the legacy tool.** This week validated your attack vector.
-
-**2. AI-native gov-tech is bifurcating the market**
-SAM.gov retired FPDS ezSearch (March 2026), pushing contractors to manual filtering on a worse UI. GovDash claims "150% more qualified opportunities" vs manual SAM.gov search. Market is clearly moving — you're not early, but GovWin's pricing ($1K+/mo, annual lock-in) leaves a massive SMB gap.
-
-**3. Solo founder AI SaaS is having a moment**
-BoredHumans: $8.8M ARR, solo dev, 100+ AI tools. Granola: $125M Series C for AI meeting notes. Signal: enterprise is paying for AI workflow automation. Your $0 MRR is normal at this stage — but the window for AI-native GovTech tooling is now, not next year.
-
-### Reddit (r/SaaS + r/Entrepreneur — synthesized signals)
-
-**Pain point #1 — Annual contract anxiety**: r/SaaS threads consistently flag GovWin-style annual commits as friction for SMB contractors. Usage-based or monthly pricing is a wedge.
-
-**Pain point #2 — "Too many tools to monitor SAM.gov"**: SMB contractors cobbling together SAM.gov + email alerts + spreadsheets = your exact ICP problem. This pattern (manual workarounds + spreadsheets) is a validated "build here" signal.
-
-**Pain point #3 — AI tools that surface noise, not signal**: Multiple founder threads about AI tools that "hallucinate" procurement data. Accuracy and source-linking (back to SAM.gov) = your moat claim to make.
+### Reddit Pain Points
+- ⚠️ Network unavailable in this session — check r/entrepreneur and r/SaaS manually
 
 ---
 
-## COMPETITIVE FLASH
+## TODAY'S ONE ACTION
 
-GovWin IQ pricing confirmed Q1 2026: **$1,000–$3,000+/mo, annual only.**
-Free alternatives (SAM.gov, GovTribe, SamSearch) = commoditized basic search.
-AI-native gap: nobody owns **affordable ($99–299/mo) + AI-native + monthly billing** for SMB contractors under $10M revenue. That's your lane.
+**Send the 20 DMs. Now.**
 
----
+You're at $0 MRR with a manual concierge validation in progress. The kill signal (≥3 positive responses from 20 DMs) is due in 5 days. The stage rule is clear: no building, no designing — talk to people and attempt a close.
 
-## ONE ACTION TODAY
-
-**Launch the GovProcure email sequence in Instantly.ai.**
-
-Not "finish setting it up." Not "review the copy one more time." Send batch #1 today.
-- 40 emails → Apollo.io list → Instantly.ai → track opens by EOD
-- If open rate >25% by tomorrow morning: message is landing. Keep going.
-- If open rate <15%: subject line problem, not product problem. A/B test subject only.
+1. Send 20 outreach messages to your target ICP
+2. Track responses by EOD
+3. If ≥3 positive responses: you have signal — proceed to manual delivery
+4. If <3: kill signal triggers on 2026-04-05
 
 ---
 
 ## OPEN DECISIONS
 
-- [ ] Has govprocure.ai domain been registered? ($19 Carrd landing page can't go live without it)
-- [ ] Google Ads — is the $100 budget loaded and campaign live?
-- [ ] TapTap META P0 inputs — still blocked on founder action
+None logged in context file. Run `/onboard` to populate `context/business-context.md`.
 
 ---
 
-_Kill signal FL-002 expires: 2026-04-05 | Next brief: 2026-04-01_
+_Kill signal [[FL-002]] expires: **2026-04-05** | Outcome check: 2026-04-21_
