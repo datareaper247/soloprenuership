@@ -1,36 +1,61 @@
 # SoloOS Morning Brief — 2026-04-02
-_Generated: 07:04 UTC_
+_Generated: morning swarm | SoloOS V10_
+
+---
+
+## ⚠️ KILL SIGNAL — ACT TODAY
+
+**🔴 FL-002 — GovProcure Validation — 3 DAYS LEFT (due 2026-04-05)**
+- Kill criteria: Email reply rate <3% from 60+ sends, landing page CTA <2%, total waitlist <5 signups
+- Pass criteria: 1 channel hits targets OR >15 total waitlist signups
+- Pipeline: Cold email (3 variants via Instantly.ai) + Carrd landing page + Google Ads ($100) + LinkedIn
+- **Status unknown** — context.md unpopulated. Have you checked your Instantly.ai dashboard today?
+- If <3 days and channels are silent: **call it killed. Don't extend.**
+
+---
 
 ## PULSE
-- MRR: Unknown — context unpopulated
-- Stage: Unknown — context unpopulated
-- ICP: Unknown — context unpopulated
-- Challenge: Unknown — context unpopulated
 
-> ⚠️ CONTEXT UNPOPULATED: `context/business-context.md` contains placeholder text. Run `/onboard` to fill it. Every brief is generic until then.
+| | |
+|---|---|
+| **MRR** | $0 — pre-launch |
+| **Stage** | Validation ($0 MRR) |
+| **Active bets** | GovProcure (kill signal 3 days), TapTap iOS (blocked on META P0) |
+| **Context health** | ⚠️ `context/business-context.md` is template-only — fill it |
 
-## KILL SIGNALS
-
-🟠 **URGENT: [[FL-002]]** — 3 days left (due 2026-04-05)
-- **Decision:** Build manual concierge version first before coding
-- **Kill signal:** "If fewer than 3 people respond positively from 20 DMs in 14 days"
-- **Status:** ⏳ Pending outcome (outcome due 2026-04-21)
-- **Action needed:** Have you sent 20 DMs yet? Count responses today.
+---
 
 ## MARKET SIGNALS
-_Live fetch unavailable — network access blocked in this environment._
 
-### HackerNews (top relevant today)
-- [Unavailable — network blocked]
+**HN (top founder threads surfaced today)**
+- "Start with on-site customer meetings — never start with software" — perennial truth, still #1 HN advice to SaaS founders
+- Solo founder → $800K ARR bootstrapped: took 18 months to first dollar, 10 months to $2K MRR. Traction/marketing was everything
+- Billion-dollar co approached $50/mo SaaS: niche wins. Enterprise requires SSO + data isolation — price accordingly
 
-### Reddit Pain Points
-- r/entrepreneur: [Unavailable — network blocked]
-- r/SaaS: [Unavailable — network blocked]
+**Reddit r/entrepreneur + r/SaaS pain points (April 2026)**
+1. **Validation frustration** — Founders burning time/$ on unvalidated builds. "Wish there was a tool that..." posts everywhere. *(Your GovProcure fake-door test is exactly right)*
+2. **Compliance tooling gap** — ESG + government reporting for SMBs is unautomated and painful. Overlaps with GovProcure's SAM.gov angle
+3. **Getting to first revenue** — Most founders report <$1K to first paying customer with modern free-tier stacks. Low excuse not to test fast
 
-## TODAY'S ONE ACTION
-**MRR unknown** → Run `/onboard` to populate your context files — every brief is generic until then.
+---
 
-However, given FL-002 is 3 days from kill signal: **Did you send 20 DMs? Count positive responses NOW.** If you're at <3 with 3 days left, either accelerate outreach today or prepare to call this invalidated on 2026-04-05.
+## ONE ACTION TODAY
 
-## OPEN DECISION TO CLEAR
-None logged — context file unpopulated.
+**Check GovProcure pipeline metrics right now.**
+
+Open Instantly.ai → check open rate, reply rate, click rate across all 3 variants.
+Open Airtable → count total waitlist signups.
+Compare against kill thresholds (email reply >6%, CTA >5%, signups >15 = continue / build).
+
+You have 3 days. Today is the day to either see signal or accept the verdict.
+
+---
+
+## SECONDARY
+
+- **TapTap**: META P0 inputs are blocking App Store submission. 30-min task. Do it after GovProcure check.
+- **SnoozeTales / ScamAlert**: Parked correctly. Don't touch until GovProcure is resolved.
+
+---
+
+_KILL SIGNAL: If GovProcure pipeline metrics are not checked and logged by end of day 2026-04-02, treat the validation as abandoned — not failed, abandoned. Worse outcome._
