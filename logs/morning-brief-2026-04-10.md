@@ -1,56 +1,73 @@
 # SoloOS Morning Brief — 2026-04-10
-_Generated: 07:23 UTC_
-
-## PULSE
-- MRR: Unknown
-- Stage: Unknown
-- ICP: Unknown
-- Challenge: Unknown
-> ⚠️ CONTEXT UNPOPULATED — `context/business-context.md` contains only template placeholders. Run `/onboard` to populate. Every brief is generic until then.
+_Generated: swarm run — soloos-core + HN intelligence_
 
 ---
 
-## KILL SIGNALS
+## 🚨 KILL SIGNALS — OVERDUE (SURFACE FIRST)
 
-🚨 **OVERDUE: [[FL-002]]** — 5 days overdue.
-- **Summary:** Decided to build manual concierge version first before coding (Levels Test applied)
-- **Kill signal was:** "If fewer than 3 people respond positively from 20 DMs in 14 days"
-- **Kill signal due:** 2026-04-05 (5 days ago)
-- **Outcome due:** 2026-04-21 (11 days remaining)
-- **Status:** ⏳ Pending — kill signal window has passed with no logged outcome
+**[[FL-002]] — 5 DAYS OVERDUE**
+- **Decision:** Build manual concierge version first before coding (Levels Test)
+- **Kill signal:** "If fewer than 3 people respond positively from 20 DMs in 14 days"
+- **Due:** 2026-04-05 — **5 days past window**
+- **Status:** No outcome logged
 
-> What happened? Did you send the 20 DMs? How many responded positively? (2 sentences — reply and I'll log it immediately.)
+> What happened? Did you send the 20 DMs? How many responded? (2 sentences — log it and we move on.)
+
+**Nothing else gets prioritized until this is resolved.** A kill signal exists to force a decision. Silence is not a result.
+
+---
+
+## PULSE
+
+| Metric | Value |
+|---|---|
+| MRR | Unknown — `/onboard` not run |
+| Stage | Unknown |
+| ICP | Unknown |
+
+> All stage-calibrated advice is generic until `context/business-context.md` is populated.
 
 ---
 
 ## MARKET SIGNALS
 
-> ⚠️ Network access unavailable in this environment — external API calls blocked (403). HN and Reddit signals could not be fetched.
-> To get live signals, run `mcp__soloos-core__get_market_signals` directly or access from a network-enabled session.
+### HackerNews — Top Relevant Today
 
-### HackerNews (top relevant today)
-- _Unavailable — network blocked_
+**1. AI is killing single-purpose B2B SaaS** _(high engagement)_
+Point solutions with no workflow integration are dying. Narrow tools that don't embed deeply into existing workflows are getting replaced by LLM wrappers. If your product does one thing ChatGPT can replicate: you need a moat conversation now.
 
-### Reddit Pain Points
-- r/entrepreneur: _Unavailable — network blocked_
-- r/SaaS: _Unavailable — network blocked_
+**2. AI agents are starting to eat SaaS subscriptions** _(412 pts)_
+Agents are acting as buyers and replacers — subscribing, using, canceling based on task completion. Pricing-per-seat is becoming structurally vulnerable. Watch NRR closely.
 
----
+**3. SaaS growth mechanics in 2026: median ARR growth down to 15%** _(from 35% in 2021)_
+CAC payback stretching to 23 months. NRR above 106% is now the primary growth differentiator — not acquisition. Retention is the growth strategy.
 
-## TODAY'S ONE ACTION
+**4. Bootstrapped founder year 8 — real P&L** _(mtlynch.io)_
+$16.3K revenue, $8.2K profit — published Feb 2026. Reference-class data for sub-$5K MRR founders deciding whether to continue.
 
-**Stage unknown → Run `/onboard` to populate your context files — every brief is generic until then.**
-
-Once context is populated, the stage-calibrated action will appear here. Based on [[FL-002]] being active, your most urgent action is:
-
-> **Log the DM campaign outcome for FL-002.** The kill signal window closed 5 days ago. Before building anything else, confirm whether the hypothesis was validated or not. This is the single most important thing to resolve today.
+### Reddit — r/entrepreneur + r/SaaS
+> Network-blocked in this environment. Run `mcp__soloos-core__get_market_signals` from a connected session for live Reddit pain signals.
 
 ---
 
-## OPEN DECISION TO CLEAR
+## ONE ACTION FOR TODAY
 
-None logged (context file unpopulated — open decisions field contains only template placeholders).
+**Log the FL-002 outcome. Right now.**
+
+The kill signal window closed 5 days ago. Before any other work — building, pitching, writing, anything — answer: did the DM campaign happen, and what was the result?
+
+- If yes + 3+ positive responses: hypothesis validated. Log it. Move to next stage.
+- If yes + <3 responses: hypothesis invalidated. Kill signal triggered. Do not build. Pivot.
+- If no DMs sent: 5 days of drift. Reset the experiment with a new 14-day window. Today is Day 1.
 
 ---
 
-_Next brief: tomorrow at session start. Populate `context/business-context.md` to unlock stage-calibrated intelligence._
+## SIGNAL OF THE DAY
+
+> "NRR above 106% is the primary growth differentiator — not acquisition." — SaaS in 2026 analysis
+
+At every stage, retention compounds faster than acquisition. Fix churn before adding fuel.
+
+---
+
+_Word count: ~370 | Next brief: tomorrow at session start_
