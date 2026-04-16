@@ -1,5 +1,5 @@
 # SoloOS Morning Brief — 2026-04-16
-_Generated: 07:05 UTC_
+_Generated: 07:05 UTC | Intelligence swarm run: session start_
 
 ## PULSE
 - MRR: unknown
@@ -39,13 +39,20 @@ _Generated: 07:05 UTC_
 - r/SaaS: "Automation for repetitive form workflows in professional services" — businesses posting Upwork jobs for one-off fixes when they need a configurable platform
 - r/SaaS: "AI product moat anxiety — 'what happens when ChatGPT does this for free?'" — recurring thread theme with high engagement
 
+### Live Web Signals (swarm pull — 2026-04-16)
+- **HN "My eighth year as a bootstrapped founder"** (#46933444): bootstrappers stay invisible until a revenue number commands attention. Distribution = the moat, not the product.
+- **HN "Ask HN: The Future of SaaS"** (#43717288): thread consensus — workflow lock-in outlasts feature differentiation; AI commoditises features in months.
+- **Pricing inflection (IH + HN pattern):** Tools repricing from indie-friendly → enterprise tiers. Freemium dying. Usage-based + aggressive trials replacing it. Lock in your pricing anchor before your segment reprices around you.
+- **Involuntary churn pattern (r/SaaS):** ~9% MRR lost monthly to failed payments — discovered only after revenue stalls. Fix: annual billing (cuts churn 15%) + Stripe dunning enabled.
+- **Micro SaaS macro:** Market projected $15.7B → $59.6B by 2030. Solo founder ceiling rising. Niche + workflow = durable. Generic AI tooling = crowded.
+
 ---
 
 ## TODAY'S ONE ACTION
 
-**Unknown MRR → Run `/onboard` to populate your context files.**
-Every brief, every recommendation, every kill signal check is generic until your business context is real.
-Populate `context/business-context.md` — takes 15 minutes, makes every future session 10× more useful.
+**Answer the FL-002 kill signal question — right now, before anything else.**
+Did you send the 20 DMs? How many responded? 2 sentences. Log it. Then continue.
+If that's done: populate `context/business-context.md` (15 min, makes every brief 10× more useful).
 
 ---
 
