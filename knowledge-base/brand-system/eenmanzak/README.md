@@ -28,6 +28,9 @@ Read in order:
 15. [`16-mor-vs-stripe-decision-memo.md`](16-mor-vs-stripe-decision-memo.md) — Paddle/FastSpring MoR vs Stripe Billing/Tax decision memo for web micro-SaaS.
 16. [`17-revenuecat-app-store-readiness-checklist.md`](17-revenuecat-app-store-readiness-checklist.md) — RevenueCat, Apple IAP, Google Play Billing, privacy, and app-store readiness checklist.
 17. [`18-consulting-sow-liability-template.md`](18-consulting-sow-liability-template.md) — low-liability consulting offer, SOW scaffold, prohibited-project checklist, and proof-permission guidance.
+18. [`19-company-start-master-plan.md`](19-company-start-master-plan.md) — end-to-end company start roadmap from registration to trust spine, validation, launch, and operating cadence.
+19. [`20-gtm-launch-master-playbook.md`](20-gtm-launch-master-playbook.md) — GTM and launch system for consulting, web micro-SaaS, and mobile apps.
+20. [`21-company-registration-and-admin-checklist.md`](21-company-registration-and-admin-checklist.md) — registration, KVK/Belastingdienst, banking, insurance, website, register, and revenue readiness checklist.
 
 
 Brainstorm support files:
