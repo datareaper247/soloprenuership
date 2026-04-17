@@ -83,6 +83,17 @@
 
 **Status:** Recommended.
 
+## ADR-010 — Use the company website as the canonical trust and proof router
+
+**Decision:** Treat the main company site as the authoritative home for identity, proof, contact, support, privacy, terms, and outbound routing. Social profiles should point back to it and should not be considered the authoritative record for important claims.
+
+**Rationale:** Social platforms are discovery and distribution surfaces. The website is the only surface the founder fully controls, so it should hold the stable version of the story, proof, and call to action.
+
+**Rejected:** Social-first brand presence with no central site.
+**Reason:** Too weak for proof ownership, compliance, and conversion; would fragment claims across platforms.
+
+**Status:** Recommended.
+
 ## Open questions
 
 1. Is `Eenmanzak` the intended brand name, or a typo for `Eenmanszaak`?

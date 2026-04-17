@@ -7,6 +7,15 @@
 
 > Goal: update the founder profile in subtle but high-impact ways so it still reads as a serious working senior engineer, while clearly showing founder/operator identity and routing trust to the official company site.
 
+## Positioning guardrails
+
+- Keep the current employment identity visible; do not bury senior-engineer credibility.
+- Add founder identity in the headline, About section, Featured section, and relevant project/experience surfaces.
+- Let proof do the heavy lifting: featured links, demos, site pages, and GitHub/YouTube assets should carry the founder signal.
+- Use the company site as the canonical proof router; LinkedIn should point to it, not replace it.
+- Stay precise and understated; avoid hype, inflated team language, or premature startup claims.
+- If the company site is not live yet, keep the founder signal softer and use the Projects section before adding a full founder Experience entry.
+
 ## Positioning principle
 
 Do not turn the profile into hype. Make it read like:
@@ -21,7 +30,7 @@ That balance matters because the founder context includes full-time employment, 
 |---|---|---|
 | Keep employment credibility | Trust and seniority | current role, experience, skills |
 | Add founder identity | Brand trust transfer | headline, about, featured, experience/project section |
-| Link official company site | Avoid fake/duplicate accounts and route traffic | contact info, featured, company Page, about CTA |
+| Link official company site | Avoid fake/duplicate accounts and route traffic to the canonical proof hub | contact info, featured, company Page, about CTA |
 | Show product proof | Proves shipping, not just intent | featured demos, product pages, GitHub/YouTube |
 | Avoid overclaiming | Compliance and employer/trust safety | wording, disclaimers, exact status |
 
@@ -60,7 +69,7 @@ Recommendation: start with **Option B** until the official company site and Page
 ```text
 I’m Ashwin SP, a senior software engineer based in the Netherlands.
 
-Alongside my engineering work, I’m building a founder-led product company focused on practical software for one-person businesses, accessible mobile workflows, and AI-assisted operations.
+I keep my engineering identity visible while building a founder-led product company focused on practical software for one-person businesses, accessible mobile workflows, and AI-assisted operations.
 
 Current focus areas:
 • tools and systems for solo operators / Dutch ZZP workflows

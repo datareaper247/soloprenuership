@@ -18,6 +18,27 @@ Current context indicates validation/pre-launch. That means:
 - convert the best insights into durable assets,
 - build launch assets before launch day.
 
+## Website as the canonical content home
+
+The company site is the durable home for the brand. Social channels discover and distribute; the website owns the current version of the story.
+
+Use the site as the canonical source for:
+
+- founder and company bios,
+- product and service descriptions,
+- proof assets and permissioned testimonials,
+- contact and support routing,
+- privacy, terms, and consent language,
+- launch pages and evergreen explainer pages,
+- updated links to the active social and proof surfaces.
+
+Rules:
+
+- if a claim matters, it should also exist on the site,
+- if a CTA matters, it should have a canonical URL on the site,
+- if a social post converts, the linked page should be the authoritative version of the offer,
+- do not let a social post become the only record of an important claim.
+
 ## Primary audience hypotheses
 
 There are two possible primary narratives. Pick one as the public lead; keep the other as a secondary pillar until evidence clarifies.
@@ -193,12 +214,24 @@ Tasks:
 - create Product Hunt founder account,
 - create Reddit Pro business profile,
 - decide whether Instagram is active now or reserved only,
-- publish minimum website pages,
+- publish minimum website pages and the canonical site router,
 - draft privacy/terms/support pages,
 - set up password manager + MFA + recovery vault,
 - build access matrix,
 - create processing register starter entries,
 - create asset library.
+
+Minimum website pages before serious posting:
+
+1. Home with one-line value proposition and primary CTA.
+2. About/founder page with the current founder story.
+3. Proof page or proof section with demos and permissioned evidence.
+4. Product/service page for the current public offer.
+5. Contact page with the right inbox routing.
+6. Support page with response expectations.
+7. Privacy page and terms where needed.
+8. Media/partnerships page or section if inbound matters.
+9. Links page or footer that points back to the official profiles.
 
 Content assets to create before regular publishing:
 

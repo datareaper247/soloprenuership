@@ -42,7 +42,7 @@ Use for GDPR/AVG record of processing activities. Professional review required.
 | Field | Description |
 |---|---|
 | Processing ID | Stable ID, e.g. `SOCIAL-DM-001` |
-| Processing name | Social DMs, newsletter, waitlist, testimonials, support, creator partnerships |
+| Processing name | Social DMs, lead capture/contact forms, newsletter, waitlist, testimonials, support, creator partnerships |
 | Business owner | Accountable person |
 | Privacy owner | Reviewer/owner |
 | Controller | Legal/trade name and contact |

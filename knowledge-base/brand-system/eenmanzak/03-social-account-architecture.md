@@ -162,19 +162,31 @@ Prepare for each launch:
 
 ### 6. Website and email routing
 
-**Job:** canonical trust + conversion source.
+**Job:** canonical trust + conversion source + proof hub.
 
-Minimum pages before serious posting:
+The main company site is the official home for the brand. Social profiles can discover, distribute, and discuss, but the site must hold the durable version of the story, the proof, and the next step.
 
-- home / company one-liner,
-- about/founder,
-- product/service pages,
-- contact,
-- support,
-- privacy statement,
-- terms where needed,
-- media kit / press / partnerships page,
-- status/changelog page when product is live.
+Main site requirements:
+
+- one canonical domain used consistently across founder, company, product, and support profiles,
+- home page with the current one-line value proposition and the primary CTA,
+- about/founder page with the real founder story and current operating context,
+- product/service pages for active offers only,
+- proof page or proof section with demos, screenshots, case studies, and permissioned testimonials,
+- contact page with the business inbox and routing rules,
+- support page with the support inbox and escalation expectations,
+- privacy statement and terms where needed,
+- media/press/partnerships page or section,
+- links page or footer that routes to the official LinkedIn, GitHub, YouTube, and Product Hunt surfaces,
+- current bios and claims maintained on the site before they are reused elsewhere.
+
+Routing rules:
+
+- every serious profile should link back to the site,
+- every launch post should point to a canonical URL on the site when one exists,
+- social posts are discovery surfaces, not the authoritative record,
+- do not leave key proof claims only on social platforms,
+- if a temporary campaign page exists, it should still route back to the main site and be decommissioned after the campaign.
 
 Emails:
 

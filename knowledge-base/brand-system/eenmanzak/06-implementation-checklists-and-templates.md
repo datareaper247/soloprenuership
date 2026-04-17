@@ -24,11 +24,17 @@
 ### Trust
 
 - [ ] Website live.
+- [ ] Canonical company-site router live.
 - [ ] About/founder page.
 - [ ] Contact page.
 - [ ] Support page/inbox.
 - [ ] Privacy statement.
 - [ ] Terms where needed.
+- [ ] Proof page or proof section.
+- [ ] Media/press/partnerships page or section.
+- [ ] Links/footer routes to official social and proof surfaces.
+- [ ] Lead capture form and privacy notice tested.
+- [ ] Cookie/banner consent reviewed if tracking exists.
 - [ ] Processing register started.
 - [ ] Media/press/partnership email.
 - [ ] Founder bio.
@@ -122,6 +128,34 @@ We believe small companies can be serious companies: clear systems, honest proof
 | Support | `Email support@... so we can help privately.` |
 | Privacy | `Email privacy@... for data/privacy requests.` |
 | Product Hunt | `Try it, ask anything, and tell me what’s unclear.` |
+
+## Company-site router checklist
+
+Use this to verify the main site is the authoritative brand hub before heavy posting.
+
+| Page/surface | Required job |
+|---|---|
+| Home | one-line value prop, primary CTA, trust cues |
+| About/founder | founder credibility, current role context, mission |
+| Proof | demos, screenshots, case studies, permissioned testimonials |
+| Product/service | current offer, pricing or next step, FAQ |
+| Contact | business inbox and response route |
+| Support | issue reporting and escalation route |
+| Privacy | data collection, consent, retention, rights |
+| Terms | only where required or useful |
+| Media/partners | press, collaboration, and partnership routing |
+| Links/footer | canonical outbound links to social and proof pages |
+
+Checklist:
+
+- [ ] All profile bios point back to the same canonical domain.
+- [ ] The site contains the current company and founder language used on social profiles.
+- [ ] Every public CTA has a stable URL on the site.
+- [ ] Proof assets are on the site, not only in posts.
+- [ ] Forms and lead capture have privacy language before traffic arrives.
+- [ ] Cookie/analytics consent is in place before any tracking pixel or retargeting tool is enabled.
+- [ ] The support path is separated from general inbox traffic.
+- [ ] There is a documented owner for future updates.
 
 ## UTM convention
 

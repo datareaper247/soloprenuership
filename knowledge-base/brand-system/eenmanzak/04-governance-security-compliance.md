@@ -44,6 +44,16 @@
 - Platform ownership documented in access matrix.
 - No personal-device-only recovery for business-critical channels.
 
+### Platform role access rules
+
+- Assign access to the function, not the person.
+- Give contractors the lowest role that can do the job.
+- Keep ownership and recovery in business-controlled hands.
+- Use content/task roles for publishing, analyst roles for measurement, and owner roles only for continuity.
+- Do not hand out admin access just to speed up collaboration.
+- Revoke access immediately when a project, contract, or campaign ends.
+- Split publishing and recovery duties across different people where possible.
+
 ## Platform-specific governance notes
 
 ### LinkedIn
@@ -131,6 +141,7 @@ KVK guidance says a processing register should capture purposes, data subjects, 
 | Process | Data subjects | Data | Purpose | Legal basis placeholder | Recipients/processors | Retention draft | Security |
 |---|---|---|---|---|---|---|---|
 | Social DMs | prospects, users, partners | name/handle, messages, contact info | support, sales, research | legitimate interest / consent / contract depending case | platform, CRM/helpdesk if used | 12-24 months unless support/legal need | MFA, least privilege |
+| Lead capture / contact forms | prospects, partners, press | name, email, company, role, message, source, consent record | respond, qualify, route, book calls | legitimate interest / consent / pre-contract | website form provider, email inbox, CRM | 12-24 months unless converted or legal need | MFA, access controls, spam protection |
 | Newsletter | subscribers | email, name optional, preferences, opens/clicks | send updates | consent | email provider | until unsubscribe + suppression record | MFA, DPA |
 | Waitlist | prospects | email, role, problem, product interest | beta/access notification | consent / pre-contract | form tool, database/email provider | until launch + 12 months unless opted in | access controls |
 | Product support | users/customers | email, issue content, device/browser, attachments | resolve support | contract / legitimate interest | helpdesk, engineering tools | 24 months unless legal/accounting need | ticket permissions |
@@ -151,6 +162,18 @@ Maintain a `proof-permissions` sheet with:
 - approver/contact,
 - storage link,
 - revocation status.
+
+### DM and lead capture handling
+
+- Treat DMs as potential personal data whenever they are copied, summarized, exported, or stored outside the platform.
+- Use public DMs for triage and trust building, not for collecting sensitive details.
+- Move sales, support, privacy, or billing conversations to the website, support inbox, or business email as soon as the conversation becomes personal or operational.
+- Prefer site-hosted forms or business inboxes for the first durable record of a lead.
+- Collect only the fields needed to respond or qualify the request.
+- If a DM becomes a lead, log the source, purpose, retention rule, and owner in the processing register.
+- Do not scrape, bulk-export, or paste DM lists into spreadsheets without a documented purpose, access control, and retention rule.
+- Waitlist and lead forms need a privacy notice before launch and a retention rule before traffic is sent to them.
+- If a platform auto-syncs leads into CRM or email tooling, record that processor and review the data flow in the register.
 
 ## AI-content guardrails
 
@@ -194,6 +217,13 @@ Before enabling analytics pixels, retargeting, conversion tags, or custom audien
 - avoid sensitive-category targeting,
 - keep screenshots/exports of consent text and privacy policy versions.
 
+For the company site and launch pages:
+
+- do not enable tracking pixels or retargeting until the consent and notice flow is live,
+- prefer privacy-light measurement first: server logs, first-party form fields, and UTM parameters,
+- keep a dated copy of the cookie banner and privacy notice used at launch,
+- if a social campaign sends traffic to a form, the form and notice must already be in place.
+
 For early-stage validation, prefer privacy-light measurement first: server logs, first-party form source fields, UTM parameters, and aggregate dashboarding before heavy ad-tech.
 
 ## Creator / influencer partnerships
@@ -207,6 +237,13 @@ If creators promote the company/product:
 - collect invoice/payment/tax info securely,
 - maintain proof of approvals,
 - keep claims substantiated.
+
+Disclosure rules:
+
+- Do not rely on a buried bio note or a vague hashtag if the platform or regulator expects a clearer disclosure.
+- Put the disclosure in the content itself whenever the relationship must be recognizable.
+- If compensation, free product, affiliate credit, or a barter arrangement exists, document it before publication.
+- Keep the approval trail with the asset so future reuse does not strip out the disclosure requirement.
 
 KVK notes that advertisers hiring influencers are responsible and that ad relationships must be clearly recognizable under applicable rules.
 
