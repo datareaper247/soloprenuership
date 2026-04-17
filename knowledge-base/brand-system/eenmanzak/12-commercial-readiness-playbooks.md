@@ -4,6 +4,11 @@
 **Last updated:** 2026-04-17
 **Purpose:** Define concrete commercial-readiness paths for paid mobile apps, web micro-SaaS, and consulting/services sold internationally, with rich Western markets as the first commercial target.
 
+
+## Company mandate alignment
+
+Interpret this document through `00-company-mandate-and-alignment.md`: the company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, and multiple revenue streams. Dutch ZZP, TapTap, SpatialSense, and SoloOS are lanes, not the entire company identity.
+
 > This guide is for planning. It is not tax, legal, accounting, app-store, consumer-law, or payment-provider advice.
 
 ## 1. Market sequencing

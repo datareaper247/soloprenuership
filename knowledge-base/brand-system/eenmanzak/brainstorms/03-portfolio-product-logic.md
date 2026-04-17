@@ -5,13 +5,18 @@
 **Lane owner:** Worker 3 / portfolio-product logic
 **Source IDs:** L03-L08, E30-E31, E49-E56, U01-U06
 
+
+## Company mandate alignment
+
+Interpret this document through `00-company-mandate-and-alignment.md`: the company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, and multiple revenue streams. Dutch ZZP, TapTap, SpatialSense, and SoloOS are lanes, not the entire company identity.
+
 > This document is a brainstorming artifact for founder review. It should not be treated as a public roadmap, financial forecast, legal/tax/immigration statement, WBSO plan, or product commitment. Keep the caveats from `09-claims-compliance-register.md` attached to any public copy derived from this work.
 
 ## Working portfolio thesis
 
 The cleanest portfolio logic is not “one company with many random ideas.” It is:
 
-> **A founder-led software company that compounds trust by shipping practical operator tools: accessibility-first apps, Dutch one-person-business workflows, and AI-assisted internal operating systems.**
+> **An AI-first founder-led software company that compounds trust by shipping practical products and services across ecommerce, logistics, B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS, and AI-assisted internal operating systems.**
 
 That gives the portfolio one coherent reason to exist while preserving optionality:
 

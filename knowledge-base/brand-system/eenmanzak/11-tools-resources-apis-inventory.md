@@ -4,6 +4,11 @@
 **Last updated:** 2026-04-17
 **Purpose:** Identify the tools, official docs, services, APIs, CLIs, OSS/public APIs, and internal resources that can accelerate the Eenmanszaak / Eenmanzak deep dive into apps, micro-SaaS, consulting, trust-building, commercial readiness, and liability reduction.
 
+
+## Company mandate alignment
+
+Interpret this document through `00-company-mandate-and-alignment.md`: the company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, and multiple revenue streams. Dutch ZZP, TapTap, SpatialSense, and SoloOS are lanes, not the entire company identity.
+
 > Use this as a selection map. Do not connect tools or collect data until the relevant privacy, payment, tax, app-store, and claims-register gates are satisfied.
 
 ## 1. Operating model

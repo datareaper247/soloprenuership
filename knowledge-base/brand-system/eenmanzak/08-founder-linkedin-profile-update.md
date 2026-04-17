@@ -41,25 +41,25 @@ Pick one depending on how public the company should be today.
 ### Option A — safest / subtle
 
 ```text
-Senior Software Engineer | Building practical software for solo operators, accessibility, and AI-assisted workflows
+Senior Software Engineer | Building AI-first software across ecommerce, logistics, apps, SaaS, and automation
 ```
 
 ### Option B — clearer founder signal
 
 ```text
-Senior Software Engineer | Founder building practical tools for one-person businesses and accessible mobile workflows
+Senior Software Engineer | Founder building B2B/B2C apps, SaaS, micro-SaaS, and AI-first operating systems
 ```
 
 ### Option C — strongest company linkage
 
 ```text
-Senior Software Engineer | Founder, [Company Name] — practical software for solo operators and accessibility-first products
+Senior Software Engineer | Founder, [Company Name] — AI-first software for ecommerce, logistics, apps, SaaS, and operator workflows
 ```
 
 ### Option D — Dutch/ZZP-oriented
 
 ```text
-Senior Software Engineer | Founder building tools for Dutch ZZP’ers and one-person businesses
+Senior Software Engineer | Founder building practical software products and services from ecommerce/logistics domain expertise
 ```
 
 Recommendation: start with **Option B** until the official company site and Page are live, then move to **Option C**.
@@ -72,10 +72,11 @@ I’m Ashwin SP, a senior software engineer based in the Netherlands.
 I keep my engineering identity visible while building a founder-led product company focused on practical software for one-person businesses, accessible mobile workflows, and AI-assisted operations.
 
 Current focus areas:
-• tools and systems for solo operators / Dutch ZZP workflows
-• TapTap — senior-friendly smartphone learning and digital confidence
-• SpatialSense — assistive spatial-awareness experiments using mobile sensors and audio
-• AI-agent operating systems for focused solo-founder execution
+• ecommerce and logistics workflow products
+• B2B SaaS / micro-SaaS and B2C app experiments
+• consulting/productized services where they create proof and customer learning
+• TapTap and SpatialSense as product/R&D proof lanes
+• OSS, content, and AI-agent operating systems for leverage and public trust
 
 I share what I’m learning from building: product decisions, technical tradeoffs, validation work, demos, governance, and lessons from operating a small company seriously.
 
@@ -118,7 +119,7 @@ Netherlands
 Suggested description:
 
 ```text
-Building a focused portfolio of practical software products and operating systems for one-person businesses, accessibility-first mobile workflows, and AI-assisted founder execution.
+Building a focused portfolio of AI-first software products and services across ecommerce, logistics, B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D-backed experiments, and public engineering proof.
 
 Current public work includes:
 • brand and trust system for the company
@@ -158,21 +159,23 @@ I’m making a small but important shift in how I show up here.
 
 I’m still a senior software engineer — that remains a big part of my work and identity.
 
-But I’m also building a founder-led product company in the Netherlands, focused on practical software for one-person businesses, accessible mobile workflows, and AI-assisted operations.
+But I’m also building a founder-led AI-first software company in the Netherlands, focused on ecommerce/logistics workflows, B2B and B2C apps, SaaS/micro-SaaS, consulting, R&D-backed products, OSS, and public engineering proof.
 
 The operating principle is simple:
 build useful systems, show the work, keep trust evidence close to the product.
 
 Over the next months I’ll share more about:
 • product decisions and tradeoffs
-• what I’m learning from Dutch solo-business workflows
-• accessible app work like TapTap and SpatialSense
+• what I’m learning from ecommerce/logistics and operational workflows
+• app and SaaS launch cycles
+• consulting and R&D lessons
+• OSS/public engineering proof
 • how I use AI agents without handing them the steering wheel
-• the governance needed to make a one-person company look and act serious
+• the governance needed to make an AI-first company trustworthy from day one
 
 Official site: [URL]
 
-If you’re building as a solo operator, working with Dutch ZZP/admin workflows, or care about accessibility-first products, I’d like to connect.
+If you work in ecommerce, logistics, B2B/B2C software, automation, apps, SaaS, or AI-first company building, I’d like to connect.
 ```
 
 ## Red lines

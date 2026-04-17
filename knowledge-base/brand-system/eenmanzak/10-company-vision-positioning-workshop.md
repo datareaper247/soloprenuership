@@ -7,11 +7,15 @@
 
 > This is a **workshop artifact**, not final public strategy. Treat every statement below as a hypothesis to test. Do not publish legal, tax, immigration, privacy, accessibility, advertising, WBSO, KVK, VAT, trademark, or product-safety claims without current evidence and qualified review.
 
+## 0. Mandate correction — April 18, 2026
+
+The company mandate is broader than this workshop originally assumed. The company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS, authority content, and multiple revenue streams. Dutch ZZP tooling and SoloOS are important possible lanes, but they are not the whole company. All workshop hypotheses below should be re-read through `00-company-mandate-and-alignment.md`.
+
 ## 1. Workshop intent
 
 The current brand system already recommends a founder-led, monobrand-first public operating system. This workshop adds the next layer: what the company is trying to become, who it should speak to first, how the portfolio fits together, what copy directions are safe to test, and which decisions must be made before public launch.
 
-The practical goal is to help the founder choose a **30-day validation wedge** without prematurely freezing a 3-year identity.
+The practical goal is to help the founder choose the first **2–3 launch-cycle wedges** without prematurely freezing the long-term company identity.
 
 ## 2. Ground rules and caveats
 
@@ -53,21 +57,21 @@ These are not slogans. They are the deeper operating truths that can guide copy,
 
 ## 4. Working vision and mission options
 
-### Vision option 1 — Dutch one-person business clarity
+### Vision option 1 — AI-first ecommerce/logistics software company
 
-> A calmer operating layer for Dutch one-person businesses: clearer routines, safer decisions, and practical software that helps solo operators stay in control.
+> An AI-first software company building practical products and services for ecommerce, logistics, operational workflows, and modern B2B/B2C digital businesses.
 
-**Best if:** the Dutch ZZP/freelance product becomes the primary validation wedge.
+**Best if:** founder domain authority in ecommerce/logistics becomes the first public wedge.
 
-**Risks:** can sound like legal/accounting software; must preserve adviser-review boundaries.
+**Risks:** needs concrete proof assets quickly to avoid sounding broad.
 
-### Vision option 2 — Solo founder product studio
+### Vision option 2 — Senior-engineer-led product company
 
-> A founder-led product company proving how one technical operator can build useful software, services, and AI-assisted systems without losing trust, focus, or human judgment.
+> A senior-engineer-led company turning deep product, ecommerce, logistics, and operations experience into apps, SaaS, micro-SaaS, R&D, consulting, and OSS-backed products.
 
-**Best if:** the broader SoloOS / AI operator / product portfolio narrative becomes the public lead.
+**Best if:** the founder’s personal authority is the primary distribution engine.
 
-**Risks:** can become too meta or build-in-public-heavy before there is customer proof.
+**Risks:** can become founder-centric unless product/customer proof compounds.
 
 ### Vision option 3 — Practical technology for solo operators and overlooked users
 
@@ -91,14 +95,15 @@ Lead with the audience that has the most urgent pain, clearest trust requirement
 
 ### Recommended public sequence for validation
 
-1. **Research wedge:** Dutch ZZP / one-person business operators.
-2. **Trust wedge:** founder as senior engineer building seriously from the Netherlands.
-3. **Proof wedge:** small portfolio of practical apps, services, and operating-system assets.
-4. **Expansion wedge:** solo technical founders / AI-enabled operators once proof assets exist.
+1. **Authority wedge:** senior engineering + ecommerce/logistics/operations insight.
+2. **Commercial wedge:** one scoped consulting/productized-service offer or one micro-SaaS validation CTA.
+3. **Proof wedge:** one app/product demo lane such as TapTap or another B2C/B2B launch.
+4. **Infrastructure wedge:** OSS/content/AI operating-system proof that shows how the company builds.
+5. **Optional local-market wedge:** Dutch ZZP tooling if repeated pain and paid willingness appear.
 
-### Primary audience hypothesis — Dutch ZZP / one-person business operator
+### Primary audience hypothesis — ecommerce/logistics and operational software buyers
 
-**Draft ICP:** Dutch self-employed professionals and one-person business owners who are competent at their craft but feel operationally scattered across admin, decisions, tools, compliance reminders, content, client pipeline, and support.
+**Draft ICP:** ecommerce, logistics, marketplace, fulfillment, returns, customer operations, support, finance-ops, or small/mid-market operators who have costly workflow gaps and need practical software, automation, integrations, or expert execution.
 
 **Likely triggers:**
 
@@ -159,21 +164,26 @@ Use the company as a **proof-and-trust shell** with one public lead wedge at a t
 ```text
 Founder / senior engineer trust
 └── Company: Eenmanszaak / Eenmanzak working brand
-    ├── Primary validation wedge: Dutch ZZP / one-person business operating layer
-    ├── Proof products: TapTap and SpatialSense
-    ├── Service/cashflow lane: senior engineering + AI/operator systems
-    └── Internal thesis: SoloOS / AI-assisted one-person company operations
+    ├── Domain authority: ecommerce, logistics, operations, software execution
+    ├── Product lanes: B2B SaaS, micro-SaaS, B2C apps, app-store products
+    ├── Service/cashflow lane: consulting and productized services
+    ├── R&D / OSS lane: technical proof, public engineering, future IP
+    └── Internal operating lane: SoloOS / AI-assisted company operating system
 ```
 
 ### Portfolio roles
 
 | Lane | Public role | Private strategic role | Near-term action |
 |---|---|---|---|
-| Dutch ZZP product | Primary audience/product wedge candidate | Fastest route to concrete pain language and local trust need | Validate pains, checklist CTA, privacy-ready waitlist |
+| Ecommerce/logistics products | Primary domain-authority candidate | Founder-market fit and strongest expertise signal | Publish teardowns, workflow maps, and consulting/product discovery CTAs |
+| B2B SaaS / micro-SaaS | Scalable recurring revenue lane | Turns repeated workflow pain into products | Validate narrow problems and MoR/Stripe path before build |
+| B2C apps | App-store revenue and product-craft proof | Proves consumer UX, distribution, and support capability | Use TapTap-style readiness checklists and conservative claims |
+| Consulting/productized services | Cashflow/proof/discovery lane | Funds learning and creates case-study assets | Offer only through founder/company proof with SOW and liability gates |
+| R&D / OSS | Technical moat and public engineering proof | Builds credibility and future IP | Publish safe demos, repos, notes, and source-linked research when ready |
+| Dutch ZZP product | Optional local-market lane | Tests founder-local operating pain | Keep as research lane unless paid willingness appears |
 | TapTap | Accessible/product proof | Demonstrates empathy-led product craft and demo ability | Use as proof content; avoid overpromising launch/status |
 | SpatialSense | Experimental accessibility concept | Shows technical ambition and values | Keep experimental; avoid safety/medical claims |
-| Services | Cashflow/proof lane | Funds learning and creates case-study assets | Offer only through founder/company proof, not separate brand |
-| SoloOS / AI operator | Operating thesis | Internal leverage and meta-narrative | Publish selected systems once they produce proof |
+| SoloOS / AI operator | Internal leverage and meta-narrative | Helps the company operate and may become content/product later | Publish only what is useful/proven after 2–3 launch cycles |
 
 ### Product independence rule
 
@@ -192,19 +202,19 @@ Until then, products should live as pages, demos, changelogs, and recurring cont
 
 ## 7. Positioning territories to test
 
-### Territory A — “Calm operating system for Dutch one-person businesses”
+### Territory A — “AI-first ecommerce/logistics software company”
 
 **One-liner hypothesis:**
 
-> Practical software and workflows for Dutch one-person businesses that want calmer operations, clearer weekly decisions, and human-reviewed AI help.
+> AI-first software, automation, and product systems for ecommerce, logistics, and operational teams that need practical execution instead of tool sprawl.
 
 **Best homepage hero direction:**
 
-> Run your one-person business with less scattered admin.
+> Practical software for ecommerce, logistics, and operational workflows.
 >
-> Draft tools, checklists, and AI-assisted workflows for Dutch solo operators — with clear review gates for legal, tax, privacy, and accounting decisions.
+> Built by a senior software engineer turning domain experience into B2B/B2C apps, micro-SaaS, consulting, R&D, OSS, and public proof.
 
-**Risk:** must not sound like compliance/accounting replacement.
+**Risk:** must show concrete proof quickly or it sounds broad.
 
 ### Territory B — “Proof-first solo founder product studio”
 
@@ -248,8 +258,8 @@ Until then, products should live as pages, demos, changelogs, and recurring cont
 
 ### Company bio variants
 
-1. **Dutch ZZP lead**
-   `Draft: Practical software and operating-system workflows for Dutch one-person businesses. Human-reviewed AI assistance, clear routines, and conservative claim boundaries.`
+1. **Ecommerce/logistics lead**
+   `Draft: AI-first software and automation for ecommerce, logistics, and operational workflows — built with senior engineering judgment, public proof, and practical launch discipline.`
 
 2. **Product-studio lead**
    `Draft: A founder-led product studio building useful apps, solo-operator systems, and accessibility-aware tools from the Netherlands.`
@@ -259,21 +269,21 @@ Until then, products should live as pages, demos, changelogs, and recurring cont
 
 ### Founder intro post direction
 
-> I’m building a small founder-led company from the Netherlands around a simple constraint: a one-person business needs serious systems without pretending to be a big company.
+> I’m building an AI-first founder-led software company from the Netherlands around a practical constraint: real businesses need useful software, operational clarity, and trustworthy execution — not hype.
 >
-> The first public questions I’m exploring: how Dutch solo operators keep admin and decisions under control, how AI can help without making regulated claims, and how product proof can stay closer to the work than hype.
+> My strongest domain threads are ecommerce, logistics, B2B/B2C product building, app launches, SaaS/micro-SaaS, consulting, R&D, OSS, and public engineering proof.
 >
-> I’ll share careful build notes, demos, decision records, and the parts that are still unresolved.
+> I’ll share build notes, demos, decision records, launch lessons, OSS work, and the parts that are still unresolved.
 
 ### LinkedIn company post direction
 
-> Draft hypothesis: a one-person company should not need ten abandoned social accounts to look serious. It needs one clear trust shell, a canonical website, careful support/privacy routing, and proof assets that compound.
+> Draft hypothesis: an AI-first company should not need loud claims to look serious. It needs one clear trust shell, a canonical website, careful support/privacy routing, product proof, engineering artifacts, and launch assets that compound.
 >
-> We’re turning that into a practical operating system for solo operators and founder-led products.
+> We’re turning that into a practical operating system for apps, SaaS, consulting, and R&D-backed products.
 
 ### Safe research ask
 
-> I’m collecting examples from Dutch one-person businesses: what do you actually review weekly to feel in control of admin, clients, tools, and decisions? General workflow research only — not legal, tax, or accounting advice.
+> I’m collecting examples from ecommerce, logistics, and operational teams: where do workflows still leak time, quality, money, or customer trust? General workflow research only — not legal, tax, accounting, or regulated advice.
 
 ## 9. Goals and milestones
 
@@ -308,16 +318,16 @@ Until then, products should live as pages, demos, changelogs, and recurring cont
 
 Choose one of these after market evidence, not before:
 
-1. **Dutch one-person business operating layer:** a trusted software/workflow hub for ZZP operators, with adviser-safe boundaries and practical AI assistance.
-2. **Founder-led product studio:** a small portfolio of useful apps and tools, with one or two products earning independent identities.
-3. **SoloOS / AI operator platform:** a reusable operating system for one-person companies, combining workflows, agents, proof, and governance.
+1. **AI-first ecommerce/logistics software company:** B2B/B2C apps, SaaS, micro-SaaS, consulting, R&D, OSS, and content authority around operational problems.
+2. **Senior-engineer-led product company:** a portfolio of useful apps and software products, with one or two products earning independent identities.
+3. **Internal AI operator platform:** SoloOS-like systems as internal leverage first, external product only after repeated demand.
 4. **Services-funded product company:** senior engineering / AI-operator services fund product development and create proof assets.
 
 ## 10. Decision backlog
 
 ### Must decide before public launch
 
-- [ ] Is the first public lead audience Dutch ZZP operators, solo technical founders, accessibility/product proof audience, services buyers, or another segment?
+- [ ] Is the first public lead audience ecommerce/logistics operators, B2B SaaS buyers, B2C app users, consulting buyers, Dutch ZZP operators, solo technical founders, or another segment?
 - [ ] Is `Eenmanzak` intentional, and does it pass Dutch native-speaker and ownability review?
 - [ ] What domain and official company-site URL will be canonical?
 - [ ] What is the first CTA: checklist/template, waitlist, interview call, demo, or service inquiry?
@@ -326,7 +336,7 @@ Choose one of these after market evidence, not before:
 
 ### Should decide within 30-90 days
 
-- [ ] Which portfolio lane gets public priority: Dutch ZZP tool, TapTap, SpatialSense, services, or SoloOS content?
+- [ ] Which portfolio lane gets public priority: ecommerce/logistics SaaS, B2C app, consulting/service offer, OSS/public engineering, Dutch ZZP tool, TapTap, SpatialSense, or SoloOS content?
 - [ ] Which social channels are active vs reserved only?
 - [ ] What weekly founder/company content cadence is sustainable?
 - [ ] What data gets captured in the audience-research board, and how is consent/privacy handled?

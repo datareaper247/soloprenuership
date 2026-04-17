@@ -5,6 +5,11 @@
 **Owner lane:** Worker 4 / positioning and narrative options
 **Inputs:** `README.md`, `01-executive-brief.md`, `02-brand-architecture-and-naming.md`, `05-content-and-launch-operating-system.md`, `08-founder-linkedin-profile-update.md`, `09-claims-compliance-register.md`, and `.omx/context/eenmanzak-vision-positioning-brainstorm-20260417T185434Z.md`.
 
+
+## Company mandate alignment
+
+Interpret this document through `00-company-mandate-and-alignment.md`: the company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, and multiple revenue streams. Dutch ZZP, TapTap, SpatialSense, and SoloOS are lanes, not the entire company identity.
+
 > This document is a brainstorming artifact. It proposes language, frames, and copy directions for review. It is **not** a final company commitment, legal/tax/accounting/privacy/immigration claim, or approved public positioning. Keep all compliance caveats from `09-claims-compliance-register.md` intact before publishing any variant.
 
 ## Working positioning problem
@@ -28,11 +33,11 @@ The near-term positioning should therefore be modular: one **company umbrella** 
 
 ## Category hypotheses
 
-### Option A — Solo operator software studio
+### Option A — AI-first ecommerce/logistics software company
 
-**Category phrase:** Practical software studio for solo operators.
+**Category phrase:** AI-first software company for ecommerce, logistics, and operational workflows.
 
-**Core idea:** The company builds useful tools and operating systems for people running complex work alone: Dutch self-employed professionals, solo founders, and small independent operators.
+**Core idea:** The company builds practical B2B/B2C software, micro-SaaS, apps, services, and public engineering proof from senior ecommerce/logistics engineering experience.
 
 **Best when:** The founder wants a broad umbrella that can include the ZZP product, SoloOS/AI workflows, TapTap, SpatialSense, and services without overcommitting to one product.
 
@@ -138,7 +143,7 @@ The near-term positioning should therefore be modular: one **company umbrella** 
 
 Use a two-layer message until evidence clarifies the lead market:
 
-1. **Homepage/company lead:** “Practical software for one-person businesses and solo operators.”
+1. **Homepage/company lead:** “AI-first software for ecommerce, logistics, and operational workflows.”
 2. **Founder-led proof layer:** “Built in public by a senior software engineer in the Netherlands, with demos, decisions, and governance close to the work.”
 3. **Secondary pillars:** Dutch ZZP operations, accessible mobile workflows, and AI-assisted solo-founder systems.
 
@@ -148,7 +153,7 @@ This keeps the company broad enough for the current portfolio while making the a
 
 ### Broad company one-liners
 
-1. Practical software for one-person businesses and solo operators.
+AI-first software for ecommerce, logistics, and operational workflows.
 2. Building calmer tools and operating systems for people running serious work alone.
 3. A founder-led product company for solo operators, accessible workflows, and practical AI-assisted execution.
 4. Useful software for independent operators — built with proof, restraint, and trust from day one.
@@ -199,7 +204,7 @@ These are directional, not final slogans.
 Draft company positioning
 
 **Headline**
-Practical software for one-person businesses and solo operators.
+AI-first software for ecommerce, logistics, and operational workflows.
 
 **Subhead**
 Eenmanszaak / Eenmanzak is a founder-led product company in the Netherlands, exploring tools for Dutch ZZP workflows, accessible mobile products, and AI-assisted solo-founder operations — with proof, governance, and clear caveats close to the work.
@@ -420,7 +425,7 @@ I’ll share the decisions, demos, constraints, and mistakes as the system devel
 
 **Company tagline options**
 
-1. Practical software for one-person businesses and solo operators.
+AI-first software for ecommerce, logistics, and operational workflows.
 2. Tools, workflows, and product experiments for independent operators.
 3. Building calmer systems for solo-business operations, accessibility, and AI-assisted work.
 4. Proof-first product company for useful solo-operator software.

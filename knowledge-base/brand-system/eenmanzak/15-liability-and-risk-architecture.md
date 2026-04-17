@@ -4,6 +4,11 @@
 **Last updated:** 2026-04-17
 **Purpose:** Define how the business should avoid high-liability work, reduce exposure lawfully, and protect personal wealth as much as feasible.
 
+
+## Company mandate alignment
+
+Interpret this document through `00-company-mandate-and-alignment.md`: the company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, and multiple revenue streams. Dutch ZZP, TapTap, SpatialSense, and SoloOS are lanes, not the entire company identity.
+
 > Hard truth: an **eenmanszaak does not create a liability shield**. Under official Dutch guidance, the owner is personally liable and creditors can reach private assets. There is no lawful “liability-free” product or service. The correct strategy is: avoid high-risk work, use limited-liability entities when justified, insure, contract carefully, minimize data/safety exposure, and keep claims conservative.
 
 ## 1. Non-negotiable principle

@@ -91,6 +91,7 @@
 | U05 | User-provided memo in chat | Establish governance/security requirements: business emails, password manager, MFA, backup owner, no shared passwords, monthly access review. |
 | U06 | User-provided memo in chat | AI may draft/repurpose; humans approve every public post; no autonomous posting/commenting/DMing at the start. |
 | U07 | User-provided LinkedIn profile URL | Founder LinkedIn profile reference: https://www.linkedin.com/in/ashwinspurohit/. Needs subtle updates to show both working senior-engineer credibility and founder identity, plus official company-site link. |
+| U08 | User-provided company mandate on 2026-04-18 | Company should use senior software engineering expertise in ecommerce/logistics to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, personal brand, and multiple revenue streams toward an AI-first solo-to-MNC company. SoloOS/soloprenuership is only one project until proven by 2–3 launch cycles. |
 
 ## Evidence caveats
 

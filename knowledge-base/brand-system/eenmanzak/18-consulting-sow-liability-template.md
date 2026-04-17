@@ -4,6 +4,11 @@
 **Last updated:** 2026-04-17
 **Applies to:** Consulting, productized services, automation prototypes, audits, and implementation support sold under the company/founder brand.
 
+
+## Company mandate alignment
+
+Interpret this document through `00-company-mandate-and-alignment.md`: the company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, and multiple revenue streams. Dutch ZZP, TapTap, SpatialSense, and SoloOS are lanes, not the entire company identity.
+
 > This is not a legal contract. It is a structured checklist and drafting scaffold to discuss with a Dutch lawyer/insurance adviser before accepting paid consulting work.
 
 ## 1. Consulting strategy

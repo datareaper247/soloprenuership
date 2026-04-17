@@ -79,42 +79,46 @@
 
 ### Founder LinkedIn headline options
 
-1. `Building AI-enabled tools and operating systems for one-person businesses | Senior software engineer in NL`
-2. `Solo founder building accessible apps + one-person business systems | AI-agent operator | Netherlands`
-3. `Senior engineer building practical products for solo operators, seniors, and accessibility-first workflows`
+1. `Senior Software Engineer | Building AI-first software for ecommerce, logistics, apps, SaaS, and automation`
+2. `Founder building B2B/B2C apps, micro-SaaS, consulting systems, and public engineering proof`
+3. `Senior engineer turning ecommerce/logistics experience into AI-first software products and services`
 
 ### Founder about-section skeleton
 
 ```text
-I’m Ash / Ashwin SP — a senior software engineer in the Netherlands building a one-person product company in public.
+I’m Ash / Ashwin SP — a senior software engineer in the Netherlands building an AI-first software company in public.
 
 My work sits at the intersection of:
-• practical AI-agent operating systems for solo founders
-• Dutch one-person business / ZZP workflows
-• accessible mobile products such as TapTap and SpatialSense
+• ecommerce and logistics workflow software
+• B2B SaaS / micro-SaaS and B2C app experiments
+• consulting and productized services where they create proof and customer learning
+• R&D-backed product bets and OSS/public engineering
+• internal AI operating systems that improve speed, quality, and leverage
 
-I share what I’m learning while building: decisions, constraints, product demos, market research, mistakes, and proof.
+I share what I’m learning while building: decisions, constraints, product demos, launch lessons, market research, mistakes, and proof.
 
-If you’re a Dutch solo operator, technical founder, accessibility-minded builder, or potential partner, reach out: [email/link].
+If you work in ecommerce, logistics, B2B/B2C software, automation, apps, SaaS, or AI-first company building, reach out: [email/link].
 ```
 
 ### Company LinkedIn tagline options
 
-1. `A practical operating system for one-person businesses.`
-2. `Tools, systems, and proof for solo operators building with leverage.`
-3. `Helping solo founders and Dutch self-employed professionals run cleaner, calmer businesses.`
+1. `AI-first software for ecommerce, logistics, and operational workflows.`
+2. `B2B and B2C products, services, R&D, and OSS built with senior engineering judgment.`
+3. `Practical software, automation, and proof systems for operators who need quality execution.`
 
 ### Company description skeleton
 
 ```text
-Eenmanzak is a founder-led company building practical tools, systems, and proof assets for one-person businesses and solo technical operators.
+Eenmanzak / Eenmanszaak is a founder-led AI-first software company building practical products, services, and proof systems from senior engineering experience in ecommerce, logistics, operations, apps, SaaS, and automation.
 
 Current focus areas:
-• Dutch solo-business / ZZP operating workflows
-• accessible mobile apps such as TapTap and SpatialSense
-• AI-enabled founder operations without hype or unsafe automation
+• ecommerce and logistics workflow products
+• B2B SaaS / micro-SaaS and B2C app experiments
+• consulting/productized services where they create proof and customer learning
+• R&D-backed products, OSS/public engineering, and AI-assisted internal operating systems
+• selected product lanes such as TapTap, SpatialSense, Dutch ZZP tooling, and SoloOS only when evidence supports them
 
-We believe small companies can be serious companies: clear systems, honest proof, privacy-aware operations, and focused shipping.
+We believe small teams can build serious companies when they combine strong engineering, AI-first operating systems, domain expertise, public proof, privacy-aware operations, and focused launch cycles.
 ```
 
 ## CTA library

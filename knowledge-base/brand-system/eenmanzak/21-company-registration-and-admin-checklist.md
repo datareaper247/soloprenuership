@@ -4,6 +4,11 @@
 **Last updated:** 2026-04-17
 **Purpose:** Practical checklist for registering and operating the Dutch eenmanszaak/company foundation before paid apps, micro-SaaS, or services.
 
+
+## Company mandate alignment
+
+Interpret this document through `00-company-mandate-and-alignment.md`: the company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, and multiple revenue streams. Dutch ZZP, TapTap, SpatialSense, and SoloOS are lanes, not the entire company identity.
+
 ## 1. Pre-registration gate
 
 - [ ] Confirm founder work authorization / residence permit / employer NOC status.

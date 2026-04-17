@@ -5,6 +5,11 @@
 **Decision owner:** Founder + accountant/tax adviser
 **Applies to:** Web micro-SaaS, paid web apps, digital products, templates, and non-app-store software sold internationally.
 
+
+## Company mandate alignment
+
+Interpret this document through `00-company-mandate-and-alignment.md`: the company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, and multiple revenue streams. Dutch ZZP, TapTap, SpatialSense, and SoloOS are lanes, not the entire company identity.
+
 > This memo does **not** apply to app-native digital goods consumed inside iOS/Android apps. For those, start with Apple In-App Purchase / Google Play Billing and RevenueCat unless a specific platform-permitted alternative path is reviewed.
 
 ## 1. Decision to make

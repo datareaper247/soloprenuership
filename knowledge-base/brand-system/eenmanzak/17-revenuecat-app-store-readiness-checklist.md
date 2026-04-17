@@ -4,6 +4,11 @@
 **Last updated:** 2026-04-17
 **Applies to:** TapTap and future paid iOS/Android app subscriptions or in-app purchases.
 
+
+## Company mandate alignment
+
+Interpret this document through `00-company-mandate-and-alignment.md`: the company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, and multiple revenue streams. Dutch ZZP, TapTap, SpatialSense, and SoloOS are lanes, not the entire company identity.
+
 > Use this checklist before any paid app-store launch. It assumes digital content/features consumed inside the app use Apple In-App Purchase and/or Google Play Billing, with RevenueCat as the entitlement/subscription backend.
 
 ## 1. Decision rule

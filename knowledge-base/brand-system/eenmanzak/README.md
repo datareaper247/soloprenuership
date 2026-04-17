@@ -3,14 +3,19 @@
 **Status:** Draft v0.1
 **Owner:** Founder / CMO lane
 **Created:** 2026-04-17
-**Scope:** Brand architecture, social account architecture, governance, content system, and rollout plan for the new company context currently referred to as `eenmanzak` / `eenmanszaak`.
+**Scope:** Brand architecture, company mandate, social account architecture, governance, content system, GTM, commercial readiness, liability controls, and launch operating system for the AI-first founder-led software company currently referred to as `eenmanzak` / `eenmanszaak`.
 
 > This is a **brand system**, not a pile of social handles. The goal is to make every public account do one of five jobs from day one: **trust, distribution, market research, proof, and support**.
+
+## Company-wide alignment note
+
+The company should be understood as an **AI-first founder-led software company** built around senior software engineering expertise, ecommerce/logistics domain experience, B2B/B2C products, SaaS/micro-SaaS, consulting, R&D, OSS, public authority content, and multiple compounding revenue streams. Dutch ZZP tooling, TapTap, SpatialSense, SoloOS/soloprenuership, and service offers are lanes inside the company — not the whole company identity unless proven by launch cycles and revenue.
 
 ## How to use this pack
 
 Read in order:
 
+0. [`00-company-mandate-and-alignment.md`](00-company-mandate-and-alignment.md) — canonical company mandate and interpretation rule for all docs.
 1. [`00-source-index.md`](00-source-index.md) — provenance, local context, official platform sources.
 2. [`01-executive-brief.md`](01-executive-brief.md) — strategic summary and recommendation.
 3. [`02-brand-architecture-and-naming.md`](02-brand-architecture-and-naming.md) — founder/company/product/service identity model.
@@ -31,6 +36,7 @@ Read in order:
 18. [`19-company-start-master-plan.md`](19-company-start-master-plan.md) — end-to-end company start roadmap from registration to trust spine, validation, launch, and operating cadence.
 19. [`20-gtm-launch-master-playbook.md`](20-gtm-launch-master-playbook.md) — GTM and launch system for consulting, web micro-SaaS, and mobile apps.
 20. [`21-company-registration-and-admin-checklist.md`](21-company-registration-and-admin-checklist.md) — registration, KVK/Belastingdienst, banking, insurance, website, register, and revenue readiness checklist.
+21. [`22-documentation-alignment-review.md`](22-documentation-alignment-review.md) — review log aligning the pack with the broader ecommerce/logistics, B2B/B2C, SaaS, apps, consulting, R&D, OSS, AI-first company mandate.
 
 
 Brainstorm support files:

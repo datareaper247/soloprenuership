@@ -7,8 +7,8 @@
 
 1. `Eenmanzak` and `Eenmanszaak` refer to the same company context unless founder review says otherwise.
 2. The company is pre-launch or validation-stage for the public brand system.
-3. The founder wants a professional but lean system a solo operator can maintain.
-4. The company may include apps, services, and future product/IP, so the brand must preserve optionality.
+3. The founder wants a professional but lean system a solo operator can maintain while building toward a larger AI-first software company.
+4. The company may include ecommerce/logistics products, B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS, content authority, services, and future product/IP, so the brand must preserve optionality.
 5. LinkedIn is the best primary channel for the immediate trust layer.
 6. Reddit Pro is valuable as market research even if public Reddit posting is deferred.
 7. TikTok/Pinterest are not day-one requirements unless a native content engine exists.
@@ -21,7 +21,7 @@
 | Unknown | Why it matters | Suggested validation |
 |---|---|---|
 | Final public brand spelling | domains, handles, SEO, trust | native Dutch review + availability search |
-| Primary audience | content pillars and channel choice | interview/prospect mapping |
+| First public wedge | content pillars, channel choice, commercial path | founder review + interview/prospect mapping |
 | First launch object | Product Hunt/YouTube/GitHub asset sequencing | portfolio review |
 | Existing founder audience | cadence and launch strategy | audit LinkedIn/X/newsletter |
 | Support capacity | public DM/comment promises | weekly bandwidth estimate |

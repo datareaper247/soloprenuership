@@ -6,6 +6,11 @@
 
 ## Content strategy in one sentence
 
+## Company-wide content correction
+
+Content should build authority around the founder’s broader software/company-building edge: ecommerce, logistics, operations, AI-first engineering, B2B/B2C product building, app launches, SaaS/micro-SaaS, consulting, R&D, OSS, and public proof. Dutch ZZP and SoloOS content should remain lanes inside that narrative until they prove stronger market pull.
+
+
 Use founder-led content to create trust and research signals, company-led content to package proof, and product-led content only when product momentum creates a real audience.
 
 ## Stage calibration
@@ -41,29 +46,30 @@ Rules:
 
 ## Primary audience hypotheses
 
-There are two possible primary narratives. Pick one as the public lead; keep the other as a secondary pillar until evidence clarifies.
+There are multiple possible public leads. Pick one 30-day wedge as the public lead; keep the others as proof or research lanes until evidence clarifies.
 
-### Hypothesis A — Dutch ZZP / one-person business operator
+### Hypothesis A — Ecommerce/logistics and operational software buyers
 
-**Audience:** Dutch self-employed professionals and solo business owners who need clearer operations, admin, and decision support.
+**Audience:** ecommerce, logistics, operations, returns, procurement, fulfillment, support, finance-ops, and marketplace teams that need practical software and automation from someone who understands production systems.
 
 Content angles:
 
-- “What I wish every new Dutch sole proprietor understood before tools get messy.”
-- “The one-person business operating checklist.”
-- “From scattered admin to weekly operating rhythm.”
-- “Practical, non-hype AI workflows for ZZP'ers.”
+- “Where ecommerce/logistics workflows still leak time and money.”
+- “Operational software lessons from senior engineering work.”
+- “AI-first workflow automation without breaking trust, support, or compliance.”
+- “What small teams can automate before buying enterprise platforms.”
 
 Best channels:
 
-- LinkedIn,
-- Reddit/community listening,
-- website/templates,
-- possibly Instagram/Pinterest for checklists.
+- founder LinkedIn,
+- company site/resources,
+- GitHub/OSS proof,
+- YouTube demos,
+- direct/warm outreach and industry communities.
 
-### Hypothesis B — Solo technical founder product studio
+### Hypothesis B — B2B/B2C product portfolio
 
-**Audience:** solo technical founders, indie hackers, and technical operators building AI-era products.
+**Audience:** buyers/users for a focused portfolio of B2B SaaS, B2C apps, app-store products, and micro-SaaS launched rapidly under one trust shell.
 
 Content angles:
 
@@ -85,6 +91,7 @@ Best channels:
 | Pillar | Founder angle | Company angle | Product angle | Proof asset |
 |---|---|---|---|---|
 | Solo-founder leverage | lessons, constraints, systems | operating model | AI-assisted workflows | diagrams, weekly review |
+| Ecommerce/logistics operating insight | founder engineering/domain experience | teardown, workflow map, automation idea | B2B SaaS / consulting | diagrams, audits, OSS demos |
 | Dutch one-person business clarity | founder experience, mistakes avoided | templates/checklists | ZZP/freelance tool | waitlist, checklist downloads |
 | Accessible technology | why seniors/visually impaired users matter | product portfolio values | TapTap/SpatialSense demos | videos, architecture visuals |
 | Build-in-public proof | what shipped/failed/changed | monthly roundup | changelog/demo | screenshots, GitHub, demo videos |
@@ -331,7 +338,7 @@ Decision gates:
 ## 30 reusable content asset ideas
 
 1. Founder intro: why I’m building this.
-2. Company thesis: one-person businesses need operating systems, not more tools.
+2. Company thesis: AI-first software companies need proof, domain authority, launch cadence, and risk controls — not random tools.
 3. “What I learned researching Dutch solo business operations.”
 4. “The difference between a legal entity and a brand.”
 5. TapTap demo/problem story.
@@ -343,13 +350,13 @@ Decision gates:
 11. Privacy/trust pledge.
 12. AI-content policy in plain English.
 13. Support promise.
-14. “What I’m listening for in ZZP communities.”
+14. “What I’m listening for in ecommerce/logistics/operator communities.”
 15. First audience question post.
 16. First customer-language synthesis.
 17. Product account decision tree.
 18. “Why demos beat claims.”
 19. “What not to automate in public communication.”
-20. “A monthly review template for one-person businesses.”
+20. “A monthly operating review template for ecommerce/logistics/product operators.”
 21. “How I choose which ideas become products.”
 22. “What gets a product its own brand.”
 23. “Founder vs company voice.”

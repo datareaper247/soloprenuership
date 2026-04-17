@@ -2,7 +2,7 @@
 
 **Status:** Draft
 **Last updated:** 2026-04-17
-**Source IDs:** U01-U06, L01-L09, E01-E25
+**Source IDs:** U01-U08, L01-L09, E01-E25
 
 ## One-page answer
 
@@ -23,26 +23,42 @@ This is the cleanest model because it mirrors how the platforms themselves work:
 
 ## Strategic context for this specific company
 
-The local project context points to a company that is both:
+## Company mandate correction
 
-- a **Dutch solo-business / ZZP-oriented product opportunity** (`eenmanszaak` in the registry and the correct Dutch legal/category spelling), and
-- a broader **solo-founder product studio / AI-enabled operator context** where TapTap v2, SpatialSense, service/cashflow, and future app/IP bets sit under one founder-led company narrative.
+The brand system should now be interpreted through `00-company-mandate-and-alignment.md`. The company goal is not merely to operate a solo-founder content project or Dutch ZZP tool. The company goal is to build an AI-first software company capable of launching multiple high-quality products and services across ecommerce, logistics, B2B, B2C, apps, SaaS/micro-SaaS, consulting, R&D, OSS, and authority media.
 
-That means the brand must avoid two traps:
+
+The updated company context points to a broader company than the earlier working docs implied. It is an **AI-first founder-led software company** using Ashwin SP’s senior software engineering experience — especially ecommerce, logistics, operational systems, B2B/B2C product building, and AI-assisted execution — to create multiple compounding revenue and authority lanes.
+
+Current and possible lanes include:
+
+- ecommerce/logistics workflow products and domain-authority content;
+- B2B apps, SaaS, and micro-SaaS;
+- B2C apps and app-store products;
+- consulting and productized services;
+- R&D-backed product bets;
+- OSS/public engineering proof;
+- personal branding and domain-authority content;
+- internal AI operating systems such as SoloOS;
+- Dutch ZZP tooling as one possible local-market product lane;
+- TapTap and SpatialSense as product/R&D proof lanes.
+
+That means the brand must avoid four traps:
 
 1. **Too generic:** “Eenmanszaak” is a legal form and broad Dutch term. It may be difficult to own as a distinctive brand without a sharper name/visual/narrative system.
 2. **Naming ambiguity:** `Eenmanzak` may be an intentional stylized variant, but `Eenmanszaak` is the correct Dutch legal/category term and should be used on trust-sensitive surfaces until validated otherwise.
-3. **Too fragmented:** Creating separate accounts for every app, service, and experiment will make the company look abandoned, scattered, or unserious.
+3. **Too narrow:** Reducing the company to Dutch ZZP, SoloOS, TapTap, SpatialSense, or consulting would hide the broader ecommerce/logistics, B2B/B2C, AI-first company ambition.
+4. **Too fragmented:** Creating separate accounts for every app, service, and experiment will make the company look abandoned, scattered, or unserious.
 
 The system should therefore start with **monobrand + founder + product pages only when justified**.
 
 ## Brand thesis
 
-> Working label: **Eenmanszaak / [chosen trade name]** is the public operating system for a solo technical founder building useful apps, services, and AI-enabled business infrastructure from the Netherlands — with proof, restraint, and compounding trust instead of hype.
+> Working label: **Eenmanszaak / [chosen trade name]** is an AI-first software company from the Netherlands turning senior engineering expertise in ecommerce, logistics, and operational systems into practical B2B/B2C apps, SaaS, micro-SaaS, consulting, R&D-backed products, OSS proof, and domain-authority content — built with speed, quality, trust, and legal/compliance restraint.
 
-Alternate wording if the ZZP product becomes the primary focus:
+A narrower product-lane thesis may still be used when needed:
 
-> Eenmanzak helps Dutch self-employed professionals run a cleaner, calmer one-person business — fewer scattered tools, clearer decisions, and better operational confidence.
+> Dutch ZZP tooling, TapTap, SpatialSense, SoloOS, and consulting offers are individual lanes that must earn prominence through launches, users, revenue, or proof.
 
 ## What every channel must do
 

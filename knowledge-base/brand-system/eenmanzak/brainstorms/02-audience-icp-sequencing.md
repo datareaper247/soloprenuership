@@ -5,6 +5,11 @@
 **Worker lane:** Worker 2 — audience/ICP sequencing, anti-ICP, trust barriers, buying triggers
 **Inputs used:** `.omx/context/eenmanzak-vision-positioning-brainstorm-20260417T185434Z`, `README.md`, `01-executive-brief.md`, `02-brand-architecture-and-naming.md`, `05-content-and-launch-operating-system.md`, `08-founder-linkedin-profile-update.md`, `09-claims-compliance-register.md`, `appendix/assumptions.md`
 
+
+## Company mandate alignment
+
+Interpret this document through `00-company-mandate-and-alignment.md`: the company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, and multiple revenue streams. Dutch ZZP, TapTap, SpatialSense, and SoloOS are lanes, not the entire company identity.
+
 > This document is a **brainstorming artifact**. Treat every segment, trigger, barrier, and sequence below as a hypothesis to test. It is not legal, tax, accounting, immigration, privacy, accessibility, or advertising advice. Keep public wording conservative until professional review confirms exact claims and obligations.
 
 ## Core audience problem
@@ -144,7 +149,8 @@ Use services as a **cashflow and proof lane**, not a separate public audience. T
 
 | Audience hypothesis | Urgency | Trust sensitivity | Ease of research | Proof currently available | Recommended public priority |
 |---|---:|---:|---:|---:|---|
-| Dutch ZZP / one-person business operator | High | High | High | Medium | Primary validation wedge |
+| Ecommerce/logistics operator | High | High | High | High founder fit | Primary authority and commercial wedge candidate |
+| Dutch ZZP / one-person business operator | Medium | High | High | Medium | Optional local-market lane |
 | Solo technical founder / AI operator | Medium | Medium | High | Medium | Secondary content pillar |
 | Accessibility / senior-support network | Medium | High | Medium | Product-dependent | Product proof lane |
 | Service / consulting buyer | High if cashflow needed | Medium | Medium | Founder credibility | Founder/company proof lane |

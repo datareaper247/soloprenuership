@@ -4,6 +4,11 @@
 **Last updated:** 2026-04-17
 **Purpose:** One high-level map for starting and operating the company so apps, micro-SaaS, and consulting services can be launched with trust, commercial readiness, and risk controls.
 
+
+## Company mandate alignment
+
+Interpret this document through `00-company-mandate-and-alignment.md`: the company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, and multiple revenue streams. Dutch ZZP, TapTap, SpatialSense, and SoloOS are lanes, not the entire company identity.
+
 > This is an execution playbook, not legal/tax/accounting/immigration advice. For every public or paid step, check `09-claims-compliance-register.md`, `15-liability-and-risk-architecture.md`, and qualified advisers where marked.
 
 ## 1. The operating thesis

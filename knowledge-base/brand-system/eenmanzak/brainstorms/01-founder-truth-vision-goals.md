@@ -5,6 +5,11 @@
 **Worker lane:** Worker 1 — founder truth, company vision/mission, 30/90/365-day and 3-year goals
 **Source IDs:** L01-L09, U01-U07, E21-E25, E30-E31, E36, E49-E51, E55-E56
 
+
+## Company mandate alignment
+
+Interpret this document through `00-company-mandate-and-alignment.md`: the company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, and multiple revenue streams. Dutch ZZP, TapTap, SpatialSense, and SoloOS are lanes, not the entire company identity.
+
 > This document is a **thinking artifact**, not an approved strategy or public commitment. It preserves options and caveats for founder review. Do not copy claims into public copy without checking `09-claims-compliance-register.md` and the relevant professional review gates.
 
 ## 1. Evidence-backed founder truth

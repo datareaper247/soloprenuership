@@ -2,9 +2,14 @@
 
 **Status:** Draft
 **Last updated:** 2026-04-17
-**Source IDs:** L01-L09, U01-U04, E01-E10
+**Source IDs:** L01-L09, U01-U08, E01-E10
 
 ## Architecture decision
+
+## Company-wide architecture correction
+
+The company architecture is broader than the original Dutch ZZP / SoloOS framing. The company should be architected as an AI-first software company with multiple product/service lanes. Dutch ZZP tooling and SoloOS are potential lanes; they are not the full company architecture unless proven by launch cycles and revenue.
+
 
 Use a **monobrand-first, founder-endorsed architecture**.
 
@@ -12,16 +17,20 @@ Use a **monobrand-first, founder-endorsed architecture**.
 Founder identity
 └── Company identity: Eenmanzak / Eenmanszaak
     ├── Product/app identities only when earned
+    │   ├── Ecommerce/logistics workflow products
+    │   ├── B2B SaaS / micro-SaaS
+    │   ├── B2C apps / app-store products
     │   ├── TapTap
     │   ├── SpatialSense
-    │   └── Future ZZP/freelance tool
-    ├── Service lines under company proof, not separate handles
+    │   ├── Future Dutch ZZP/freelance tool
+    │   └── OSS / public engineering projects
+    ├── Service and consulting lines under company proof, not separate handles
     └── Support surfaces under company/product docs, not public handle sprawl
 ```
 
 ## Why this is right for the current stage
 
-The company is still validating multiple lanes: a Dutch ZZP/freelance management concept, technical app pipeline, service/cashflow possibilities, and a founder-AI-operator thesis. Separate public brands for every lane would create premature complexity.
+The company is still validating multiple lanes: ecommerce/logistics workflow products, B2B/B2C apps, SaaS/micro-SaaS, consulting/productized services, R&D bets, OSS/public engineering, Dutch ZZP tooling, TapTap, SpatialSense, and SoloOS/internal AI-operator systems. Separate public brands for every lane would create premature complexity.
 
 A monobrand-first setup gives the founder:
 
@@ -39,9 +48,9 @@ A monobrand-first setup gives the founder:
 
 Use founder identity for:
 
-- point of view on solo-founder leverage, Dutch solo business operations, and technical product building,
+- point of view on senior engineering, ecommerce/logistics systems, B2B/B2C product building, AI-first execution, and solo-founder leverage,
 - build-in-public posts,
-- lessons from TapTap / SpatialSense / service work,
+- lessons from ecommerce/logistics, apps, SaaS/micro-SaaS, consulting, R&D, OSS, TapTap, SpatialSense, and service work,
 - launch narratives,
 - Product Hunt maker activity,
 - relationship-building with potential users, partners, creators, and press.
@@ -158,7 +167,7 @@ Do not finalize public handles, domains, logos, or trademarks until:
 2. Domain and handle availability are checked.
 3. KVK/trademark/search feasibility is reviewed.
 4. BOIP/trademark distinctiveness is considered for any product name.
-5. The brand’s primary audience is clarified: Dutch ZZP'ers vs broader solo-founder product studio.
+5. The brand’s first public wedge is clarified without reducing the company to that wedge: ecommerce/logistics authority, B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS, Dutch ZZP tooling, or another lane.
 
 KVK-specific note: KVK distinguishes a **handelsnaam** (trade/company name in the Business Register) from a **merknaam** (brand/trademark registered through BOIP). KVK also states that one eenmanszaak may have multiple trade names and activities. That supports a cleaner architecture: keep the legal/category term accurate, but give customer-facing products distinctive names when they need trademark/search defensibility.
 
@@ -243,7 +252,7 @@ Product sentence pattern:
 ### Company-level message pillars
 
 1. **Solo-founder leverage** — systems and AI agents can multiply a focused individual without pretending constraints disappear.
-2. **Dutch one-person business clarity** — run a cleaner, compliant, less chaotic solo operation.
+2. **Ecommerce/logistics and operational depth** — use founder domain experience to solve real workflow, marketplace, supply-chain, customer, and operational problems.
 3. **Proof through shipping** — demos, code, posts, customer language, and case studies beat abstract claims.
 4. **Accessible technology** — products such as TapTap/SpatialSense show an empathy-led technical direction.
 5. **Operational trust** — privacy, support, documentation, and governance are part of the product experience.

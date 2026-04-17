@@ -4,6 +4,11 @@
 **Last updated:** 2026-04-17
 **Purpose:** Define how the company should go from research to offer to launch to repeatable distribution for apps, micro-SaaS, and consulting.
 
+
+## Company mandate alignment
+
+Interpret this document through `00-company-mandate-and-alignment.md`: the company is an AI-first founder-led software company using senior software engineering and ecommerce/logistics expertise to build B2B/B2C apps, SaaS/micro-SaaS, consulting, R&D, OSS/content authority, and multiple revenue streams. Dutch ZZP, TapTap, SpatialSense, and SoloOS are lanes, not the entire company identity.
+
 ## 1. GTM principle
 
 Do not launch a product. Launch a **proof system**:

@@ -97,8 +97,8 @@
 ## Open questions
 
 1. Is `Eenmanzak` the intended brand name, or a typo for `Eenmanszaak`?
-2. Is the primary external audience Dutch ZZP'ers or broader solo technical founders?
-3. Which product is first public launch: TapTap, SpatialSense, ZZP/freelance tool, service offer, or another lane?
+2. Is the first external wedge ecommerce/logistics operators, B2B SaaS buyers, B2C app users, consulting buyers, Dutch ZZP'ers, solo technical founders, or another segment?
+3. Which launch cycle comes first: ecommerce/logistics authority content, B2B micro-SaaS, B2C app, consulting service offer, OSS/public engineering, TapTap, SpatialSense, Dutch ZZP tool, or another lane?
 4. Which domain is preferred and available?
 5. Is there already a founder LinkedIn/audience baseline?
 6. Will Instagram short-form actually be produced in the first 60 days?
