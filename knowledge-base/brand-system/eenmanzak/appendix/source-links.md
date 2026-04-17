@@ -112,3 +112,23 @@
 - European Commission AI Act FAQ — https://digital-strategy.ec.europa.eu/en/faqs/navigating-ai-act
 - Business.gov.nl product/service accessibility — https://business.gov.nl/regulation/accessibility-products-services/
 - KVK European Accessibility Act — https://www.kvk.nl/wetten-en-regels/european-accessibility-act-wat-betekent-dit-voor-ondernemers/
+
+### Platform APIs and automation sources
+
+- LinkedIn Marketing APIs — https://learn.microsoft.com/en-us/linkedin/marketing/
+- LinkedIn Posts API — https://learn.microsoft.com/en-us/linkedin/marketing/community-management/shares/posts-api
+- GitHub REST Organizations API — https://docs.github.com/en/rest/orgs/orgs
+- GitHub CLI — https://docs.github.com/en/github-cli
+- GitHub Actions events — https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
+- YouTube Data API getting started — https://developers.google.com/youtube/v3/getting-started
+- YouTube API developer policies — https://developers.google.com/youtube/terms/developer-policies
+- Product Hunt API — https://help.producthunt.com/en/articles/484971-does-product-hunt-have-an-api
+- Product Hunt launch sharing rules — https://help.producthunt.com/en/articles/2690626-how-do-i-share-my-post
+- Reddit Pro announcement — https://redditinc.com/news/introducing-the-new-toolkit-for-business-growth-reddit-pro-is-here
+- Pinterest Developers — https://developers.pinterest.com/
+- Pinterest Developer Guidelines — https://policy.pinterest.com/developer-guidelines
+- Pinterest commercial/branded content guidelines — https://policy.pinterest.com/commercial-and-branded-content-guidelines
+- TikTok Content Posting API — https://developers.tiktok.com/products/content-posting-api
+- TikTok Share Kit — https://developers.tiktok.com/products/share-kit
+- TikTok content sharing guidelines — https://developers.tiktok.com/doc/content-sharing-guidelines/
+- Meta AI-generated content labeling approach — https://about.fb.com/news/2024/04/metas-approach-to-labeling-ai-generated-content-and-manipulated-media/

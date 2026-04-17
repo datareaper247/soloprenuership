@@ -22,6 +22,9 @@ Read in order:
 9. [`08-founder-linkedin-profile-update.md`](08-founder-linkedin-profile-update.md) — subtle founder LinkedIn profile update plan using the provided founder profile URL.
 10. [`09-claims-compliance-register.md`](09-claims-compliance-register.md) — official-source claims/compliance verification register and safe-wording library.
 11. [`10-company-vision-positioning-workshop.md`](10-company-vision-positioning-workshop.md) — draft/hypothesis workshop for vision, mission, positioning, audience sequencing, portfolio logic, goals, and decision backlog.
+12. [`11-tools-resources-apis-inventory.md`](11-tools-resources-apis-inventory.md) — tools, services, APIs, CLIs, official-source, and internal-resource architecture.
+13. [`12-commercial-readiness-playbooks.md`](12-commercial-readiness-playbooks.md) — commercial readiness playbooks for paid apps, web micro-SaaS, consulting, and rich-market launches.
+14. [`15-liability-and-risk-architecture.md`](15-liability-and-risk-architecture.md) — lawful liability-reduction, risk-tier, entity, insurance, and prohibited-project architecture.
 
 
 Brainstorm support files:
