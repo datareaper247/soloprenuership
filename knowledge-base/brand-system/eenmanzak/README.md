@@ -25,6 +25,9 @@ Read in order:
 12. [`11-tools-resources-apis-inventory.md`](11-tools-resources-apis-inventory.md) — tools, services, APIs, CLIs, official-source, and internal-resource architecture.
 13. [`12-commercial-readiness-playbooks.md`](12-commercial-readiness-playbooks.md) — commercial readiness playbooks for paid apps, web micro-SaaS, consulting, and rich-market launches.
 14. [`15-liability-and-risk-architecture.md`](15-liability-and-risk-architecture.md) — lawful liability-reduction, risk-tier, entity, insurance, and prohibited-project architecture.
+15. [`16-mor-vs-stripe-decision-memo.md`](16-mor-vs-stripe-decision-memo.md) — Paddle/FastSpring MoR vs Stripe Billing/Tax decision memo for web micro-SaaS.
+16. [`17-revenuecat-app-store-readiness-checklist.md`](17-revenuecat-app-store-readiness-checklist.md) — RevenueCat, Apple IAP, Google Play Billing, privacy, and app-store readiness checklist.
+17. [`18-consulting-sow-liability-template.md`](18-consulting-sow-liability-template.md) — low-liability consulting offer, SOW scaffold, prohibited-project checklist, and proof-permission guidance.
 
 
 Brainstorm support files:
