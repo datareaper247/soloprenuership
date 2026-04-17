@@ -31,6 +31,7 @@
 - [ ] Privacy statement.
 - [ ] Terms where needed.
 - [ ] Proof page or proof section.
+- [ ] Claims/compliance register seeded and linked from public-copy drafts.
 - [ ] Media/press/partnerships page or section.
 - [ ] Links/footer routes to official social and proof surfaces.
 - [ ] Lead capture form and privacy notice tested.

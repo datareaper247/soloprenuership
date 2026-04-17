@@ -47,6 +47,13 @@
 - Get a Pinterest business account — https://help.pinterest.com/en/business/article/get-a-business-account
 - Pinterest Business Manager roles and permissions — https://help.pinterest.com/en/business/article/business-manager-access-roles-and-permissions
 
+### Instagram / Meta
+
+- About professional accounts on Instagram — https://www.facebook.com/help/instagram/138925576505882
+- How to manage shared access on Instagram — https://www.facebook.com/help/instagram/514043488379093/
+- Manage roles on a shared Instagram business account — https://www.facebook.com/help/218638451837962
+- Connect or disconnect an Instagram account and your Page — https://www.facebook.com/help/www/1148909221857370
+
 ### KVK / Dutch business basics
 
 - GDPR processing register — https://www.kvk.nl/en/rules-and-laws/how-to-set-up-a-gdpr-processing-register/
@@ -84,3 +91,24 @@
 - Autoriteit Persoonsgegevens cookie rules — https://www.autoriteitpersoonsgegevens.nl/en/themes/internet-and-smart-devices/cookies
 - Stichting Reclame Code social advertising — https://www.reclamecode.nl/overig/social/
 - Business.gov.nl social-media/influencer advertising rules — https://business.gov.nl/regulation/advertising-rules-social-media-influencers/
+
+
+### Additional Dutch/EU compliance verification sources
+
+- KVK business-name choice — https://www.kvk.nl/starten/alles-wat-je-moet-weten-over-een-bedrijfsnaam-kiezen/
+- KVK brand registration — https://www.kvk.nl/wetten-en-regels/je-merk-registreren-dit-zijn-de-voordelen/
+- Autoriteit Persoonsgegevens accountability / processing register — https://autoriteitpersoonsgegevens.nl/themas/basis-avg/avg-algemeen/verantwoordingsplicht
+- Autoriteit Persoonsgegevens data breach steps — https://autoriteitpersoonsgegevens.nl/themas/beveiliging/datalekken/datalek-dit-moet-u-doen
+- Autoriteit Persoonsgegevens right to information — https://www.autoriteitpersoonsgegevens.nl/nl/zelf-doen/gebruik-uw-privacyrechten/recht-op-informatie
+- Business.gov.nl advertising — https://business.gov.nl/regulation/advertising/
+- Business.gov.nl social media and influencer advertising — https://business.gov.nl/regulation/advertising-rules-social-media-influencers/
+- Business.gov.nl cookies — https://business.gov.nl/regulation/cookies/
+- Business.gov.nl online selling — https://business.gov.nl/regulation/online-selling/
+- Business.gov.nl customer reviews — https://business.gov.nl/regulation/customer-reviews/
+- RVO WBSO for self-employed professionals — https://english.rvo.nl/subsidies-financing/wbso/self-employed-professionals
+- Business.gov.nl residence permit for self-employed professionals — https://business.gov.nl/coming-to-the-netherlands/permits-and-visa/residence-permit-for-self-employed-professionals/
+- Business.gov.nl tax schemes for entrepreneurs — https://business.gov.nl/financing-your-business/taxation/tax-schemes-for-entrepreneurs/
+- European Commission AI Act regulatory framework — https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai
+- European Commission AI Act FAQ — https://digital-strategy.ec.europa.eu/en/faqs/navigating-ai-act
+- Business.gov.nl product/service accessibility — https://business.gov.nl/regulation/accessibility-products-services/
+- KVK European Accessibility Act — https://www.kvk.nl/wetten-en-regels/european-accessibility-act-wat-betekent-dit-voor-ondernemers/

@@ -6,6 +6,10 @@
 
 > This document is operational guidance, not legal/tax/immigration advice. Verify privacy, advertising, consumer, KVK, WBSO, tax, and immigration-sensitive claims with qualified professionals before relying on them publicly.
 
+## Claims-control rule
+
+Before any public page, profile, social post, launch asset, creator brief, lead form, or support template makes a legal, tax, privacy, compliance, platform-verification, accessibility, AI-content, testimonial, or product-safety claim, check [`09-claims-compliance-register.md`](09-claims-compliance-register.md). If the claim is not in the register, add it with a source, safe wording, avoided wording, and review gate before publishing.
+
 ## Governance principles
 
 1. **Least privilege** — give each person/tool only what they need.
@@ -90,10 +94,12 @@
 
 ### Meta / Instagram
 
-- Use professional/business account only if public profile and business tools are intended.
-- Configure Meta Business access from desktop and avoid sharing Instagram login.
+- Use a professional/business account only if a public profile and business tools are intended.
+- Professional accounts are public and cannot be set to private.
+- If shared access is available, grant collaborators access through Instagram/Meta role-based tools instead of sharing the login.
+- If the account is connected to a Page or Business Manager, use Page/Business roles for boosting and ad access.
 - Contractors should receive task/content access, not full admin by default.
-- Verify in Meta Business Suite directly because help-page retrieval and UI behavior can vary.
+- Verify in Meta Business Suite directly because help-page retrieval and UI behavior can vary by account/eligibility.
 
 ### Reddit Pro
 

@@ -234,6 +234,13 @@ Create only if:
 - DMs can be monitored,
 - Meta Business access is configured without sharing passwords.
 
+Notes:
+
+- Instagram professional accounts are public and come in Business or Creator form; use Business for a brand/company presence and Creator only if the account is intentionally personal-led.
+- Professional accounts can't be set to private.
+- If shared access is available for the account, invite trusted collaborators through Instagram/Meta role-based access rather than sharing the login.
+- If shared access is not available yet, keep the account owner-only until role-based access is configured.
+
 Use for:
 
 - product demos,

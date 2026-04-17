@@ -20,6 +20,7 @@ Read in order:
 7. [`06-implementation-checklists-and-templates.md`](06-implementation-checklists-and-templates.md) — setup sheets, UTMs, bios, replies, review cadence.
 8. [`07-decision-records.md`](07-decision-records.md) — explicit brand architecture decisions and open questions.
 9. [`08-founder-linkedin-profile-update.md`](08-founder-linkedin-profile-update.md) — subtle founder LinkedIn profile update plan using the provided founder profile URL.
+10. [`09-claims-compliance-register.md`](09-claims-compliance-register.md) — official-source claims/compliance verification register and safe-wording library.
 
 Appendices:
 
