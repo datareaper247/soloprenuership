@@ -21,6 +21,15 @@ Read in order:
 8. [`07-decision-records.md`](07-decision-records.md) — explicit brand architecture decisions and open questions.
 9. [`08-founder-linkedin-profile-update.md`](08-founder-linkedin-profile-update.md) — subtle founder LinkedIn profile update plan using the provided founder profile URL.
 10. [`09-claims-compliance-register.md`](09-claims-compliance-register.md) — official-source claims/compliance verification register and safe-wording library.
+11. [`10-company-vision-positioning-workshop.md`](10-company-vision-positioning-workshop.md) — draft/hypothesis workshop for vision, mission, positioning, audience sequencing, portfolio logic, goals, and decision backlog.
+
+
+Brainstorm support files:
+
+- [`brainstorms/01-founder-truth-vision-goals.md`](brainstorms/01-founder-truth-vision-goals.md) — founder truth, vision/mission hypotheses, and goal horizons.
+- [`brainstorms/02-audience-icp-sequencing.md`](brainstorms/02-audience-icp-sequencing.md) — audience/ICP sequencing, anti-ICP, trust barriers, and buying triggers.
+- [`brainstorms/03-portfolio-product-logic.md`](brainstorms/03-portfolio-product-logic.md) — portfolio logic across TapTap, SpatialSense, Dutch ZZP tooling, services, and SoloOS/AI operator thread.
+- [`brainstorms/04-positioning-narrative-options.md`](brainstorms/04-positioning-narrative-options.md) — positioning territories, narrative options, and draft homepage/LinkedIn copy directions.
 
 Appendices:
 

@@ -17,6 +17,7 @@
 | L07 | `/Users/fsd/Projects/founder-ai-company-strategy/README.md` | Portfolio operating model: keep active focus narrow; primary build lane `taptap`; validation/revenue lane `govprocure-ai`; service/cashflow lane `bratman`; tooling must improve shipping, validation, revenue, cognitive load, or quality/risk control. | High |
 | L08 | `/Users/fsd/Projects/soloprenuership/VISION.md` | SoloOS thesis: solo founder can multiplex business functions through AI agents; systems, depth, and compounding assets matter. | High |
 | L09 | `skills/claude-code/brand.md`, `content.md`, `launch.md` | Existing internal frameworks: audience-first building, one primary + one secondary platform early, content flywheel, launch as content machine. | Medium-high |
+| L10 | `.omx/context/eenmanzak-vision-positioning-brainstorm-20260417T185434Z` | Brainstorming task context for company goals, vision, positioning, identity, audience/ICP, portfolio logic, public copy, account/content execution, and review cadence. | Medium; workshop-only hypothesis input |
 
 ## Official external sources used
 
