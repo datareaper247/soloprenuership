@@ -4,15 +4,18 @@
 
 ## ⏰ KILL SIGNAL OVERDUE — MUST ADDRESS FIRST
 
-**FL-002 — GovProcure Validation** — **13 days overdue** (due: 2026-04-05)
+🚨 **OVERDUE:** [[FL-002]] — Kill signal was due **2026-04-05** (13 days ago).
+Kill signal: *"If fewer than 3 people respond positively from 20 DMs in 14 days."*
 
-Kill criteria (any channel, all 10-day windows now closed):
+Kill criteria (all 10-day windows now closed):
 - Email: <3% reply rate from 200 sends
 - Landing page: <1% CTA click from 500 visitors
 - Paid ads: >$50 spent, 0 signups
 - Overall: <8 total positive signals across all channels
 
-**What happened? (2 sentences — I'll log it and we continue.)**
+🟠 **URGENT — Outcome due 2026-04-21 (3 days):** *"Getting 5 paying customers for manual version in 2 weeks will validate demand."*
+
+**What happened with the pipeline? (2 sentences — I'll log it and we continue.)**
 
 ---
 
@@ -32,32 +35,37 @@ Kill criteria (any channel, all 10-day windows now closed):
 | ID | Product | Status | Due | Days |
 |---|---|---|---|---|
 | FL-002 | GovProcure Validation | 🔴 OVERDUE | 2026-04-05 | +13 |
+| FL-002 | GovProcure Outcome | 🟠 URGENT | 2026-04-21 | 3 left |
 
 ---
 
 ## MARKET SIGNALS
 
-### HN (2 days ago)
-- **"Ask HN: How to Launch First SaaS"** — fresh thread, high engagement. Signal: demand for launch playbooks is perennial. Not directly actionable for GovProcure.
+### HackerNews
+- **"Ask HN: How to Launch First SaaS"** (Apr 16) — demand for launch playbooks is perennial; not directly actionable
+- **"AI is killing B2B SaaS"** — commoditization pressure on undifferentiated SaaS; moat = workflow depth or data lock-in
+- **"Ask HN: How to sell SaaS without AI features in 2026?"** — "AI-powered" fatigue; buyers filtering for substance over hype
 
-### Gov Procurement Tailwind (strong signal for GovProcure)
-- **California EO N-5-26 (March 30, 2026)**: Newsom mandated AI vendor certification + procurement standards for all state AI contracts. Creates compliance moat — buyers now *need* certified vendors.
-- **GAO Report**: Federal agencies doubled AI use 2023→2024 but "difficulty accessing AI experts to evaluate contractor proposals." GovProcure sits directly in this gap.
-- **B2B Procurement**: 75% of companies now considering AI in procurement — buyer readiness is high.
+### Gov Procurement Tailwind (direct GovProcure signal)
+- **California EO N-5-26 (March 30, 2026)**: AI vendor certification + procurement standards now mandatory for state AI contracts — compliance moat forming
+- **GAO Report**: Federal agencies doubled AI use 2023→2024 but "difficulty accessing AI experts to evaluate contractor proposals" — GovProcure sits in this gap
+- **75% of B2B companies** actively considering AI in procurement — buyer readiness is high
 
 ### Reddit Pain Points (r/entrepreneur + r/SaaS)
-1. **Solo founders have no sales system** — no process, no scripts, no CRM templates. Direct outreach cold-start problem is universal.
-2. **Multi-channel profitability opacity** — recurring theme; tools don't show net margins after fees.
-3. **Compliance requirements blocking deals** — growing in regulated markets (gov, healthcare, finance).
+1. **Founders: selling feels harder than building** — "validating, talking to people, selling" named as top prioritization failure
+2. **AI pricing opacity** — token costs + usage limits killing conversion; buyers want flat/predictable pricing
+3. **Compliance blocking deals** — growing pain in gov, healthcare, finance; buyers need vendors who handle this
 
 ---
 
 ## ONE ACTION TODAY
 
-**Close FL-002.** Answer the kill signal question above in 2 sentences. If the pipeline generated ≥8 positive signals → proceed to build. If not → kill GovProcure and activate FSMA 204 (window: Q2 2026–Q1 2027, best current alternative at 7.5/10).
+**Close FL-002.** Answer the kill signal question above in 2 sentences.
+- ≥8 positive signals → build GovProcure
+- <8 signals → kill GovProcure, activate **FSMA 204** (7.5/10, window Q2 2026–Q1 2027 — opens now)
 
-Do not start new work until FL-002 status is logged.
+Do not start new work until FL-002 outcome is logged.
 
 ---
 
-*Generated: 2026-04-18 | Sources: local ai-memory, GAO, Ropes & Gray, PYMNTS, iQuasar*
+*Generated: 2026-04-18 | Sources: local ai-memory, GAO, Ropes & Gray, PYMNTS, iQuasar, HN search index*
