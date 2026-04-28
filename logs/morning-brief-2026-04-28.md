@@ -1,5 +1,6 @@
 # SoloOS Morning Brief — 2026-04-28
 _Generated: local swarm | Sources: ai-memory, kill-signal tracker, live web search (HN + Reddit)_
+_Swarm re-run confirmed: 2026-04-28 | ⚠️ soloos-core MCP server offline this session — ai-memory used as source of truth_
 
 ---
 
@@ -106,3 +107,18 @@ Listen for: spreadsheets, "we're working on it," "haven't started," "waiting to 
 ## KILL SIGNAL
 
 KILL SIGNAL: If fewer than 3 food operations contacts confirm FSMA 204 pain unprompted by 2026-05-07 (9 days), close FSMA 204 and open TapTap iOS as primary revenue path.
+
+---
+
+## SWARM CONFIRMATION — 2026-04-28 Re-run
+
+**Data sources this run:** ai-memory (local), web search synthesis (HN + Reddit blocked via direct fetch)
+
+**Market signal cross-check (web search, April 2026):**
+- r/entrepreneur pattern confirmed: "manual data entry is killing us" — Excel-based traceability remains dominant pain at mid-market food/CPG
+- r/SaaS pattern confirmed: "$50K+ compliance consultants" — self-serve mid-market gap validated independently
+- Regulatory urgency pattern confirmed: "Regulatory deadlines manufacture urgency you don't have to create" — FSMA 2028 deadline is the entry point
+
+**Verdict: No signal has changed. Brief stands. Execute the calls.**
+
+**⚠️ System note:** `soloos-core` MCP server not reachable this session. Kill signal state loaded from `ai-memory/decisions/active-kill-signals.md`. Confirm FL-003 status is current before next session.
