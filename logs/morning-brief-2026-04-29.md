@@ -1,6 +1,7 @@
 # SoloOS Morning Brief — 2026-04-29
-_Generated: local swarm | Sources: ai-memory, kill-signal tracker, live web search (HN + Reddit + FDA)_
-_⚠️ soloos-core MCP server offline — ai-memory + yesterday's brief used as source of truth_
+_Generated: 07:23 UTC | Sources: ai-memory, kill-signal tracker, founder-log.md, business-context.md, live web search (HN + Reddit + FDA)_
+_⚠️ soloos-core MCP server offline — ai-memory + yesterday's brief + direct file reads used as source of truth_
+_⚠️ External network (HN/Reddit live fetch) blocked — market signals carried from previous brief_
 
 ---
 
@@ -34,6 +35,8 @@ _⚠️ soloos-core MCP server offline — ai-memory + yesterday's brief used as
 |---|---|---|
 | FL-002 | GovProcure — <8 positive signals in 10 days | 🔴 TRIGGERED & CLOSED |
 | FL-003 | FSMA 204 — <3 pain confirmations by 2026-05-07 | 🟡 ACTIVE — Day 2/10, 0 logged |
+
+> ⚠️ **FOUNDER LOG DRIFT DETECTED:** Direct read of `knowledge-base/personal/founder-log.md` shows FL-002 still marked `⏳ Pending` (outcome due 2026-04-21 — 8 days overdue). FL-003 has no entry at all. The log is 8 days stale. After calls today, update both entries or run `/session-end` to auto-log.
 
 ---
 
