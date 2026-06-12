@@ -297,16 +297,20 @@ def cmd_stats(args):
     result = json.loads(knowledge_base_stats())
 
     print(f"  {bold('Status:')}    {green(result['status'])}")
-    print(f"  {bold('Version:')}   {result['version']}")
-    print(f"  {bold('Root:')}      {dim(result['knowledge_base_root'])}")
+    print(f"  {bold('Version:')}   {result.get('soloos_version', 'unknown')}")
+    print(f"  {bold('Root:')}      {dim(result.get('kb_root', result.get('knowledge_base_root', '?')))}")
     print()
-    print(f"  {cyan('Patterns:')}         {result['patterns_loaded']}")
-    print(f"  {cyan('Founder Cases:')}    {result['founder_cases_loaded']}")
-    print(f"  {cyan('Market Categories:')} {result['market_categories_loaded']}")
-    print(f"  {cyan('Log Entries:')}      {result['founder_log_entries']}")
-    print(f"  {cyan('Pending Outcomes:')} {result['pending_outcomes']}")
+    patterns = result.get('patterns', {})
+    print(f"  {cyan('Patterns:')}         {patterns.get('count', result.get('patterns_loaded', '?'))}")
+    fc = result.get('founder_cases', {})
+    print(f"  {cyan('Founder Cases:')}    {fc.get('count', result.get('founder_cases_loaded', '?'))}")
+    mi = result.get('market_intelligence', {})
+    print(f"  {cyan('Market Categories:')} {mi.get('count', result.get('market_categories_loaded', '?'))}")
+    fl = result.get('founder_log', {})
+    print(f"  {cyan('Log Entries:')}      {fl.get('total_entries', result.get('founder_log_entries', '?'))}")
+    print(f"  {cyan('Pending Outcomes:')} {fl.get('pending_outcomes', result.get('pending_outcomes', '?'))}")
     print()
-    cats = result.get("pattern_categories", [])
+    cats = patterns.get("categories", result.get("pattern_categories", []))
     if cats:
         print(f"  {bold('Pattern Categories:')}")
         for c in sorted(cats):
@@ -523,7 +527,8 @@ def cmd_setup(args):
     # Remind user to source it
     shell_rc = "~/.zshrc" if shutil.which("zsh") else "~/.bashrc"
     print(f"\n  {dim('Add to your shell profile to auto-load:')}")
-    print(f"  {cyan(f'  echo \"source ~/.soloos/.env\" >> {shell_rc}')}")
+    source_cmd = f'  echo "source ~/.soloos/.env" >> {shell_rc}'
+    print(f"  {cyan(source_cmd)}")
     print()
     print(bold("  Next steps:"))
     print(f"  {green('1.')} Restart your terminal (or source ~/.soloos/.env)")
@@ -638,18 +643,7 @@ def main():
         prog="soloos",
         description="SoloOS Founder Intelligence CLI",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="""
-commands:
-  setup      Interactive first-run setup wizard (writes ~/.soloos/.env)
-  pattern    Match decision patterns to your situation
-  ev         Calculate expected value per hour for competing activities
-  market     Check market saturation for a category
-  stage      Get stage-calibrated advice for your MRR
-  validate   Run idea through validation gates
-  signals    Check overdue kill signals
-  stats      Show knowledge base stats
-  log        View or tail the tool call / audit log (-f to follow live)
-        """,
+        epilog="""\ncommands:\n  setup      Interactive first-run setup wizard (writes ~/.soloos/.env)\n  pattern    Match decision patterns to your situation\n  ev         Calculate expected value per hour for competing activities\n  market     Check market saturation for a category\n  stage      Get stage-calibrated advice for your MRR\n  validate   Run idea through validation gates\n  signals    Check overdue kill signals\n  stats      Show knowledge base statistics\n  log        View or tail the tool call / audit log (-f to follow live)\n        """,
     )
 
     subparsers = parser.add_subparsers(dest="command")
